@@ -1,0 +1,349 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\PuTTYCS.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\PuTTYCS.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PUTTYCS_DIALOG DIALOGEX 0, 0, 212, 174
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "PuTTY Filter:",IDC_STATIC,7,6,88,8
+    COMBOBOX        IDC_FILTERS_COMBOBOX,7,17,198,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "C&ascade",IDC_CASCADE_BUTTON,7,34,38,14
+    PUSHBUTTON      "&Tile",IDC_TILE_BUTTON,47,34,38,14
+    PUSHBUTTON      "Minimi&ze",IDC_MINIMIZE_BUTTON,87,34,38,14
+    PUSHBUTTON      "&Hide",IDC_HIDE_BUTTON,127,34,38,14
+    PUSHBUTTON      "&Filters",IDC_FILTERS_BUTTON,167,34,38,14
+    LTEXT           "Command:",IDC_STATIC,7,54,40,8
+    EDITTEXT        IDC_COMMAND_EDIT,7,65,198,66,ES_MULTILINE | 
+                    ES_AUTOVSCROLL
+    RADIOBUTTON     "¿",IDC_SENDCR_PUSHBUTTON,170,54,10,9,BS_PUSHLIKE | 
+                    WS_TABSTOP
+    PUSHBUTTON      "3",IDC_CMDHISTORYUP_BUTTON,183,54,10,9,WS_DISABLED,
+                    WS_EX_TRANSPARENT
+    PUSHBUTTON      "4",IDC_CMDHISTORYDOWN_BUTTON,194,54,10,9,BS_CENTER | 
+                    BS_VCENTER | WS_DISABLED,WS_EX_TRANSPARENT
+    PUSHBUTTON      "i",IDC_CLEAR_BUTTON,20,145,10,9,0,WS_EX_TRANSPARENT
+    PUSHBUTTON      "5",IDC_UP_BUTTON,20,135,10,9,0,WS_EX_TRANSPARENT
+    PUSHBUTTON      "3",IDC_LEFT_BUTTON,8,145,10,9,0,WS_EX_TRANSPARENT
+    PUSHBUTTON      "6",IDC_DOWN_BUTTON,20,156,10,9,0,WS_EX_TRANSPARENT
+    PUSHBUTTON      "4",IDC_RIGHT_BUTTON,32,145,10,9,BS_CENTER | BS_VCENTER,
+                    WS_EX_TRANSPARENT
+    PUSHBUTTON      "Ctr&l-C",IDC_BREAK_BUTTON,57,134,22,14
+    PUSHBUTTON      "Ctrl&-]",IDC_ENDTELNET_BUTTON,82,134,22,14
+    PUSHBUTTON      "Es&c",IDC_ESCAPE_BUTTON,107,134,22,14
+    PUSHBUTTON      "&Enter",IDC_ENTER_BUTTON,132,134,22,14
+    PUSHBUTTON      "Sc&ript",IDC_SCRIPT_BUTTON,158,134,47,14
+    PUSHBUTTON      "Passwor&d",IDC_PASSWORD_BUTTON,57,152,47,14
+    PUSHBUTTON      "&Preferences",IDC_PREFERENCES_BUTTON,107,152,47,14
+    DEFPUSHBUTTON   "&Send",IDC_SEND_BUTTON,158,152,47,14
+END
+
+IDD_PASSWORD_DIALOG DIALOG DISCARDABLE  0, 0, 186, 59
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Send Password"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Enter Password:",IDC_STATIC,7,7,52,8
+    EDITTEXT        IDC_PASSWORD_CEDIT,7,20,172,14,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,76,38,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,38,50,14
+END
+
+IDD_PREFERENCES_DIALOG DIALOG DISCARDABLE  0, 0, 196, 170
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Password:",IDC_STATIC,7,3,182,31
+    CONTROL         "Save password",IDC_SAVEPASSWORD_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,16,65,10
+    GROUPBOX        "Auto arrange:",IDC_STATIC,7,37,182,57
+    CONTROL         "Off",IDC_AUTOARRANGE_OFF_RADIO,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,13,52,44,10
+    CONTROL         "Cascade",IDC_AUTOARRANGE_CASCADE_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,13,64,44,10
+    CONTROL         "Tile",IDC_AUTOARRANGE_TILE_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,13,76,44,10
+    CONTROL         "Minimize other PuTTYs",IDC_AUTOMINIMIZE_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,94,52,89,10
+    CONTROL         "Arrange on startup",IDC_ARRANGEONSTARTUP_CHECKBOX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,94,64,74,10
+    CONTROL         "Unhide PuTTYs on exit",IDC_UNHIDEONEXIT_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,94,76,89,10
+    GROUPBOX        "Window:",IDC_STATIC,7,98,182,44
+    CONTROL         "Tool window",IDC_TOOLWINDOW_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,112,72,10
+    CONTROL         "Always on top",IDC_ALWAYSONTOP_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,125,72,10
+    LTEXT           "Transition:",IDC_STATIC,94,112,34,10
+    EDITTEXT        IDC_TRANSITION_EDIT,131,109,22,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "ms",IDC_STATIC,157,112,10,10
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,86,149,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,139,149,50,14
+END
+
+IDD_FILTERS_DIALOG DIALOG DISCARDABLE  0, 0, 200, 178
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "PuTTY Filters"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Filter name:",IDC_STATIC,7,7,37,8
+    LISTBOX         IDC_FILTERS_LISTBOX,7,19,186,51,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Filter list:",IDC_STATIC,7,73,28,8
+    EDITTEXT        IDC_FILTERLIST_EDIT,7,85,186,28,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_READONLY
+    PUSHBUTTON      "Add",IDC_ADD_BUTTON,7,116,44,14
+    PUSHBUTTON      "Edit",IDC_EDIT_BUTTON,54,116,45,14
+    PUSHBUTTON      "Copy",IDC_COPY_BUTTON,102,116,44,14
+    PUSHBUTTON      "Remove",IDC_REMOVE_BUTTON,7,132,44,14
+    PUSHBUTTON      "Remove All",IDC_REMOVE_ALL_BUTTON,54,132,45,14
+    PUSHBUTTON      "Move Up",IDC_MOVEUP_BUTTON,149,116,44,14
+    PUSHBUTTON      "Move Down",IDC_MOVEDOWN_BUTTON,149,132,44,14
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,39,157,50,14
+    PUSHBUTTON      "Cancel",IDC_CANCEL_BUTTON,91,157,50,14
+    PUSHBUTTON      "Apply",IDC_APPLY_BUTTON,143,157,50,14,WS_DISABLED
+END
+
+IDD_FILTER_DIALOG DIALOG DISCARDABLE  0, 0, 186, 142
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Filter name:",IDC_STATIC,7,7,38,8
+    EDITTEXT        IDC_FILTERNAME_EDIT,7,19,169,14,ES_AUTOHSCROLL
+    LTEXT           "Filter list:",IDC_STATIC,7,40,83,8
+    RTEXT           "(Use * and ? for wildcards)",IDC_STATIC,92,40,84,8
+    EDITTEXT        IDC_FILTERLIST_EDIT,7,52,169,28,ES_MULTILINE | 
+                    ES_AUTOVSCROLL
+    LTEXT           "Format:",IDC_STATIC,23,88,25,8
+    LTEXT           "+inclusion;+inclusion;...;+inclusion;",IDC_STATIC,49,88,
+                    108,8
+    LTEXT           "-exclusion;-exclusion;...;-exclusion",IDC_STATIC,49,99,
+                    108,8
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,74,121,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,126,121,50,14
+END
+
+IDD_ABOUT_DIALOG DIALOG DISCARDABLE  0, 0, 170, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About PuTTYCS"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CTEXT           "About Text Line 1",IDC_ABOUT_TEXT_LINE1,9,9,150,8
+    CTEXT           "About Text Line 2",IDC_ABOUT_TEXT_LINE2,9,19,150,8
+    PUSHBUTTON      "Visit Web Site",IDC_VISITWEBSITE_BUTTON,30,60,52,14
+    DEFPUSHBUTTON   "Close",IDC_CLOSE_BUTTON,87,60,52,14
+    CTEXT           "Portions of code based on SendKeys in C++\n© 2004  lallousx86@yahoo.com.",
+                    IDC_ABOUT_TEXT_LINE3,7,35,156,16
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,7,7,156,24
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,9,9,0
+ PRODUCTVERSION 1,9,9,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "PuTTYCS\0"
+            VALUE "FileVersion", "1, 9, 9, 0\0"
+            VALUE "InternalName", "PuTTYCS\0"
+            VALUE "LegalCopyright", "Copyright (C) 2005\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "PuTTYCS.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender\0"
+            VALUE "ProductVersion", "1, 9, 9, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_PUTTYCS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 205
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 167
+    END
+
+    IDD_PASSWORD_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 52
+    END
+
+    IDD_PREFERENCES_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 189
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 163
+    END
+
+    IDD_FILTERS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 193
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 171
+    END
+
+    IDD_FILTER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 176
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 135
+        HORZGUIDE, 96
+    END
+
+    IDD_ABOUT_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 163
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\PuTTYCS.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
