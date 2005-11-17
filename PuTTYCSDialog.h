@@ -27,7 +27,10 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
+ *             Added command cistory clear button          
+ *             Added AltGr support                  
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -42,48 +45,50 @@ class CPuTTYCSDialog : public CDialog
 // Construction
 public:
 
-	CPuTTYCSDialog(CWnd* pParent = NULL);	// standard constructor
+   CPuTTYCSDialog(CWnd* pParent = NULL);   // standard constructor
    ~CPuTTYCSDialog();
-	   
+      
 // Dialog Data
-	//{{AFX_DATA(CPuTTYCSDialog)
-	enum { IDD = IDD_PUTTYCS_DIALOG };
-	//}}AFX_DATA
+   //{{AFX_DATA(CPuTTYCSDialog)
+   enum { IDD = IDD_PUTTYCS_DIALOG };
+   //}}AFX_DATA
 
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CPuTTYCSDialog)
-	public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
-	//}}AFX_VIRTUAL
+   // ClassWizard generated virtual function overrides
+   //{{AFX_VIRTUAL(CPuTTYCSDialog)
+   public:
+   virtual BOOL PreTranslateMessage(MSG* pMsg);
+   protected:
+   virtual void DoDataExchange(CDataExchange* pDX);   // DDX/DDV support
+   //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	HICON m_hIcon;
+   HICON m_hIcon;
 
-   bool m_bIsClosing;	
+   CString m_csAltGrKeys;
+
+   bool m_bIsClosing;   
    int m_iDialogHeight;
 
    /**
     * PuTTY Filters
     */
 
-	CStringArray m_csaFilters;
+   CStringArray m_csaFilters;
    int m_iFilter;
 
- 	/**
+    /**
     * Command history
     */
 
-	CStringArray m_csaCmdHistory;
+   CStringArray m_csaCmdHistory;
    int m_iCmdHistory;
 
- 	/**
+    /**
     * Password
     */
-	
+   
    int m_iSavePassword;
    CString m_csPassword;
   
@@ -91,30 +96,40 @@ protected:
     * Window
     */
 
-	int m_iToolWindow;
-	int m_iAlwaysOnTop;
-	int m_iTransition;
+   int m_iToolWindow;
+   int m_iAlwaysOnTop;
+   int m_iTransition;
 
    /**
     * Auto arrange 
     */
-	
+   
    int m_iAutoArrange;
    int m_iAutoMinimize;
-	int m_iArrangeOnStartup;   
- 	int m_iUnhideOnExit;
+   int m_iArrangeOnStartup;   
+   int m_iUnhideOnExit;
 
    /**
     * Send CR
     */
 
-  	int m_iSendCR;
+   int m_iSendCR;
+
+   /**
+    * Keyboard
+    */ 
+
+   int m_iUseAltGr;
+
+   /**
+    * Fonts
+    */
 
    CFont* m_pMarlettNormal;
-	CFont* m_pMarlettSmall;
+   CFont* m_pMarlettSmall;
    CFont* m_pSymbolSmall;
  
-	void sendBuffer(CString csBuffer, bool parse = false);
+   void sendBuffer(CString csBuffer, bool parse = false);
 
    void LoadPreferences();
    void SavePreferences();
@@ -122,48 +137,49 @@ protected:
    void UpdateDialog();
    void RefreshDialog();
 
-	// Generated message map functions
-	//{{AFX_MSG(CPuTTYCSDialog)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnPaint();
-	afx_msg HCURSOR OnQueryDragIcon();
-   afx_msg void OnSelChangeFiltersCombobox();	
-   afx_msg void OnCascadeButton();	   
-	afx_msg void OnTileButton();
-	afx_msg void OnMinimizeButton();
-   afx_msg void OnHideButton();	
+   // Generated message map functions
+   //{{AFX_MSG(CPuTTYCSDialog)
+   virtual BOOL OnInitDialog();
+   afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+   afx_msg void OnPaint();
+   afx_msg HCURSOR OnQueryDragIcon();
+   afx_msg void OnSelChangeFiltersCombobox();   
+   afx_msg void OnCascadeButton();      
+   afx_msg void OnTileButton();
+   afx_msg void OnMinimizeButton();
+   afx_msg void OnHideButton();   
    afx_msg void OnFiltersButton();
-	afx_msg void OnSendCRPushButton();		
+   afx_msg void OnSendCRPushButton();      
    afx_msg void OnCmdHistoryUpButton();
-	afx_msg void OnCmdHistoryDownButton();   
-	afx_msg void OnUpButton();
-	afx_msg void OnDownButton();
-	afx_msg void OnRightButton();
-	afx_msg void OnLeftButton();
+   afx_msg void OnCmdHistoryDownButton();   
+   afx_msg void OnUpButton();
+   afx_msg void OnDownButton();
+   afx_msg void OnRightButton();
+   afx_msg void OnLeftButton();
    afx_msg void OnClearButton();
    afx_msg void OnBreakButton();
-	afx_msg void OnEndTelnetButton();
-	afx_msg void OnEscapeButton();
-	afx_msg void OnEnterButton();	
+   afx_msg void OnEndTelnetButton();
+   afx_msg void OnEscapeButton();
+   afx_msg void OnEnterButton();   
    afx_msg void OnPasswordButton();
-   afx_msg void OnPreferencesButton();	   
-	afx_msg void OnScriptButton();	
-	afx_msg void OnSendButton();	
-	afx_msg void OnClose();
-	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
+   afx_msg void OnPreferencesButton();      
+   afx_msg void OnScriptButton();   
+   afx_msg void OnSendButton();   
+   afx_msg void OnClose();
+   afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
+	afx_msg void OnCmdHistoryClearButton();
 	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+   DECLARE_MESSAGE_MAP()
 
 private:
 
    CSendKeys m_skSendKeys;
-	CObArray  m_obaWindows;
+   CObArray  m_obaWindows;
 
-	static BOOL CALLBACK enumwindowsProc(HWND hwnd, LPARAM lParam); 
-	static int wildcmp(const char* wild, const char* string);
+   static BOOL CALLBACK enumwindowsProc(HWND hwnd, LPARAM lParam); 
+   static int wildcmp(const TCHAR* wild, const TCHAR* string);
    
-	void SortWindows();
+   void SortWindows();
    static int Compare(const void* pWndS1, const void* pWndS2);
 };
 

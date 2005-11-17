@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #include "stdafx.h"
@@ -41,11 +42,11 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 BEGIN_MESSAGE_MAP(CPuTTYCSApp, CWinApp)
-	//{{AFX_MSG_MAP(CPuTTYCSApp)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
-	//}}AFX_MSG
-	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
+   //{{AFX_MSG_MAP(CPuTTYCSApp)
+      // NOTE - the ClassWizard will add and remove mapping macros here.
+      //    DO NOT EDIT what you see in these blocks of generated code!
+   //}}AFX_MSG
+   ON_COMMAND(ID_HELP, CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 /**
@@ -68,30 +69,30 @@ CPuTTYCSApp theApp;
 BOOL CPuTTYCSApp::InitInstance()
 {
    /**
-	 * Search for existing application 
-	 * (tool window style first, then app window style)
-	 */
+    * Search for existing application 
+    * (tool window style first, then app window style)
+    */
 
    CWnd* pAppWnd =
       CWnd::FindWindow( NULL, PUTTYCS_WINDOW_TITLE_TOOL );
 
-	if ( !pAppWnd )
-	{
-	   pAppWnd =
+   if ( !pAppWnd )
+   {
+      pAppWnd =
          CWnd::FindWindow( NULL, PUTTYCS_WINDOW_TITLE_APP );
    }
 
-	if ( pAppWnd )
-	{
+   if ( pAppWnd )
+   {
       pAppWnd->SetForegroundWindow();
    }
-	else
-	{
+   else
+   {
       CPuTTYCSDialog dialog;
-	   m_pMainWnd = &dialog;
+      m_pMainWnd = &dialog;
 
       dialog.DoModal();
-	}
-	
-	return FALSE;
+   }
+   
+   return FALSE;
 }

@@ -30,7 +30,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #include "stdafx.h"
@@ -44,7 +45,7 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 CString CBase64::BASE64_CHARS =
-   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+   _T( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" );
 
 /**
  * CBase64::encode()
@@ -54,10 +55,10 @@ CString CBase64::encode( CString csBuffer )
 {
    CString csValue = "";
 
-   unsigned char buffer3[3];
-   unsigned char buffer4[4];
+   TCHAR buffer3[3];
+   TCHAR buffer4[4];
 
-   char* bytes = csBuffer.GetBuffer(0);
+   TCHAR* bytes = csBuffer.GetBuffer(0);
    int pos = csBuffer.GetLength();
 
    int i = 0;
@@ -134,8 +135,8 @@ CString CBase64::decode( CString csBuffer )
 {
    CString csValue = "";
 
-   unsigned char buffer4[4];
-   unsigned char buffer3[3];
+   TCHAR buffer4[4];
+   TCHAR buffer3[3];
 
    int pos = csBuffer.GetLength();
    int offset = 0;

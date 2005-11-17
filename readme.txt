@@ -1,13 +1,16 @@
-PuTTYCS - PuTTY Command Sender v1.0
+PuTTYCS - PuTTY Command Sender v1.1
 (C) 2005 - Jason Millard - jsm174@gmail.com
-Release Date: 11/05/05
+Release Date: 11/17/05
 
 
 
 VERSION HISTORY
 ---------------
 
-11/05/05 - v1.0 - Initial release
+11/07/05 - v1.0 - Initial release
+11/17/05 - v1.1 - Added UNICODE support
+                  Added clear command history button
+                  Added AltGr support
 
 
 ABOUT
@@ -116,7 +119,8 @@ COMMAND HISTORY
 
 PuTTYCS supports a command history up to 100 items.
 To scroll through the history, use the left and right
-arrows above the Command input field. 
+arrows above the Command input field. The x button 
+will prompt you about clearing the command history.
 
 
 CARRIAGE RETURN
@@ -167,12 +171,19 @@ PREFERENCES
 This button will bring up the Preferences dialog. 
 Preferences are loaded each time PuTTYCS is started.
 
-  Save Password
-     Saves the password used in the Send Password dialog.
+  Tool Window:
+     Display PuTTYCS as a tool window with the thin
+     title bar.
 
-     NOTE: Passwords are encoded in Base64, so they
-           are not secure.
+  Always on top:
+     Display the PuTTYCS on top of all other windows.
+  
+  Transition:
+     Sets the amount time (in milliseconds) to pause
+     before sending a command to next PuTTY window. 
 
+     NOTE: The slower the machine the higher this value
+           should be.
 
   Auto Arrange (Off, Cascade, Tile) 
      When switching filters, automatically cascade or
@@ -190,19 +201,16 @@ Preferences are loaded each time PuTTYCS is started.
      Unhides any PuTTYs hidden using the Hide button.
 
 
-  Tool Window:
-     Display PuTTYCS as a tool window with the thin
-     title bar.
+  Use AltGR for characters ~ # { [ | ` ^ @ ] } €     
+    Sends AltGR (Ctrl+Alt) before sending characters:
+    ~ # { [ | ` ^ @ ] } €
+     
 
-  Always on top:
-     Display the PuTTYCS on top of all other windows.
-  
-  Transition:
-     Sets the amount time (in milliseconds) to pause
-     before sending a command to next PuTTY window. 
+  Save Password
+     Saves the password used in the Send Password dialog.
 
-     NOTE: The slower the machine the higher this value
-           should be.
+     NOTE: Passwords are encoded in Base64, so they
+           are not secure.
 
   
 SCRIPT

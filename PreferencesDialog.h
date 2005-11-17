@@ -27,7 +27,9 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
+ *             Added AltGr support 
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -41,44 +43,47 @@ class CPreferencesDialog : public CDialog
 {
 // Construction
 public:
-	CPreferencesDialog(CWnd* pParent = NULL);   // standard constructor
+   CPreferencesDialog(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CPreferencesDialog)
-	enum { IDD = IDD_PREFERENCES_DIALOG };
-		// NOTE: the ClassWizard will add data members here
-	//}}AFX_DATA
+   //{{AFX_DATA(CPreferencesDialog)
+   enum { IDD = IDD_PREFERENCES_DIALOG };
+      // NOTE: the ClassWizard will add data members here
+   //}}AFX_DATA
 
-   void setSavePassword(int);	
-	int getSavePassword();
+   void setSavePassword(int);   
+   int getSavePassword();
 
- 	void setAutoArrange(int);
-	int getAutoArrange();
+   void setAutoArrange(int);
+   int getAutoArrange();
 
-	int getAutoMinimize();
+   int getAutoMinimize();
    void setAutoMinimize(int);
 
    int getArrangeOnStartup();
    void setArrangeOnStartup(int);
 
-	int getUnhideOnExit();
-	void setUnhideOnExit(int);
+   int getUnhideOnExit();
+   void setUnhideOnExit(int);
 
    int getToolWindow();
-   void setToolWindow(int);	
-	
-	void setAlwaysOnTop(int);	
-	int getAlwaysOnTop();
+   void setToolWindow(int);   
+   
+   void setAlwaysOnTop(int);   
+   int getAlwaysOnTop();
 
-  	int getTransition();
+   int getTransition();
    void setTransition(int);
 
+   int getUseAltGr();
+   void setUseAltGr(int);
+
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CPreferencesDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+   // ClassWizard generated virtual function overrides
+   //{{AFX_VIRTUAL(CPreferencesDialog)
+   protected:
+   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+   //}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -86,28 +91,30 @@ protected:
    int m_iSavePassword;
    int m_iAutoArrange;
    int m_iAutoMinimize;
-	int m_iArrangeOnStartup;
-   int m_iUnhideOnExit;	   
-   int m_iToolWindow;	
+   int m_iArrangeOnStartup;
+   int m_iUnhideOnExit;      
+   int m_iToolWindow;   
    int m_iAlwaysOnTop;
-   int m_iTransition;	
-   	
-	// Generated message map functions
-	//{{AFX_MSG(CPreferencesDialog)
+   int m_iTransition; 
+   int m_iUseAltGr;
+      
+   // Generated message map functions
+   //{{AFX_MSG(CPreferencesDialog)
    virtual BOOL OnInitDialog();
-   afx_msg void OnSavePasswordCheckbox();	
+   afx_msg void OnSavePasswordCheckbox();   
    afx_msg void OnAutoArrangeRadio();
-	afx_msg void OnAutoMinimizeCheckbox();
-	afx_msg void OnArrangeOnStartupCheckbox();
-	afx_msg void OnUnhideOnExitCheckbox();	
-	afx_msg void OnToolWindowCheck();
-	afx_msg void OnAlwaysOnTopCheck();
-	afx_msg void OnChangeTransition();
-	afx_msg void OnOKButton();	
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+   afx_msg void OnAutoMinimizeCheckbox();
+   afx_msg void OnArrangeOnStartupCheckbox();
+   afx_msg void OnUnhideOnExitCheckbox();   
+   afx_msg void OnToolWindowCheckbox();
+   afx_msg void OnUseAltGrCheckbox();
+   afx_msg void OnAlwaysOnTopCheckbox();
+   afx_msg void OnChangeTransition();
+   afx_msg void OnOKButton();   
+   //}}AFX_MSG
+   DECLARE_MESSAGE_MAP()
 
-  	void UpdateDialog();
+   void UpdateDialog();
 };
 
 //{{AFX_INSERT_LOCATION}}

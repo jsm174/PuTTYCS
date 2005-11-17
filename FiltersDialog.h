@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #if !defined(AFX_FILTERSDIALOG_H__4D53D37A_8AFC_4E18_9D8E_BCE2978E4D7A__INCLUDED_)
@@ -41,25 +42,25 @@ class CFiltersDialog : public CDialog
 {
 // Construction
 public:
-	CFiltersDialog(CWnd* pParent = NULL);   // standard constructor
+   CFiltersDialog(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CFiltersDialog)
-	enum { IDD = IDD_FILTERS_DIALOG };
-		// NOTE: the ClassWizard will add data members here
-	//}}AFX_DATA
+   //{{AFX_DATA(CFiltersDialog)
+   enum { IDD = IDD_FILTERS_DIALOG };
+      // NOTE: the ClassWizard will add data members here
+   //}}AFX_DATA
 
-	void setFilters( CStringArray* pCSAFilters );
+   void setFilters( CStringArray* pCSAFilters );
 
    int getFilter();
-	void setFilter(int);
-		
+   void setFilter(int);
+      
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CFiltersDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+   // ClassWizard generated virtual function overrides
+   //{{AFX_VIRTUAL(CFiltersDialog)
+   protected:
+   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+   //}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -67,27 +68,27 @@ protected:
    CStringArray m_csaFilters;
    CStringArray* m_pCSAFilters;
 
-	bool m_bChanges;
+   bool m_bChanges;
    int m_iFilter;
 
- 	void RefreshDialog();
+   void RefreshDialog();
    void InitFilterList( int );
 
-	// Generated message map functions
-	//{{AFX_MSG(CFiltersDialog)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnAddButton();
-  	afx_msg void OnEditButton();
-  	afx_msg void OnCopyButton();
-  	afx_msg void OnRemoveButton();
-	afx_msg void OnRemoveAllButton();
-	afx_msg void OnMoveUpButton();
-	afx_msg void OnMoveDownButton();
-	afx_msg void OnOKButton();	
-	afx_msg void OnCancelButton();
+   // Generated message map functions
+   //{{AFX_MSG(CFiltersDialog)
+   virtual BOOL OnInitDialog();
+   afx_msg void OnAddButton();
+   afx_msg void OnEditButton();
+   afx_msg void OnCopyButton();
+   afx_msg void OnRemoveButton();
+   afx_msg void OnRemoveAllButton();
+   afx_msg void OnMoveUpButton();
+   afx_msg void OnMoveDownButton();
+   afx_msg void OnOKButton();   
+   afx_msg void OnCancelButton();
    afx_msg void OnApplyButton();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+   //}}AFX_MSG
+   DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

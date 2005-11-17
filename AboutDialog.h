@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #if !defined(AFX_ABOUTDIALOG_H__F0AE1C5B_A002_4323_855F_204A89B2CD5D__INCLUDED_)
@@ -41,31 +42,31 @@ class CAboutDialog : public CDialog
 {
 // Construction
 public:
-	CAboutDialog(CWnd* pParent = NULL);   // standard constructor
+   CAboutDialog(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CAboutDialog)
-	enum { IDD = IDD_ABOUT_DIALOG };
-		// NOTE: the ClassWizard will add data members here
-	//}}AFX_DATA
+   //{{AFX_DATA(CAboutDialog)
+   enum { IDD = IDD_ABOUT_DIALOG };
+      // NOTE: the ClassWizard will add data members here
+   //}}AFX_DATA
 
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAboutDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+   // ClassWizard generated virtual function overrides
+   //{{AFX_VIRTUAL(CAboutDialog)
+   protected:
+   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+   //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CAboutDialog)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnVisitWebSiteButton();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+   // Generated message map functions
+   //{{AFX_MSG(CAboutDialog)
+   virtual BOOL OnInitDialog();
+   afx_msg void OnVisitWebSiteButton();
+   //}}AFX_MSG
+   DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

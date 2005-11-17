@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #if !defined(AFX_FILTERENTRYDIALOG_H__350B78DB_CD24_4F93_BF27_9BC84C684633__INCLUDED_)
@@ -41,46 +42,46 @@ class CFilterDialog : public CDialog
 {
 // Construction
 public:
-	CFilterDialog(CWnd* pParent = NULL);   // standard constructor
+   CFilterDialog(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CFilterDialog)
-	enum { IDD = IDD_FILTER_DIALOG };
-		// NOTE: the ClassWizard will add data members here
-	//}}AFX_DATA
+   //{{AFX_DATA(CFilterDialog)
+   enum { IDD = IDD_FILTER_DIALOG };
+      // NOTE: the ClassWizard will add data members here
+   //}}AFX_DATA
 
    void setWindowTitle( CString csWindowTitle );
 
-  	CString getFilterName();
+     CString getFilterName();
    void setFilterName( CString csFilterName );
 
-   CString getFilterList();	
-	void setFilterList( CString csFilterList );
+   CString getFilterList();   
+   void setFilterList( CString csFilterList );
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CFilterDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+   // ClassWizard generated virtual function overrides
+   //{{AFX_VIRTUAL(CFilterDialog)
+   protected:
+   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+   //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CFilterDialog)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnChangeFilterName();
-	afx_msg void OnChangeFilterList();	
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+   // Generated message map functions
+   //{{AFX_MSG(CFilterDialog)
+   virtual BOOL OnInitDialog();
+   afx_msg void OnChangeFilterName();
+   afx_msg void OnChangeFilterList();   
+   //}}AFX_MSG
+   DECLARE_MESSAGE_MAP()
 
-  	CString m_csFilterName;
-	CString m_csFilterList;
-	
+   CString m_csFilterName;
+   CString m_csFilterList;
+   
    CString m_csWindowTitle;
 
-	void RefreshDialog();
+   void RefreshDialog();
 };
 
 //{{AFX_INSERT_LOCATION}}

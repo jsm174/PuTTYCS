@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #if !defined(AFX_PasswordDialog_H__0E57B11B_D61A_4B2C_90A2_B0108BC9C4DF__INCLUDED_)
@@ -41,35 +42,35 @@ class CPasswordDialog : public CDialog
 {
 // Construction
 public:
-	CPasswordDialog(CWnd* pParent = NULL);   // standard constructor
+   CPasswordDialog(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CPasswordDialog)
-	enum { IDD = IDD_PASSWORD_DIALOG };
-		// NOTE: the ClassWizard will add data members here
-	//}}AFX_DATA
-	
+   //{{AFX_DATA(CPasswordDialog)
+   enum { IDD = IDD_PASSWORD_DIALOG };
+      // NOTE: the ClassWizard will add data members here
+   //}}AFX_DATA
+   
    void setPassword( CString csPassword );
    CString getPassword();
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CPasswordDialog)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+   // ClassWizard generated virtual function overrides
+   //{{AFX_VIRTUAL(CPasswordDialog)
+   protected:
+   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+   //}}AFX_VIRTUAL
 
 // Implementation
 protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CPasswordDialog)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnOKButton();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+   // Generated message map functions
+   //{{AFX_MSG(CPasswordDialog)
+   virtual BOOL OnInitDialog();
+   afx_msg void OnOKButton();
+   //}}AFX_MSG
+   DECLARE_MESSAGE_MAP()
 
-	CString m_csPassword;
+   CString m_csPassword;
 };
 
 //{{AFX_INSERT_LOCATION}}

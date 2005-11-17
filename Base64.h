@@ -30,7 +30,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #if !defined(AFX_BASE64_H__8D695A8F_54ED_4819_AA0E_33ADC00CDF60__INCLUDED_)
@@ -43,8 +44,8 @@
 class CBase64  
 {
 public:
-	CBase64();
-	virtual ~CBase64();
+   CBase64();
+   virtual ~CBase64();
    
    static CString encode( CString csBuffer );
    static CString decode( CString csBuffer );

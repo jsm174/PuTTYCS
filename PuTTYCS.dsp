@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=PuTTYCS - Win32 Debug
+CFG=PuTTYCS - Win32 Debug Unicode
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,12 +13,14 @@ CFG=PuTTYCS - Win32 Debug
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "PuTTYCS.mak" CFG="PuTTYCS - Win32 Debug"
+!MESSAGE NMAKE /f "PuTTYCS.mak" CFG="PuTTYCS - Win32 Debug Unicode"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "PuTTYCS - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE "PuTTYCS - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "PuTTYCS - Win32 Debug Unicode" (based on "Win32 (x86) Application")
+!MESSAGE "PuTTYCS - Win32 Release Unicode" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -79,12 +81,65 @@ LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
+!ELSEIF  "$(CFG)" == "PuTTYCS - Win32 Debug Unicode"
+
+# PROP BASE Use_MFC 6
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "PuTTYCS___Win32_Debug_Unicode"
+# PROP BASE Intermediate_Dir "PuTTYCS___Win32_Debug_Unicode"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 6
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "PuTTYCS___Win32_Debug_Unicode"
+# PROP Intermediate_Dir "PuTTYCS___Win32_Debug_Unicode"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D _WIN32_WINNT=0x401 /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_UNICODE" /D "UNICODE" /D _WIN32_WINNT=0x401 /Yu"stdafx.h" /FD /GZ /c
+# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "_AFXDLL"
+# ADD RSC /l 0x409 /d "_DEBUG" /d "_AFXDLL"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 /nologo /entry:"wWinMainCRTStartup" /subsystem:windows /debug /machine:I386 /pdbtype:sept
+
+!ELSEIF  "$(CFG)" == "PuTTYCS - Win32 Release Unicode"
+
+# PROP BASE Use_MFC 6
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "PuTTYCS___Win32_Release_Unicode0"
+# PROP BASE Intermediate_Dir "PuTTYCS___Win32_Release_Unicode0"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 6
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "PuTTYCS___Win32_Release_Unicode"
+# PROP Intermediate_Dir "PuTTYCS___Win32_Release_Unicode"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D _WIN32_WINNT=0x401 /FR /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_UNICODE" /D "UNICODE" /D _WIN32_WINNT=0x401 /FR /Yu"stdafx.h" /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /d "_AFXDLL"
+# ADD RSC /l 0x409 /d "NDEBUG" /d "_AFXDLL"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
+# ADD LINK32 /nologo /entry:"wWinMainCRTStartup" /subsystem:windows /machine:I386
+
 !ENDIF 
 
 # Begin Target
 
 # Name "PuTTYCS - Win32 Release"
 # Name "PuTTYCS - Win32 Debug"
+# Name "PuTTYCS - Win32 Debug Unicode"
+# Name "PuTTYCS - Win32 Release Unicode"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -203,5 +258,9 @@ SOURCE=.\SendKeys.cpp
 SOURCE=.\SendKeys.h
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\readme.txt
+# End Source File
 # End Target
 # End Project

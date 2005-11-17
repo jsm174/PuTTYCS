@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #if !defined(AFX_PuTTYCS_H__0CA01026_D42B_4CD9_AD0C_DE18E2410D45__INCLUDED_)
@@ -38,30 +39,30 @@
 #endif // _MSC_VER > 1000
 
 #ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
+   #error include 'stdafx.h' before including this file for PCH
 #endif
 
-#include "resource.h"		// main symbols
+#include "resource.h"      // main symbols
 
 class CPuTTYCSApp : public CWinApp
 {
 public:
-	CPuTTYCSApp();
+   CPuTTYCSApp();
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CPuTTYCSApp)
-	public:
-	virtual BOOL InitInstance();
-	//}}AFX_VIRTUAL
+   // ClassWizard generated virtual function overrides
+   //{{AFX_VIRTUAL(CPuTTYCSApp)
+   public:
+   virtual BOOL InitInstance();
+   //}}AFX_VIRTUAL
 
 // Implementation
 
-	//{{AFX_MSG(CPuTTYCSApp)
-		// NOTE - the ClassWizard will add and remove member functions here.
-		//    DO NOT EDIT what you see in these blocks of generated code !
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+   //{{AFX_MSG(CPuTTYCSApp)
+      // NOTE - the ClassWizard will add and remove member functions here.
+      //    DO NOT EDIT what you see in these blocks of generated code !
+   //}}AFX_MSG
+   DECLARE_MESSAGE_MAP()
 };
 
 

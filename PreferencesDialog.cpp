@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #include "stdafx.h"
@@ -45,11 +46,11 @@ static char THIS_FILE[] = __FILE__;
  */
 
 CPreferencesDialog::CPreferencesDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CPreferencesDialog::IDD, pParent)
+   : CDialog(CPreferencesDialog::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CPreferencesDialog)
-		// NOTE: the ClassWizard will add member initialization here
-	//}}AFX_DATA_INIT
+   //{{AFX_DATA_INIT(CPreferencesDialog)
+      // NOTE: the ClassWizard will add member initialization here
+   //}}AFX_DATA_INIT
 }
 
 /**
@@ -58,26 +59,27 @@ CPreferencesDialog::CPreferencesDialog(CWnd* pParent /*=NULL*/)
 
 void CPreferencesDialog::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPreferencesDialog)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
-	//}}AFX_DATA_MAP
+   CDialog::DoDataExchange(pDX);
+   //{{AFX_DATA_MAP(CPreferencesDialog)
+      // NOTE: the ClassWizard will add DDX and DDV calls here
+   //}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
-	//{{AFX_MSG_MAP(CPreferencesDialog)
+   //{{AFX_MSG_MAP(CPreferencesDialog)
    ON_BN_CLICKED(IDC_SAVEPASSWORD_CHECKBOX, OnSavePasswordCheckbox)
    ON_BN_CLICKED(IDC_AUTOARRANGE_OFF_RADIO, OnAutoArrangeRadio)
-   ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)	
-  	ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
+   ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
+   ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
    ON_BN_CLICKED(IDC_AUTOMINIMIZE_CHECKBOX, OnAutoMinimizeCheckbox)
    ON_BN_CLICKED(IDC_ARRANGEONSTARTUP_CHECKBOX, OnArrangeOnStartupCheckbox)
-   ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)	
-	ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheck)
-	ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheck)
-	ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)	
+   ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)   
+   ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheckbox)
+   ON_BN_CLICKED(IDC_USEALTGR_CHECKBOX, OnUseAltGrCheckbox)
+   ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)
+   ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)   
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
-	//}}AFX_MSG_MAP
+   //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /** 
@@ -189,7 +191,7 @@ void CPreferencesDialog::setToolWindow(int iToolWindow)
 }
 
 /**
- * CPreferencesDialog::getAlwaysOnTop)
+ * CPreferencesDialog::getAlwaysOnTop()
  */
 
 int CPreferencesDialog::getAlwaysOnTop()
@@ -198,7 +200,7 @@ int CPreferencesDialog::getAlwaysOnTop()
 }
 
 /**
- * CPreferencesDialog::setAlwaysOnTop)
+ * CPreferencesDialog::setAlwaysOnTop()
  */
 
 void CPreferencesDialog::setAlwaysOnTop(int iAlwaysOnTop)
@@ -207,7 +209,7 @@ void CPreferencesDialog::setAlwaysOnTop(int iAlwaysOnTop)
 }
 
 /**
- * CPreferencesDialog::getTransition)
+ * CPreferencesDialog::getTransition()
  */
 
 int CPreferencesDialog::getTransition()
@@ -216,7 +218,7 @@ int CPreferencesDialog::getTransition()
 }
 
 /**
- * CPreferencesDialog::setTransition)
+ * CPreferencesDialog::setTransition()
  */
 
 void CPreferencesDialog::setTransition(int iTransition)
@@ -225,46 +227,68 @@ void CPreferencesDialog::setTransition(int iTransition)
 }
 
 /**
+ * CPreferencesDialog::getUseAltGr()
+ */
+
+int CPreferencesDialog::getUseAltGr()
+{
+   return m_iUseAltGr;
+}
+
+/**
+ * CPreferencesDialog::setUseAltGr()
+ */
+
+void CPreferencesDialog::setUseAltGr(int iUseAltGr)
+{
+   m_iUseAltGr = iUseAltGr;
+}
+
+/**
  * CPreferencesDialog::OnInitDialog()
  */
 
 BOOL CPreferencesDialog::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-	
+   CDialog::OnInitDialog();
+   
    CheckDlgButton( IDC_SAVEPASSWORD_CHECKBOX, 
       m_iSavePassword );
 
- 	CheckDlgButton( IDC_AUTOARRANGE_OFF_RADIO,
+    CheckDlgButton( IDC_AUTOARRANGE_OFF_RADIO,
       (m_iAutoArrange == PUTTYCS_PREF_AUTO_ARRANGE_OFF) );
 
-	CheckDlgButton( IDC_AUTOARRANGE_CASCADE_RADIO, 
+   CheckDlgButton( IDC_AUTOARRANGE_CASCADE_RADIO, 
       (m_iAutoArrange == PUTTYCS_PREF_AUTO_ARRANGE_CASCADE) );
 
-	CheckDlgButton( IDC_AUTOARRANGE_TILE_RADIO, 
+   CheckDlgButton( IDC_AUTOARRANGE_TILE_RADIO, 
       (m_iAutoArrange == PUTTYCS_PREF_AUTO_ARRANGE_TILE) );
 
-	CheckDlgButton( IDC_AUTOMINIMIZE_CHECKBOX,
+   CheckDlgButton( IDC_AUTOMINIMIZE_CHECKBOX,
       m_iAutoMinimize );
 
-	CheckDlgButton( IDC_ARRANGEONSTARTUP_CHECKBOX, 
+   CheckDlgButton( IDC_ARRANGEONSTARTUP_CHECKBOX, 
       m_iArrangeOnStartup );
 
-	CheckDlgButton( IDC_UNHIDEONEXIT_CHECKBOX, 
+   CheckDlgButton( IDC_UNHIDEONEXIT_CHECKBOX, 
       m_iUnhideOnExit );
 
-	CheckDlgButton( IDC_TOOLWINDOW_CHECKBOX, 
+   CheckDlgButton( IDC_TOOLWINDOW_CHECKBOX, 
       m_iToolWindow );
 
-	CheckDlgButton( IDC_ALWAYSONTOP_CHECKBOX, 
+   CheckDlgButton( IDC_ALWAYSONTOP_CHECKBOX, 
       m_iAlwaysOnTop );
 
-	SetDlgItemInt( IDC_TRANSITION_EDIT, 
+   CheckDlgButton( IDC_USEALTGR_CHECKBOX, 
+      m_iUseAltGr );
+
+
+   SetDlgItemInt( IDC_TRANSITION_EDIT, 
       m_iTransition );
  
-	UpdateDialog();
+   UpdateDialog();
 
-	return TRUE;  
+   return TRUE;  
 }
 
 /**
@@ -281,7 +305,7 @@ void CPreferencesDialog::UpdateDialog()
 
    ((CButton*) GetDlgItem(IDC_OK_BUTTON))->
       EnableWindow( (m_iTransition >= 1) && 
- 	                 (m_iTransition <= 1500) );
+                    (m_iTransition <= 1500) );
 }
 
 /**
@@ -289,9 +313,9 @@ void CPreferencesDialog::UpdateDialog()
  */ 
 
 void CPreferencesDialog::OnSavePasswordCheckbox() 
-{	
+{   
    m_iSavePassword =
-      IsDlgButtonChecked( IDC_SAVEPASSWORD_CHECKBOX );	
+      IsDlgButtonChecked( IDC_SAVEPASSWORD_CHECKBOX );   
 }
 
 /**
@@ -303,9 +327,9 @@ void CPreferencesDialog::OnAutoArrangeRadio()
    m_iAutoArrange =
       ( (((CButton*) GetDlgItem(IDC_AUTOARRANGE_OFF_RADIO))->
           GetCheck() * PUTTYCS_PREF_AUTO_ARRANGE_OFF) +
-	     (((CButton*) GetDlgItem(IDC_AUTOARRANGE_CASCADE_RADIO))->
+        (((CButton*) GetDlgItem(IDC_AUTOARRANGE_CASCADE_RADIO))->
           GetCheck() * PUTTYCS_PREF_AUTO_ARRANGE_CASCADE) +
-	     (((CButton*) GetDlgItem(IDC_AUTOARRANGE_TILE_RADIO))->
+        (((CButton*) GetDlgItem(IDC_AUTOARRANGE_TILE_RADIO))->
           GetCheck() * PUTTYCS_PREF_AUTO_ARRANGE_TILE) );
    
    UpdateDialog();
@@ -318,7 +342,7 @@ void CPreferencesDialog::OnAutoArrangeRadio()
 void CPreferencesDialog::OnAutoMinimizeCheckbox() 
 {
    m_iAutoMinimize =
-      ((CButton*) GetDlgItem(IDC_AUTOMINIMIZE_CHECKBOX))->GetCheck();	
+      ((CButton*) GetDlgItem(IDC_AUTOMINIMIZE_CHECKBOX))->GetCheck();   
 
    UpdateDialog();
 }
@@ -330,10 +354,10 @@ void CPreferencesDialog::OnAutoMinimizeCheckbox()
 void CPreferencesDialog::OnArrangeOnStartupCheckbox() 
 {
    m_iArrangeOnStartup =
-      ((CButton*) GetDlgItem(IDC_ARRANGEONSTARTUP_CHECKBOX))->GetCheck();	
+      ((CButton*) GetDlgItem(IDC_ARRANGEONSTARTUP_CHECKBOX))->GetCheck();   
 
    UpdateDialog();
-	
+   
 }
 
 /**
@@ -347,23 +371,33 @@ void CPreferencesDialog::OnUnhideOnExitCheckbox()
 }
 
 /**
- * CPreferencesDialog::OnToolWindowCheck()
+ * CPreferencesDialog::OnToolWindowCheckbox()
  */ 
 
-void CPreferencesDialog::OnToolWindowCheck() 
+void CPreferencesDialog::OnToolWindowCheckbox() 
 {
-	m_iToolWindow =
-      IsDlgButtonChecked( IDC_TOOLWINDOW_CHECKBOX );	
+   m_iToolWindow =
+      IsDlgButtonChecked( IDC_TOOLWINDOW_CHECKBOX );   
 }
 
 /**
- * CPreferencesDialog::OnAlwaysOnTopCheck()
+ * CPreferencesDialog::OnAlwaysOnTopCheckbox()
  */ 
 
-void CPreferencesDialog::OnAlwaysOnTopCheck() 
+void CPreferencesDialog::OnAlwaysOnTopCheckbox() 
 {
-	m_iAlwaysOnTop =
-      IsDlgButtonChecked( IDC_ALWAYSONTOP_CHECKBOX );	
+   m_iAlwaysOnTop =
+      IsDlgButtonChecked( IDC_ALWAYSONTOP_CHECKBOX );   
+}
+
+/**
+ * CPreferencesDialog::OnUseAltGrCheckbox()
+ */ 
+
+void CPreferencesDialog::OnUseAltGrCheckbox() 
+{
+   m_iUseAltGr =
+      IsDlgButtonChecked( IDC_USEALTGR_CHECKBOX );   
 }
 
 /**
@@ -372,10 +406,10 @@ void CPreferencesDialog::OnAlwaysOnTopCheck()
 
 void CPreferencesDialog::OnChangeTransition() 
 {
-	m_iTransition =
+   m_iTransition =
       GetDlgItemInt( IDC_TRANSITION_EDIT );
 
-	UpdateDialog();
+   UpdateDialog();
 }
 
 /** 
@@ -384,5 +418,5 @@ void CPreferencesDialog::OnChangeTransition()
 
 void CPreferencesDialog::OnOKButton() 
 {
-	CDialog::OnOK();		
+   CDialog::OnOK();      
 }

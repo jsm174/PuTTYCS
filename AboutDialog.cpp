@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #include "stdafx.h"
@@ -45,11 +46,11 @@ static char THIS_FILE[] = __FILE__;
  */
 
 CAboutDialog::CAboutDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CAboutDialog::IDD, pParent)
+   : CDialog(CAboutDialog::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CAboutDialog)
-		// NOTE: the ClassWizard will add member initialization here
-	//}}AFX_DATA_INIT
+   //{{AFX_DATA_INIT(CAboutDialog)
+      // NOTE: the ClassWizard will add member initialization here
+   //}}AFX_DATA_INIT
 }
 
 /**
@@ -58,17 +59,17 @@ CAboutDialog::CAboutDialog(CWnd* pParent /*=NULL*/)
 
 void CAboutDialog::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CAboutDialog)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
-	//}}AFX_DATA_MAP
+   CDialog::DoDataExchange(pDX);
+   //{{AFX_DATA_MAP(CAboutDialog)
+      // NOTE: the ClassWizard will add DDX and DDV calls here
+   //}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CAboutDialog, CDialog)
-	//{{AFX_MSG_MAP(CAboutDialog)
+   //{{AFX_MSG_MAP(CAboutDialog)
    ON_BN_CLICKED(IDC_VISITWEBSITE_BUTTON, OnVisitWebSiteButton)
-	ON_BN_CLICKED(IDC_CLOSE_BUTTON, OnOK)	
-	//}}AFX_MSG_MAP
+   ON_BN_CLICKED(IDC_CLOSE_BUTTON, OnOK)   
+   //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -77,15 +78,15 @@ END_MESSAGE_MAP()
 
 BOOL CAboutDialog::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-	
+   CDialog::OnInitDialog();
+   
    SetDlgItemText(
       IDC_ABOUT_TEXT_LINE1, PUTTYCS_ABOUT_TEXT_LINE1 );
 
    SetDlgItemText(
       IDC_ABOUT_TEXT_LINE2, PUTTYCS_ABOUT_TEXT_LINE2 );
-	
-	return TRUE;  
+   
+   return TRUE;  
 }
 
 /**
@@ -94,10 +95,10 @@ BOOL CAboutDialog::OnInitDialog()
 
 void CAboutDialog::OnVisitWebSiteButton() 
 {
-	ShellExecute( NULL, 
-                 "open", 
+   ShellExecute( NULL, 
+                 PUTTYCS_SHELL_EXECUTE_OPEN, 
                  PUTTYCS_URL_HOMEPAGE, 
                  NULL, 
                  NULL, 
-                 SW_SHOWNORMAL );	
+                 SW_SHOWNORMAL );   
 }

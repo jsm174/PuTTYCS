@@ -27,7 +27,10 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
+ *             Added command history clear message
+ *             Added AltGr support
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -37,18 +40,21 @@
 
 #define PUTTYCS_WINDOW_CLASS_PUTTY          _T( "PuTTY" )
 
-#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.0 - PuTTY Command Sender")
-#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.0")
+#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.1 - PuTTY Command Sender")
+#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.1")
 
-#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS 1.0")
+#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS 1.1")
 
-#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.0" )
+#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.1" )
 #define PUTTYCS_ABOUT_TEXT_LINE2            _T( "© 2005  Jason Millard. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD     _T( "Add Filter" )
 #define PUTTYCS_WINDOW_TITLE_FILTER_EDIT    _T( "Edit Filter" )
 #define PUTTYCS_WINDOW_TITLE_FILTER_COPY    _T( "Copy Filter" )
+#define PUTTYCS_WINDOW_TITLE_OPEN_SCRIPT    _T( "Open PuTTYCS Script" )
 
+#define PUTTYCS_MESSAGEBOX_CMDHISTORY       _T( "Are you sure you want to\nclear the command history?" )
+        
 #define PUTTYCS_URL_HOMEPAGE                _T( "http://www.millardsoftware.com/puttycs/index.php?app=1" )
 
 #define PUTTYCS_FILTER_ALL                  _T( "All PuTTYs||+*")
@@ -85,6 +91,8 @@
 #define PUTTYCS_PREF_ARRANGE_ON_STARTUP     _T( "arrangeOnStartup" )
 #define PUTTYCS_PREF_UNHIDE_ON_EXIT         _T( "unhideOnExit" )
 
+#define PUTTYCS_PREF_USE_ALTGR              _T( "useAltGr" )
+
 #define PUTTYCS_PREF_SEND_CR                _T( "sendCR" )
 
 #define PUTTYCS_SENDKEY_BUTTON_UP           _T( "{UP}" )
@@ -93,8 +101,7 @@
 #define PUTTYCS_SENDKEY_BUTTON_LEFT         _T( "{LEFT}" )
 #define PUTTYCS_SENDKEY_BUTTON_CAPSLOCK     _T( "{CAPSLOCK}" )
 
-#define PUTTYCS_SENDKEY_BUTTON_CLEAR        _T( "^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m" \
-                                                "^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m" ) 
+#define PUTTYCS_SENDKEY_BUTTON_CLEAR        _T( "^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m^m" ) 
 
 #define PUTTYCS_SENDKEY_BUTTON_BREAK        _T( "^c" )
 #define PUTTYCS_SENDKEY_BUTTON_ENDTELNET    _T( "^]" )
@@ -111,25 +118,35 @@
 #define PUTTYCS_SENDKEY_BUTTON_LEFTPAREN    _T( "{LEFTPAREN}" )
 #define PUTTYCS_SENDKEY_BUTTON_RIGHTPAREN   _T( "{RIGHTPAREN}" )
 #define PUTTYCS_SENDKEY_BUTTON_PERCENT      _T( "{PERCENT}" )
+#define PUTTYCS_SENDKEY_BUTTON_ALTGR        _T( "%^" )
 
 #define PUTTYCS_SENDKEY_DELAY_0             _T( "{DELAY=0}" )
 
-#define PUTTYCS_SENDKEY_CHAR_PLUS           '+'
-#define PUTTYCS_SENDKEY_CHAR_AT             '@'
-#define PUTTYCS_SENDKEY_CHAR_CARET          '^'
-#define PUTTYCS_SENDKEY_CHAR_TILDE          '~'
-#define PUTTYCS_SENDKEY_CHAR_LEFTBRACE      '{'
-#define PUTTYCS_SENDKEY_CHAR_RIGHTBRACE     '}'
-#define PUTTYCS_SENDKEY_CHAR_LEFTPAREN      '('
-#define PUTTYCS_SENDKEY_CHAR_RIGHTPAREN     ')'
-#define PUTTYCS_SENDKEY_CHAR_PERCENT        '%'
+#define PUTTYCS_SENDKEY_CHAR_PLUS           _T( '+' )
+#define PUTTYCS_SENDKEY_CHAR_TILDE          _T( '~' )
+#define PUTTYCS_SENDKEY_CHAR_LEFTBRACE      _T( '{' )
+#define PUTTYCS_SENDKEY_CHAR_CARET          _T( '^' )
+#define PUTTYCS_SENDKEY_CHAR_AT             _T( '@' )
+#define PUTTYCS_SENDKEY_CHAR_RIGHTBRACE     _T( '}' )
+#define PUTTYCS_SENDKEY_CHAR_LEFTPAREN      _T( '(' )
+#define PUTTYCS_SENDKEY_CHAR_RIGHTPAREN     _T( ')' )
+#define PUTTYCS_SENDKEY_CHAR_PERCENT        _T( '%' )
+#define PUTTYCS_SENDKEY_CHAR_RIGHTPAREN     _T( ')' )
 
-#define PUTTYCS_CASCADE_DIMENSION_WIDTH     600
-#define PUTTYCS_CASCADE_DIMENSION_HEIGHT    400
+#define PUTTYCS_ALTGR_KEYS                  _T( "~#{[|`^@]}€" )
 
 #define PUTTYCS_SCRIPT_FILETYPE             _T( "PuTTYCS Scripts (*.pcs)|*.pcs||" )
 
-#define PUTTYCS_WILDCMP_WILDCARD            '*'
-#define PUTTYCS_WILDCMP_ANYCHAR             '?'
+#define PUTTYCS_WILDCMP_WILDCARD            _T( '*' )
+#define PUTTYCS_WILDCMP_ANYCHAR             _T( '?' )
+
+#define PUTTYCS_SHELL_EXECUTE_OPEN          _T( "open" )
+
+#define PUTTYCS_FILE_MODE_READ              _T( "r" )
+
+#define PUTTYCS_EMPTY_STRING                _T( "" )
+
+#define PUTTYCS_CASCADE_DIMENSION_WIDTH     600
+#define PUTTYCS_CASCADE_DIMENSION_HEIGHT    400
 
 #endif // !defined(DEFINES_H__INCLUDED_)

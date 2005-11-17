@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #include "stdafx.h"
@@ -46,11 +47,11 @@ static char THIS_FILE[] = __FILE__;
  */
 
 CFiltersDialog::CFiltersDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CFiltersDialog::IDD, pParent)
+   : CDialog(CFiltersDialog::IDD, pParent)
 {
    //{{AFX_DATA_INIT(CFiltersDialog)
-		// NOTE: the ClassWizard will add member initialization here
-	//}}AFX_DATA_INIT
+      // NOTE: the ClassWizard will add member initialization here
+   //}}AFX_DATA_INIT
 }
 
 /**
@@ -59,27 +60,27 @@ CFiltersDialog::CFiltersDialog(CWnd* pParent /*=NULL*/)
 
 void CFiltersDialog::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CFiltersDialog)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
-	//}}AFX_DATA_MAP
+   CDialog::DoDataExchange(pDX);
+   //{{AFX_DATA_MAP(CFiltersDialog)
+      // NOTE: the ClassWizard will add DDX and DDV calls here
+   //}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CFiltersDialog, CDialog)
-	//{{AFX_MSG_MAP(CFiltersDialog)
-  	ON_LBN_SELCHANGE(IDC_FILTERS_LISTBOX, RefreshDialog)
+   //{{AFX_MSG_MAP(CFiltersDialog)
+   ON_LBN_SELCHANGE(IDC_FILTERS_LISTBOX, RefreshDialog)
    ON_LBN_DBLCLK(IDC_FILTERS_LISTBOX, OnEditButton)
-	ON_BN_CLICKED(IDC_ADD_BUTTON, OnAddButton)
+   ON_BN_CLICKED(IDC_ADD_BUTTON, OnAddButton)
    ON_BN_CLICKED(IDC_EDIT_BUTTON, OnEditButton)
- 	ON_BN_CLICKED(IDC_COPY_BUTTON, OnCopyButton)
-	ON_BN_CLICKED(IDC_REMOVE_BUTTON, OnRemoveButton)
-  	ON_BN_CLICKED(IDC_REMOVE_ALL_BUTTON, OnRemoveAllButton)
-	ON_BN_CLICKED(IDC_MOVEUP_BUTTON, OnMoveUpButton)
-	ON_BN_CLICKED(IDC_MOVEDOWN_BUTTON, OnMoveDownButton)
+   ON_BN_CLICKED(IDC_COPY_BUTTON, OnCopyButton)
+   ON_BN_CLICKED(IDC_REMOVE_BUTTON, OnRemoveButton)
+   ON_BN_CLICKED(IDC_REMOVE_ALL_BUTTON, OnRemoveAllButton)
+   ON_BN_CLICKED(IDC_MOVEUP_BUTTON, OnMoveUpButton)
+   ON_BN_CLICKED(IDC_MOVEDOWN_BUTTON, OnMoveDownButton)
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
    ON_BN_CLICKED(IDC_CANCEL_BUTTON, OnCancel)
-	ON_BN_CLICKED(IDC_APPLY_BUTTON, OnApplyButton)			
-	//}}AFX_MSG_MAP
+   ON_BN_CLICKED(IDC_APPLY_BUTTON, OnApplyButton)         
+   //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -121,13 +122,13 @@ void CFiltersDialog::setFilter( int filter )
 
 BOOL CFiltersDialog::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-		
+   CDialog::OnInitDialog();
+      
    m_bChanges = false;
   
-	InitFilterList( m_iFilter );
-	
-	return TRUE;
+   InitFilterList( m_iFilter );
+   
+   return TRUE;
 }
 
 /**
@@ -144,7 +145,7 @@ void CFiltersDialog::InitFilterList( int pos )
    {
       CString csFilter = m_csaFilters.GetAt(loop);
       
-	   ((CListBox*) GetDlgItem(IDC_FILTERS_LISTBOX))->
+      ((CListBox*) GetDlgItem(IDC_FILTERS_LISTBOX))->
          AddString( csFilter.Mid(0, 
             csFilter.Find( PUTTYCS_FILTER_NAME_SEPARATOR)) );
    }   
@@ -171,8 +172,8 @@ void CFiltersDialog::RefreshDialog()
       csFilter.Find( PUTTYCS_FILTER_NAME_SEPARATOR );
 
    if ( pos != -1 )
-   {		  
-	  SetDlgItemText( IDC_FILTERLIST_EDIT, 
+   {        
+     SetDlgItemText( IDC_FILTERLIST_EDIT, 
          csFilter.Mid(pos + 2) );
    }
 
@@ -223,7 +224,7 @@ void CFiltersDialog::OnAddButton()
 
       m_bChanges = true;
 
-	   InitFilterList( m_csaFilters.GetSize() - 1 );
+      InitFilterList( m_csaFilters.GetSize() - 1 );
    }
 
    delete pDialog;
@@ -242,8 +243,8 @@ void CFiltersDialog::OnEditButton()
    {
       CString csFilterName;
       
-	  ((CListBox*) GetDlgItem(IDC_FILTERS_LISTBOX))->
-        GetText( index, csFilterName );
+      ((CListBox*) GetDlgItem(IDC_FILTERS_LISTBOX))->
+         GetText( index, csFilterName );
 
       CString csFilterList;
       GetDlgItemText(IDC_FILTERLIST_EDIT, csFilterList);
@@ -260,13 +261,13 @@ void CFiltersDialog::OnEditButton()
       if ( pDialog->DoModal() == IDOK )
       {
          m_csaFilters.SetAt( index, 
-	         pDialog->getFilterName() +
+            pDialog->getFilterName() +
             PUTTYCS_FILTER_NAME_SEPARATOR + 
             pDialog->getFilterList() );
 
-  	      m_bChanges = true;
+         m_bChanges = true;
 
-		   InitFilterList( index );
+         InitFilterList( index );
       }
 
       delete pDialog;
@@ -286,10 +287,10 @@ void CFiltersDialog::OnCopyButton()
    {
       CString csFilterName;      
 
-	   ((CListBox*) GetDlgItem(IDC_FILTERS_LISTBOX))->
+      ((CListBox*) GetDlgItem(IDC_FILTERS_LISTBOX))->
          GetText( index, csFilterName );
 
-	   csFilterName = "Copy of " + csFilterName;
+      csFilterName = "Copy of " + csFilterName;
 
       CString csFilterList;
       GetDlgItemText( IDC_FILTERLIST_EDIT, csFilterList );
@@ -301,7 +302,7 @@ void CFiltersDialog::OnCopyButton()
          PUTTYCS_WINDOW_TITLE_FILTER_COPY );
 
       pDialog->setFilterName( csFilterName );
-	   pDialog->setFilterList( csFilterList );
+      pDialog->setFilterList( csFilterList );
    
       if ( pDialog->DoModal() == IDOK )
       {
@@ -310,11 +311,11 @@ void CFiltersDialog::OnCopyButton()
              PUTTYCS_FILTER_NAME_SEPARATOR + 
              pDialog->getFilterList() );
 
-		   m_bChanges = true;
+         m_bChanges = true;
 
-		   InitFilterList( m_csaFilters.GetSize() - 1 );
-      }	  
-   }	
+         InitFilterList( m_csaFilters.GetSize() - 1 );
+      }     
+   }   
 }
 
 /**
@@ -333,7 +334,7 @@ void CFiltersDialog::OnRemoveButton()
       m_bChanges = true;
 
       InitFilterList( index - 
-         (1 * (index == m_csaFilters.GetSize())) );	
+         (1 * (index == m_csaFilters.GetSize())) );   
    }
 }
 
@@ -344,7 +345,7 @@ void CFiltersDialog::OnRemoveButton()
 void CFiltersDialog::OnRemoveAllButton() 
 {
    for ( int loop = m_csaFilters.GetSize() - 1;loop > 0; loop-- )
-   {	     
+   {        
       m_csaFilters.RemoveAt(loop);
    }
 
@@ -373,9 +374,9 @@ void CFiltersDialog::OnMoveUpButton()
       m_csaFilters.SetAt( index - 1, csFilter );
       m_csaFilters.SetAt( index, csTempFilter );
 
-	   m_bChanges = true;
+      m_bChanges = true;
 
-      InitFilterList( index - 1);	
+      InitFilterList( index - 1);   
    }
 }
 
@@ -399,7 +400,7 @@ void CFiltersDialog::OnMoveDownButton()
       m_csaFilters.SetAt( index + 1, csFilter );
       m_csaFilters.SetAt( index, csTempFilter );
 
-	   m_bChanges = true;
+      m_bChanges = true;
 
       InitFilterList( index + 1 );
    }
@@ -413,7 +414,7 @@ void CFiltersDialog::OnOKButton()
 {
     OnApplyButton();
 
-	 OnOK();	
+    OnOK();   
 }
 
 /**

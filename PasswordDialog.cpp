@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #include "stdafx.h"
@@ -46,11 +47,11 @@ static char THIS_FILE[] = __FILE__;
  */
 
 CPasswordDialog::CPasswordDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CPasswordDialog::IDD, pParent)
+   : CDialog(CPasswordDialog::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CPasswordDialog)
-		// NOTE: the ClassWizard will add member initialization here	
-	//}}AFX_DATA_INIT
+   //{{AFX_DATA_INIT(CPasswordDialog)
+      // NOTE: the ClassWizard will add member initialization here   
+   //}}AFX_DATA_INIT
 }
 
 /**
@@ -59,16 +60,16 @@ CPasswordDialog::CPasswordDialog(CWnd* pParent /*=NULL*/)
 
 void CPasswordDialog::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPasswordDialog)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
-	//}}AFX_DATA_MAP
+   CDialog::DoDataExchange(pDX);
+   //{{AFX_DATA_MAP(CPasswordDialog)
+      // NOTE: the ClassWizard will add DDX and DDV calls here
+   //}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CPasswordDialog, CDialog)
-	//{{AFX_MSG_MAP(CPasswordDialog)
-	ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
-	//}}AFX_MSG_MAP
+   //{{AFX_MSG_MAP(CPasswordDialog)
+   ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
+   //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -77,7 +78,7 @@ END_MESSAGE_MAP()
 
 void CPasswordDialog::setPassword( CString csPassword )
 {
-	m_csPassword = csPassword;
+   m_csPassword = csPassword;
 }
 
 /**
@@ -86,7 +87,7 @@ void CPasswordDialog::setPassword( CString csPassword )
 
 CString CPasswordDialog::getPassword()
 {
-	return m_csPassword;
+   return m_csPassword;
 }
 
 /**
@@ -95,12 +96,12 @@ CString CPasswordDialog::getPassword()
 
 BOOL CPasswordDialog::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-	
+   CDialog::OnInitDialog();
+   
    SetDlgItemText(
       IDC_PASSWORD_CEDIT, CBase64::decode(m_csPassword) );
 
-	return TRUE;  
+   return TRUE;  
 }
 
 /**
@@ -113,7 +114,7 @@ void CPasswordDialog::OnOKButton()
    
    ((CEdit*) GetDlgItem(IDC_PASSWORD_CEDIT))->
       GetWindowText( csPassword );
-	
+   
    m_csPassword =
       CBase64::encode( csPassword );
 

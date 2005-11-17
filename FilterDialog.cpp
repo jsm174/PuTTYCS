@@ -27,7 +27,8 @@
  *
  * REVISION HISTORY:
  *
- * 11/05/2005: Initial version                       J. Millard
+ * 11/07/2005: Initial version                       J. Millard
+ * 11/17/2005: Added UNICODE support                 J. Millard
  */
 
 #include "stdafx.h"
@@ -45,11 +46,11 @@ static char THIS_FILE[] = __FILE__;
  */
 
 CFilterDialog::CFilterDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CFilterDialog::IDD, pParent)
+   : CDialog(CFilterDialog::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CFilterDialog)
-		// NOTE: the ClassWizard will add member initialization here
-	//}}AFX_DATA_INIT
+   //{{AFX_DATA_INIT(CFilterDialog)
+      // NOTE: the ClassWizard will add member initialization here
+   //}}AFX_DATA_INIT
 }
 
 /**
@@ -58,18 +59,18 @@ CFilterDialog::CFilterDialog(CWnd* pParent /*=NULL*/)
 
 void CFilterDialog::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CFilterDialog)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
-	//}}AFX_DATA_MAP
+   CDialog::DoDataExchange(pDX);
+   //{{AFX_DATA_MAP(CFilterDialog)
+      // NOTE: the ClassWizard will add DDX and DDV calls here
+   //}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CFilterDialog, CDialog)
-	//{{AFX_MSG_MAP(CFilterDialog)
-	ON_EN_CHANGE(IDC_FILTERNAME_EDIT, OnChangeFilterName)
-	ON_EN_CHANGE(IDC_FILTERLIST_EDIT, OnChangeFilterList)
-	ON_BN_CLICKED(IDC_OK_BUTTON, OnOK)
-	//}}AFX_MSG_MAP
+   //{{AFX_MSG_MAP(CFilterDialog)
+   ON_EN_CHANGE(IDC_FILTERNAME_EDIT, OnChangeFilterName)
+   ON_EN_CHANGE(IDC_FILTERLIST_EDIT, OnChangeFilterList)
+   ON_BN_CLICKED(IDC_OK_BUTTON, OnOK)
+   //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -78,16 +79,16 @@ END_MESSAGE_MAP()
 
 BOOL CFilterDialog::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-	
-	SetWindowText( m_csWindowTitle );
+   CDialog::OnInitDialog();
+   
+   SetWindowText( m_csWindowTitle );
 
-	SetDlgItemText( IDC_FILTERNAME_EDIT, m_csFilterName );
+   SetDlgItemText( IDC_FILTERNAME_EDIT, m_csFilterName );
    SetDlgItemText( IDC_FILTERLIST_EDIT, m_csFilterList );
 
-	RefreshDialog();
-	
-	return TRUE;
+   RefreshDialog();
+   
+   return TRUE;
 }
 
 /**
@@ -96,11 +97,11 @@ BOOL CFilterDialog::OnInitDialog()
 
 void CFilterDialog::RefreshDialog()
 {
-	((CButton*) GetDlgItem(IDC_OK_BUTTON))->EnableWindow(
+   ((CButton*) GetDlgItem(IDC_OK_BUTTON))->EnableWindow(
       (!m_csFilterName.IsEmpty()) && 
-		(m_csFilterName.Find(PUTTYCS_FILTER_NAME_SEPARATOR) == -1) &&
-		(!m_csFilterList.IsEmpty()) &&
-      (m_csFilterList.Find(PUTTYCS_FILTER_NAME_SEPARATOR) == -1) );		
+       (m_csFilterName.Find(PUTTYCS_FILTER_NAME_SEPARATOR) == -1) &&
+      (!m_csFilterList.IsEmpty()) &&
+       (m_csFilterList.Find(PUTTYCS_FILTER_NAME_SEPARATOR) == -1) );      
 }
 
 /**
@@ -118,7 +119,7 @@ void CFilterDialog::setWindowTitle( CString csWindowTitle )
 
 CString CFilterDialog::getFilterName( )
 {
-	return m_csFilterName;
+   return m_csFilterName;
 }
 
 /**
@@ -136,7 +137,7 @@ void CFilterDialog::setFilterName( CString csFilterName )
 
 CString CFilterDialog::getFilterList( )
 {
-	return m_csFilterList;
+   return m_csFilterList;
 }
 
 /** 
@@ -173,5 +174,5 @@ void CFilterDialog::OnChangeFilterList()
    m_csFilterList.TrimLeft();
    m_csFilterList.TrimRight();
 
-   RefreshDialog();	
+   RefreshDialog();   
 }
