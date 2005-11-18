@@ -31,6 +31,7 @@
  * 11/17/2005: Added UNICODE support                 J. Millard
  *             Added command history clear button
  *             Added AltGr support
+ * 11/18/2005: Fixed AltGr support                   J. Millard
  */
 
 #include "stdafx.h"
@@ -78,12 +79,6 @@ CPuTTYCSDialog::CPuTTYCSDialog(CWnd* pParent /*=NULL*/)
 
    m_pSymbolSmall->CreatePointFont(
       80, PUTTYCS_FONT_SYMBOL );
-
-   /**
-    * AltGR Keys
-    */
-
-   m_csAltGrKeys = PUTTYCS_ALTGR_KEYS;
 }
 
 /**
@@ -249,14 +244,6 @@ void CPuTTYCSDialog::LoadPreferences()
    m_iSendCR =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_SEND_CR, 1 );
-
-   /**
-    * Use AltGr
-    */
-
-   m_iUseAltGr =
-      AfxGetApp()->GetProfileInt(
-         PUTTYCS_APP_NAME, PUTTYCS_PREF_USE_ALTGR, 0 );
 }
 
 /**
@@ -363,12 +350,6 @@ void CPuTTYCSDialog::SavePreferences()
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
       PUTTYCS_PREF_SEND_CR, m_iSendCR );
 
-   /**
-    * Use AltGR
-    */
-
-   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
-      PUTTYCS_PREF_USE_ALTGR, m_iUseAltGr );
 }
 
 /**
@@ -1245,13 +1226,6 @@ void CPuTTYCSDialog::OnPreferencesButton()
    pDialog->
       setTransition( m_iTransition );
 
-   /**
-    * Keyboard
-    */
-
-   pDialog->
-      setUseAltGr( m_iUseAltGr );
-
    if ( pDialog->DoModal() == IDOK )
    {  
       /**
@@ -1293,14 +1267,6 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
       m_iTransition =
          pDialog->getTransition();
-
-      /**
-       * Keyboard
-       */
-
-      m_iUseAltGr = 
-         pDialog->getUseAltGr();
-
 
       /**
        * Window refresh
@@ -1458,15 +1424,6 @@ void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool parse )
       for ( int loop = 0; loop < csBuffer.GetLength(); loop++ )
       {
          TCHAR ch = csBuffer.GetAt(loop);
-
-         if ( m_iUseAltGr )
-         {            
-            if ( m_csAltGrKeys.Find(ch) != -1 )
-            {
-               csOutput +=
-                  PUTTYCS_SENDKEY_BUTTON_ALTGR;
-            }
-         }
 
          if ( ch == PUTTYCS_SENDKEY_CHAR_PLUS )
          {

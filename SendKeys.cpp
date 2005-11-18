@@ -6,6 +6,10 @@
  * This is a modified version of SendKeys in C++ by lallousx86@yahoo.com.
  *
  * http://www.codeproject.com/cpp/sendkeys_cpp_Article.asp
+ *
+ * REVISION HISTORY:
+ *
+ * 11/18/2005: Added code to send right ALT          J. Millard
  */             
  
 /* 
@@ -70,6 +74,7 @@ Todo
 const WORD CSendKeys::VKKEYSCANSHIFTON = 0x01;
 const WORD CSendKeys::VKKEYSCANCTRLON  = 0x02;
 const WORD CSendKeys::VKKEYSCANALTON   = 0x04;
+const WORD CSendKeys::VKKEYSCANRALTON  = 0x06;
 const WORD CSendKeys::INVALIDKEY       = 0xFFFF;
 
 const BYTE CSendKeys::ExtendedVKeys[MaxExtendedVKeys] =
@@ -83,7 +88,8 @@ const BYTE CSendKeys::ExtendedVKeys[MaxExtendedVKeys] =
     VK_PRIOR, // PgUp
     VK_NEXT,  //  PgDn
     VK_INSERT,
-    VK_DELETE
+    VK_DELETE,
+    VK_RMENU
 };
 
 CSendKeys::CSendKeys()
@@ -300,6 +306,9 @@ void CSendKeys::SendKey(WORD MKey, WORD NumTimes, bool GenDownMsg)
   if (BitSet(HIBYTE(MKey), VKKEYSCANALTON))
     SendKeyDown(VK_MENU, 1, false);
 
+  if (BitSet(HIBYTE(MKey), VKKEYSCANRALTON))
+    SendKeyDown(VK_RMENU, 1, false);
+
   // Send the actual VKey
   SendKeyDown(LOBYTE(MKey), NumTimes, GenDownMsg, true);
 
@@ -312,6 +321,9 @@ void CSendKeys::SendKey(WORD MKey, WORD NumTimes, bool GenDownMsg)
 
   if (BitSet(HIBYTE(MKey), VKKEYSCANALTON))
     SendKeyUp(VK_MENU);
+
+  if (BitSet(HIBYTE(MKey), VKKEYSCANRALTON))
+    SendKeyUp(VK_RMENU);
 }
 
 // Implements a simple binary search to locate special key name strings

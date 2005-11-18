@@ -44,7 +44,6 @@
 #define IDC_ALWAYSONTOP_CHECKBOX        1107
 #define IDC_TOOLWINDOW_CHECKBOX         1108
 #define IDC_TRANSITION_EDIT             1109
-#define IDC_USEALTGR_CHECKBOX           1110
 #define IDC_FILTERS_LISTBOX             1200
 #define IDC_ADD_BUTTON                  1201
 #define IDC_COPY_BUTTON                 1202

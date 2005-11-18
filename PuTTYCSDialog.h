@@ -31,6 +31,7 @@
  * 11/17/2005: Added UNICODE support                 J. Millard
  *             Added command cistory clear button          
  *             Added AltGr support                  
+ * 11/18/2005: Fixed AltGr support                   J. Millard
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -65,8 +66,6 @@ public:
 protected:
 
    HICON m_hIcon;
-
-   CString m_csAltGrKeys;
 
    bool m_bIsClosing;   
    int m_iDialogHeight;
@@ -114,12 +113,6 @@ protected:
     */
 
    int m_iSendCR;
-
-   /**
-    * Keyboard
-    */ 
-
-   int m_iUseAltGr;
 
    /**
     * Fonts

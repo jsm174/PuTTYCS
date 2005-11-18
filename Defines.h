@@ -31,6 +31,7 @@
  * 11/17/2005: Added UNICODE support                 J. Millard
  *             Added command history clear message
  *             Added AltGr support
+ * 11/18/2005: Fixed AltGr support                   J. Millard
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -40,12 +41,12 @@
 
 #define PUTTYCS_WINDOW_CLASS_PUTTY          _T( "PuTTY" )
 
-#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.1 - PuTTY Command Sender")
-#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.1")
+#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.1a - PuTTY Command Sender")
+#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.1a")
 
-#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS 1.1")
+#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS 1.1a")
 
-#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.1" )
+#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.1a" )
 #define PUTTYCS_ABOUT_TEXT_LINE2            _T( "© 2005  Jason Millard. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD     _T( "Add Filter" )
@@ -118,7 +119,7 @@
 #define PUTTYCS_SENDKEY_BUTTON_LEFTPAREN    _T( "{LEFTPAREN}" )
 #define PUTTYCS_SENDKEY_BUTTON_RIGHTPAREN   _T( "{RIGHTPAREN}" )
 #define PUTTYCS_SENDKEY_BUTTON_PERCENT      _T( "{PERCENT}" )
-#define PUTTYCS_SENDKEY_BUTTON_ALTGR        _T( "%^" )
+#define PUTTYCS_SENDKEY_BUTTON_ALTGR        _T( "%" )
 
 #define PUTTYCS_SENDKEY_DELAY_0             _T( "{DELAY=0}" )
 
@@ -132,8 +133,6 @@
 #define PUTTYCS_SENDKEY_CHAR_RIGHTPAREN     _T( ')' )
 #define PUTTYCS_SENDKEY_CHAR_PERCENT        _T( '%' )
 #define PUTTYCS_SENDKEY_CHAR_RIGHTPAREN     _T( ')' )
-
-#define PUTTYCS_ALTGR_KEYS                  _T( "~#{[|`^@]}€" )
 
 #define PUTTYCS_SCRIPT_FILETYPE             _T( "PuTTYCS Scripts (*.pcs)|*.pcs||" )
 

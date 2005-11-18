@@ -40,7 +40,7 @@ private:
   enum
   {
     MaxSendKeysRecs  = 71,
-    MaxExtendedVKeys = 10
+    MaxExtendedVKeys = 11
   };
 
   /*
@@ -57,6 +57,7 @@ private:
   static const WORD VKKEYSCANSHIFTON;
   static const WORD VKKEYSCANCTRLON;
   static const WORD VKKEYSCANALTON;
+  static const WORD VKKEYSCANRALTON;
   static const WORD INVALIDKEY;
 
   static key_desc_t KeyNames[MaxSendKeysRecs]; 

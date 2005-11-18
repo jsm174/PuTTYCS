@@ -30,6 +30,7 @@
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
  *             Added AltGr support 
+ * 11/18/2005: Fixed AltGr support                   J. Millard
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -75,9 +76,6 @@ public:
    int getTransition();
    void setTransition(int);
 
-   int getUseAltGr();
-   void setUseAltGr(int);
-
 // Overrides
    // ClassWizard generated virtual function overrides
    //{{AFX_VIRTUAL(CPreferencesDialog)
@@ -96,7 +94,6 @@ protected:
    int m_iToolWindow;   
    int m_iAlwaysOnTop;
    int m_iTransition; 
-   int m_iUseAltGr;
       
    // Generated message map functions
    //{{AFX_MSG(CPreferencesDialog)
@@ -107,7 +104,6 @@ protected:
    afx_msg void OnArrangeOnStartupCheckbox();
    afx_msg void OnUnhideOnExitCheckbox();   
    afx_msg void OnToolWindowCheckbox();
-   afx_msg void OnUseAltGrCheckbox();
    afx_msg void OnAlwaysOnTopCheckbox();
    afx_msg void OnChangeTransition();
    afx_msg void OnOKButton();   

@@ -126,7 +126,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,129,38,50,14
 END
 
-IDD_PREFERENCES_DIALOG DIALOG DISCARDABLE  0, 0, 196, 214
+IDD_PREFERENCES_DIALOG DIALOG DISCARDABLE  0, 0, 196, 180
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferences"
 FONT 8, "MS Sans Serif"
@@ -153,15 +153,11 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,94,82,74,10
     CONTROL         "Unhide PuTTYs on exit",IDC_UNHIDEONEXIT_CHECKBOX,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,94,94,89,10
-    GROUPBOX        "Keyboard:",IDC_STATIC,7,116,182,31
-    CONTROL         "Use AltGr (Ctrl+Alt) for chars: ~ # { [ | ` ^ @ ] } €",
-                    IDC_USEALTGR_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,13,130,171,10
-    GROUPBOX        "Password:",IDC_STATIC,7,151,182,31
+    GROUPBOX        "Password:",IDC_STATIC,7,115,182,31
     CONTROL         "Save password",IDC_SAVEPASSWORD_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,13,164,63,10
-    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,86,193,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,139,193,50,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,128,63,10
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,86,159,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,139,159,50,14
 END
 
 IDD_FILTERS_DIALOG DIALOG DISCARDABLE  0, 0, 200, 178
@@ -228,8 +224,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,0,0
- PRODUCTVERSION 1,1,0,0
+ FILEVERSION 1,1,1,0
+ PRODUCTVERSION 1,1,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -247,14 +243,14 @@ BEGIN
             VALUE "Comments", "Created by Jason Millard\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "PuTTYCS\0"
-            VALUE "FileVersion", "1, 1, 0, 0\0"
+            VALUE "FileVersion", "1, 1, 1, 0\0"
             VALUE "InternalName", "PuTTYCS\0"
             VALUE "LegalCopyright", "Copyright (C) 2005\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "PuTTYCS.EXE\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.1\0"
-            VALUE "ProductVersion", "1, 1, 0, 0\0"
+            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.1a\0"
+            VALUE "ProductVersion", "1, 1, 1, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -296,7 +292,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 189
         TOPMARGIN, 7
-        BOTTOMMARGIN, 207
+        BOTTOMMARGIN, 173
     END
 
     IDD_FILTERS_DIALOG, DIALOG

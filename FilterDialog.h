@@ -52,7 +52,7 @@ public:
 
    void setWindowTitle( CString csWindowTitle );
 
-     CString getFilterName();
+   CString getFilterName();
    void setFilterName( CString csFilterName );
 
    CString getFilterList();   

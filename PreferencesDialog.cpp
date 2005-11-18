@@ -75,7 +75,6 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    ON_BN_CLICKED(IDC_ARRANGEONSTARTUP_CHECKBOX, OnArrangeOnStartupCheckbox)
    ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)   
    ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheckbox)
-   ON_BN_CLICKED(IDC_USEALTGR_CHECKBOX, OnUseAltGrCheckbox)
    ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)
    ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)   
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
@@ -227,24 +226,6 @@ void CPreferencesDialog::setTransition(int iTransition)
 }
 
 /**
- * CPreferencesDialog::getUseAltGr()
- */
-
-int CPreferencesDialog::getUseAltGr()
-{
-   return m_iUseAltGr;
-}
-
-/**
- * CPreferencesDialog::setUseAltGr()
- */
-
-void CPreferencesDialog::setUseAltGr(int iUseAltGr)
-{
-   m_iUseAltGr = iUseAltGr;
-}
-
-/**
  * CPreferencesDialog::OnInitDialog()
  */
 
@@ -278,10 +259,6 @@ BOOL CPreferencesDialog::OnInitDialog()
 
    CheckDlgButton( IDC_ALWAYSONTOP_CHECKBOX, 
       m_iAlwaysOnTop );
-
-   CheckDlgButton( IDC_USEALTGR_CHECKBOX, 
-      m_iUseAltGr );
-
 
    SetDlgItemInt( IDC_TRANSITION_EDIT, 
       m_iTransition );
@@ -388,16 +365,6 @@ void CPreferencesDialog::OnAlwaysOnTopCheckbox()
 {
    m_iAlwaysOnTop =
       IsDlgButtonChecked( IDC_ALWAYSONTOP_CHECKBOX );   
-}
-
-/**
- * CPreferencesDialog::OnUseAltGrCheckbox()
- */ 
-
-void CPreferencesDialog::OnUseAltGrCheckbox() 
-{
-   m_iUseAltGr =
-      IsDlgButtonChecked( IDC_USEALTGR_CHECKBOX );   
 }
 
 /**

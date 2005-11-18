@@ -1,16 +1,19 @@
-PuTTYCS - PuTTY Command Sender v1.1
+PuTTYCS - PuTTY Command Sender v1.1a
 (C) 2005 - Jason Millard - jsm174@gmail.com
-Release Date: 11/17/05
+Release Date: 11/18/05
 
 
 
 VERSION HISTORY
 ---------------
 
-11/07/05 - v1.0 - Initial release
-11/17/05 - v1.1 - Added UNICODE support
-                  Added clear command history button
-                  Added AltGr support
+11/18/05 - v1.1a - Fixed AltGr support
+11/17/05 - v1.1  - Added UNICODE support
+                   Added clear command history button
+                   Added AltGr support
+11/07/05 - v1.0  - Initial release
+
+
 
 
 ABOUT
@@ -199,11 +202,6 @@ Preferences are loaded each time PuTTYCS is started.
   
   Unhide PuTTYs on exit
      Unhides any PuTTYs hidden using the Hide button.
-
-
-  Use AltGR for characters ~ # { [ | ` ^ @ ] } €     
-    Sends AltGR (Ctrl+Alt) before sending characters:
-    ~ # { [ | ` ^ @ ] } €
      
 
   Save Password
@@ -220,15 +218,24 @@ This button can be used to a load a PuTTYCS script. A
 script can be any text file and should end with a .pcs
 extension. 
 
-Because the core of PuTTYCS is based on SendKeys in C++.
-Thus the script should follow the syntax that SendKeys 
-used. Some features such as application activation have
-been removed.
+Because the core of PuTTYCS is based on SendKeys in C++,
+the script should follow the syntax defined by SendKeys.
+Some features such as application activation have been
+removed.
 
-For more information on SendKeys in C++ visit the
+For more information on the SendKeys syntax, visit the
 following web site:
 
 http://www.codeproject.com/cpp/sendkeys_cpp_Article.asp
+
+
+CONFIG FILE
+-----------
+
+The configuration file is usually stored in the Windows 
+directory:
+
+   C:\Windows\PuTTYCS.ini
 
 
 KNOWN ISSUES
