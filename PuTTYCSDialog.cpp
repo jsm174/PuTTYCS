@@ -32,6 +32,9 @@
  *             Added command history clear button
  *             Added AltGr support
  * 11/18/2005: Fixed AltGr support                   J. Millard
+ * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
+ *             Navigation through command history
+ *             moves cursor to end of command 
  */
 
 #include "stdafx.h"
@@ -244,6 +247,14 @@ void CPuTTYCSDialog::LoadPreferences()
    m_iSendCR =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_SEND_CR, 1 );
+
+   /**
+    * Emulate Copy/Paste 
+    */
+  
+   m_iEmulateCopyPaste =
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_EMULATE_COPY_PASTE, 1 );
 }
 
 /**
@@ -350,6 +361,12 @@ void CPuTTYCSDialog::SavePreferences()
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
       PUTTYCS_PREF_SEND_CR, m_iSendCR );
 
+   /**
+    * Emulate Copy/Paste 
+    */
+ 
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
+      PUTTYCS_PREF_EMULATE_COPY_PASTE, m_iEmulateCopyPaste );  
 }
 
 /**
@@ -360,7 +377,8 @@ void CPuTTYCSDialog::DoDataExchange(CDataExchange* pDX)
 {
    CDialog::DoDataExchange(pDX);
    //{{AFX_DATA_MAP(CPuTTYCSDialog)
-   //}}AFX_DATA_MAP
+   DDX_Control(pDX, IDC_COMMAND_EDIT, m_cceCommandEdit);
+    //}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
@@ -393,7 +411,7 @@ BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
    ON_BN_CLICKED(IDC_SEND_BUTTON, OnSendButton)   
    ON_WM_CLOSE()
    ON_WM_HELPINFO()
-	//}}AFX_MSG_MAP
+   //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -482,6 +500,13 @@ BOOL CPuTTYCSDialog::OnInitDialog()
 
    ((CButton*) GetDlgItem(IDC_CLEAR_BUTTON))->
       SetFont( m_pMarlettSmall );
+
+   /**
+    * Command edit
+    */
+
+   m_cceCommandEdit.SetEmulateCopyPaste( 
+      m_iEmulateCopyPaste );
 
    /**
     * Send CR
@@ -614,7 +639,7 @@ void CPuTTYCSDialog::RefreshDialog()
    
    SendMessage(WM_NEXTDLGCTL, (WPARAM) hWnd, TRUE); 
 
-   ((CEdit*) GetDlgItem( IDC_COMMAND_EDIT) )->SetFocus();    
+   m_cceCommandEdit.SetFocus();
 
    ((CButton*) GetDlgItem(IDC_CMDHISTORYUP_BUTTON))->
       EnableWindow( m_csaCmdHistory.GetSize() > 0 );
@@ -1006,8 +1031,8 @@ void CPuTTYCSDialog::OnCmdHistoryUpButton()
          m_csaCmdHistory.GetSize() - 1;
    }
 
-   ((CEdit*) GetDlgItem(IDC_COMMAND_EDIT))->
-      SetWindowText( m_csaCmdHistory.GetAt(m_iCmdHistory) );
+   m_cceCommandEdit.SetText( 
+      m_csaCmdHistory.GetAt(m_iCmdHistory) );
 
    RefreshDialog();
 }
@@ -1026,8 +1051,8 @@ void CPuTTYCSDialog::OnCmdHistoryDownButton()
       m_iCmdHistory = 0;
    }
 
-   ((CEdit*) GetDlgItem(IDC_COMMAND_EDIT))->
-      SetWindowText( m_csaCmdHistory.GetAt(m_iCmdHistory) );
+   m_cceCommandEdit.SetText( 
+      m_csaCmdHistory.GetAt(m_iCmdHistory) );
 
    RefreshDialog();
 }
@@ -1038,7 +1063,7 @@ void CPuTTYCSDialog::OnCmdHistoryDownButton()
 
 void CPuTTYCSDialog::OnCmdHistoryClearButton() 
 {
-	if ( m_csaCmdHistory.GetSize() > 0 )
+   if ( m_csaCmdHistory.GetSize() > 0 )
    {
       if ( MessageBox( 
          PUTTYCS_MESSAGEBOX_CMDHISTORY,
@@ -1048,8 +1073,7 @@ void CPuTTYCSDialog::OnCmdHistoryClearButton()
          m_csaCmdHistory.RemoveAll();
          m_iCmdHistory = 0;
        
-         ((CEdit*) GetDlgItem(IDC_COMMAND_EDIT))->
-            SetWindowText( PUTTYCS_EMPTY_STRING );
+         m_cceCommandEdit.SetText( PUTTYCS_EMPTY_STRING );
       }         
    }
 
@@ -1226,6 +1250,13 @@ void CPuTTYCSDialog::OnPreferencesButton()
    pDialog->
       setTransition( m_iTransition );
 
+   /**
+    * Emulate Copy/Paste
+    */
+
+   pDialog->
+      setEmulateCopyPaste( m_iEmulateCopyPaste );
+
    if ( pDialog->DoModal() == IDOK )
    {  
       /**
@@ -1267,6 +1298,15 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
       m_iTransition =
          pDialog->getTransition();
+
+      /**
+       * Emulate Copy/Paste
+       */
+
+      m_iEmulateCopyPaste =
+         pDialog->getEmulateCopyPaste();
+      
+      m_cceCommandEdit.SetEmulateCopyPaste( m_iEmulateCopyPaste );
 
       /**
        * Window refresh
@@ -1375,11 +1415,10 @@ void CPuTTYCSDialog::OnSendButton()
 
    CString csCommand;
    GetDlgItemText(IDC_COMMAND_EDIT, csCommand);
- 
+
    CString csTempCommand = csCommand;
    csTempCommand.TrimLeft();
    csTempCommand.TrimRight();
-
 
    if (csTempCommand.GetLength() > 0 )
    {
@@ -1387,9 +1426,8 @@ void CPuTTYCSDialog::OnSendButton()
    }
  
    m_iCmdHistory = m_csaCmdHistory.GetSize();
-   
-   ((CEdit*) GetDlgItem(IDC_COMMAND_EDIT))->
-      SetWindowText( PUTTYCS_EMPTY_STRING );
+
+   m_cceCommandEdit.SetText( PUTTYCS_EMPTY_STRING );
 
    sendBuffer( csCommand, true );
 

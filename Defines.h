@@ -32,6 +32,7 @@
  *             Added command history clear message
  *             Added AltGr support
  * 11/18/2005: Fixed AltGr support                   J. Millard
+ * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -41,12 +42,12 @@
 
 #define PUTTYCS_WINDOW_CLASS_PUTTY          _T( "PuTTY" )
 
-#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.1a - PuTTY Command Sender")
-#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.1a")
+#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.2 - PuTTY Command Sender")
+#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.2")
 
-#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS 1.1a")
+#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS 1.2")
 
-#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.1a" )
+#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.2" )
 #define PUTTYCS_ABOUT_TEXT_LINE2            _T( "© 2005  Jason Millard. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD     _T( "Add Filter" )
@@ -92,7 +93,7 @@
 #define PUTTYCS_PREF_ARRANGE_ON_STARTUP     _T( "arrangeOnStartup" )
 #define PUTTYCS_PREF_UNHIDE_ON_EXIT         _T( "unhideOnExit" )
 
-#define PUTTYCS_PREF_USE_ALTGR              _T( "useAltGr" )
+#define PUTTYCS_PREF_EMULATE_COPY_PASTE     _T( "emulateCopyPaste" )
 
 #define PUTTYCS_PREF_SEND_CR                _T( "sendCR" )
 

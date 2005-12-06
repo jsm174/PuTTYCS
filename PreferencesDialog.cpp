@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
  */
 
 #include "stdafx.h"
@@ -76,6 +77,7 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)   
    ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheckbox)
    ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)
+   ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
    ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)   
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
    //}}AFX_MSG_MAP
@@ -94,7 +96,7 @@ int CPreferencesDialog::getSavePassword()
  * CPreferencesDialog::setSavePassword()
  */
 
-void CPreferencesDialog::setSavePassword(int iSavePassword)
+void CPreferencesDialog::setSavePassword( int iSavePassword )
 {
    m_iSavePassword = iSavePassword;
 }
@@ -112,7 +114,7 @@ int CPreferencesDialog::getAutoArrange()
  * CPreferencesDialog::setAutoArrange()
  */
 
-void CPreferencesDialog::setAutoArrange(int iAutoArrange)
+void CPreferencesDialog::setAutoArrange( int iAutoArrange )
 {
    m_iAutoArrange = iAutoArrange;
 }
@@ -130,7 +132,7 @@ int CPreferencesDialog::getAutoMinimize()
  * CPreferencesDialog::setAutoMinimize()
  */
 
-void CPreferencesDialog::setAutoMinimize(int iAutoMinimize)
+void CPreferencesDialog::setAutoMinimize( int iAutoMinimize )
 {
    m_iAutoMinimize = iAutoMinimize;
 }
@@ -148,7 +150,7 @@ int CPreferencesDialog::getArrangeOnStartup()
  * CPreferencesDialog::setArrangeOnStartup()
  */
 
-void CPreferencesDialog::setArrangeOnStartup(int iArrangeOnStartup)
+void CPreferencesDialog::setArrangeOnStartup( int iArrangeOnStartup )
 {
    m_iArrangeOnStartup = iArrangeOnStartup;
 }
@@ -166,7 +168,7 @@ int CPreferencesDialog::getUnhideOnExit()
  * CPreferencesDialog::setUnhideOnExit()
  */
 
-void CPreferencesDialog::setUnhideOnExit(int iUnhideOnExit)
+void CPreferencesDialog::setUnhideOnExit( int iUnhideOnExit )
 {
    m_iUnhideOnExit = iUnhideOnExit;
 }
@@ -184,7 +186,7 @@ int CPreferencesDialog::getToolWindow()
  * CPreferencesDialog::setToolWindow()
  */
 
-void CPreferencesDialog::setToolWindow(int iToolWindow)
+void CPreferencesDialog::setToolWindow( int iToolWindow )
 {
    m_iToolWindow = iToolWindow;
 }
@@ -202,7 +204,7 @@ int CPreferencesDialog::getAlwaysOnTop()
  * CPreferencesDialog::setAlwaysOnTop()
  */
 
-void CPreferencesDialog::setAlwaysOnTop(int iAlwaysOnTop)
+void CPreferencesDialog::setAlwaysOnTop( int iAlwaysOnTop )
 {
    m_iAlwaysOnTop = iAlwaysOnTop;
 }
@@ -220,9 +222,27 @@ int CPreferencesDialog::getTransition()
  * CPreferencesDialog::setTransition()
  */
 
-void CPreferencesDialog::setTransition(int iTransition)
+void CPreferencesDialog::setTransition( int iTransition )
 {
    m_iTransition = iTransition;
+}
+
+/**
+ * CPreferencesDialog::getEmulateCopyPaste()
+ */
+
+int CPreferencesDialog::getEmulateCopyPaste()
+{
+   return m_iEmulateCopyPaste;
+}
+
+/**
+ * CPreferencesDialog::setEmulateCopyPaste()
+ */
+
+void CPreferencesDialog::setEmulateCopyPaste( int iEmulateCopyPaste )
+{
+   m_iEmulateCopyPaste = iEmulateCopyPaste;
 }
 
 /**
@@ -262,6 +282,9 @@ BOOL CPreferencesDialog::OnInitDialog()
 
    SetDlgItemInt( IDC_TRANSITION_EDIT, 
       m_iTransition );
+
+   CheckDlgButton( IDC_EMULATECOPYPASTE_CHECKBOX, 
+      m_iEmulateCopyPaste );
  
    UpdateDialog();
 
@@ -376,6 +399,18 @@ void CPreferencesDialog::OnChangeTransition()
    m_iTransition =
       GetDlgItemInt( IDC_TRANSITION_EDIT );
 
+   UpdateDialog();
+}
+
+/**
+ * CPreferencesDialog::OnEmulateCopyPasteCheckbox()
+ */ 
+
+void CPreferencesDialog::OnEmulateCopyPasteCheckbox() 
+{
+   m_iEmulateCopyPaste =
+      IsDlgButtonChecked( IDC_EMULATECOPYPASTE_CHECKBOX );   
+  
    UpdateDialog();
 }
 

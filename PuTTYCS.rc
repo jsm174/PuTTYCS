@@ -88,7 +88,7 @@ BEGIN
     PUSHBUTTON      "&Hide",IDC_HIDE_BUTTON,127,34,38,14
     PUSHBUTTON      "&Filters",IDC_FILTERS_BUTTON,167,34,38,14
     LTEXT           "Command:",IDC_STATIC,7,54,40,8
-    EDITTEXT        IDC_COMMAND_EDIT,7,65,198,66,ES_MULTILINE | 
+    EDITTEXT        IDC_COMMAND_EDIT,7,67,198,60,ES_MULTILINE | 
                     ES_AUTOVSCROLL
     RADIOBUTTON     "¿",IDC_SENDCR_PUSHBUTTON,159,54,10,9,BS_PUSHLIKE | 
                     WS_TABSTOP
@@ -126,7 +126,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,129,38,50,14
 END
 
-IDD_PREFERENCES_DIALOG DIALOG DISCARDABLE  0, 0, 196, 180
+IDD_PREFERENCES_DIALOG DIALOG DISCARDABLE  0, 0, 196, 217
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferences"
 FONT 8, "MS Sans Serif"
@@ -153,11 +153,15 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,94,82,74,10
     CONTROL         "Unhide PuTTYs on exit",IDC_UNHIDEONEXIT_CHECKBOX,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,94,94,89,10
-    GROUPBOX        "Password:",IDC_STATIC,7,115,182,31
+    GROUPBOX        "Mouse:",IDC_STATIC,7,117,182,31
+    CONTROL         "Selection copies, right button pastes",
+                    IDC_EMULATECOPYPASTE_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,13,130,170,10
+    GROUPBOX        "Password:",IDC_STATIC,7,152,182,31
     CONTROL         "Save password",IDC_SAVEPASSWORD_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,13,128,63,10
-    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,86,159,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,139,159,50,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,165,63,10
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,86,196,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,139,196,50,14
 END
 
 IDD_FILTERS_DIALOG DIALOG DISCARDABLE  0, 0, 200, 178
@@ -224,8 +228,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,1,0
- PRODUCTVERSION 1,1,1,0
+ FILEVERSION 1,2,0,0
+ PRODUCTVERSION 1,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -243,14 +247,14 @@ BEGIN
             VALUE "Comments", "Created by Jason Millard\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "PuTTYCS\0"
-            VALUE "FileVersion", "1, 1, 1, 0\0"
+            VALUE "FileVersion", "1, 2, 0, 0\0"
             VALUE "InternalName", "PuTTYCS\0"
             VALUE "LegalCopyright", "Copyright (C) 2005\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "PuTTYCS.EXE\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.1a\0"
-            VALUE "ProductVersion", "1, 1, 1, 0\0"
+            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.2\0"
+            VALUE "ProductVersion", "1, 2, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -292,7 +296,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 189
         TOPMARGIN, 7
-        BOTTOMMARGIN, 173
+        BOTTOMMARGIN, 210
     END
 
     IDD_FILTERS_DIALOG, DIALOG

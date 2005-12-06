@@ -20,20 +20,20 @@
 #define IDC_CMDHISTORYUP_BUTTON         1008
 #define IDC_CMDHISTORYDOWN_BUTTON       1009
 #define IDC_CMDHISTORYCLEAR_BUTTON      1010
-#define IDC_COMMAND_EDIT                1012
-#define IDC_UP_BUTTON                   1013
-#define IDC_LEFT_BUTTON                 1014
-#define IDC_RIGHT_BUTTON                1015
-#define IDC_DOWN_BUTTON                 1016
-#define IDC_CLEAR_BUTTON                1017
-#define IDC_BREAK_BUTTON                1018
-#define IDC_ENDTELNET_BUTTON            1019
-#define IDC_ESCAPE_BUTTON               1020
-#define IDC_ENTER_BUTTON                1021
-#define IDC_PASSWORD_BUTTON             1022
-#define IDC_SCRIPT_BUTTON               1023
-#define IDC_PREFERENCES_BUTTON          1024
-#define IDC_SEND_BUTTON                 1025
+#define IDC_COMMAND_EDIT                1011
+#define IDC_UP_BUTTON                   1012
+#define IDC_LEFT_BUTTON                 1013
+#define IDC_RIGHT_BUTTON                1014
+#define IDC_DOWN_BUTTON                 1015
+#define IDC_CLEAR_BUTTON                1016
+#define IDC_BREAK_BUTTON                1017
+#define IDC_ENDTELNET_BUTTON            1018
+#define IDC_ESCAPE_BUTTON               1019
+#define IDC_ENTER_BUTTON                1020
+#define IDC_PASSWORD_BUTTON             1021
+#define IDC_SCRIPT_BUTTON               1022
+#define IDC_PREFERENCES_BUTTON          1023
+#define IDC_SEND_BUTTON                 1024
 #define IDC_SAVEPASSWORD_CHECKBOX       1100
 #define IDC_AUTOARRANGE_OFF_RADIO       1101
 #define IDC_AUTOARRANGE_TILE_RADIO      1102
@@ -44,6 +44,7 @@
 #define IDC_ALWAYSONTOP_CHECKBOX        1107
 #define IDC_TOOLWINDOW_CHECKBOX         1108
 #define IDC_TRANSITION_EDIT             1109
+#define IDC_EMULATECOPYPASTE_CHECKBOX   1110
 #define IDC_FILTERS_LISTBOX             1200
 #define IDC_ADD_BUTTON                  1201
 #define IDC_COPY_BUTTON                 1202
@@ -63,6 +64,7 @@
 #define IDC_ABOUT_TEXT_LINE2            1502
 #define IDC_VISITWEBSITE_BUTTON         1503
 #define IDC_ABOUT_TEXT_LINE3            1504
+#define IDC_COMMAND_RICHEDIT            1600
 
 // Next default values for new objects
 // 
@@ -70,7 +72,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1600
+#define _APS_NEXT_CONTROL_VALUE         1601
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

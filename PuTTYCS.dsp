@@ -94,7 +94,7 @@ LINK32=link.exe
 # PROP Intermediate_Dir "PuTTYCS___Win32_Debug_Unicode"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D _WIN32_WINNT=0x401 /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_UNICODE" /D "UNICODE" /D _WIN32_WINNT=0x401 /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "UNICODE" /D "_UNICODE" /D "MBCS" /D _WIN32_WINNT=0x401 /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG" /d "_AFXDLL"
@@ -153,6 +153,10 @@ SOURCE=.\Base64.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CommandEdit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\FilterDialog.cpp
 # End Source File
 # Begin Source File
@@ -195,6 +199,10 @@ SOURCE=.\AboutDialog.h
 # Begin Source File
 
 SOURCE=.\Base64.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CommandEdit.h
 # End Source File
 # Begin Source File
 

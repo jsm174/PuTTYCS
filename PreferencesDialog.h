@@ -31,6 +31,7 @@
  * 11/17/2005: Added UNICODE support                 J. Millard
  *             Added AltGr support 
  * 11/18/2005: Fixed AltGr support                   J. Millard
+ * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -52,29 +53,32 @@ public:
       // NOTE: the ClassWizard will add data members here
    //}}AFX_DATA
 
-   void setSavePassword(int);   
    int getSavePassword();
-
-   void setAutoArrange(int);
+   void setSavePassword( int iSavePassword );   
+   
    int getAutoArrange();
-
+   void setAutoArrange( int iAutoArrange );
+   
    int getAutoMinimize();
-   void setAutoMinimize(int);
+   void setAutoMinimize( int iAutoMinimize );
 
    int getArrangeOnStartup();
-   void setArrangeOnStartup(int);
+   void setArrangeOnStartup( int iArrangeOnStartup );
 
    int getUnhideOnExit();
-   void setUnhideOnExit(int);
+   void setUnhideOnExit( int iUnhideOnExit);
 
    int getToolWindow();
-   void setToolWindow(int);   
+   void setToolWindow( int iToolWindow );   
    
-   void setAlwaysOnTop(int);   
    int getAlwaysOnTop();
-
+   void setAlwaysOnTop( int iAlwaysOnTop );   
+   
    int getTransition();
-   void setTransition(int);
+   void setTransition( int iTransition );
+
+   int getEmulateCopyPaste();
+   void setEmulateCopyPaste( int iEmulateCopyPaste );
 
 // Overrides
    // ClassWizard generated virtual function overrides
@@ -94,6 +98,7 @@ protected:
    int m_iToolWindow;   
    int m_iAlwaysOnTop;
    int m_iTransition; 
+   int m_iEmulateCopyPaste;
       
    // Generated message map functions
    //{{AFX_MSG(CPreferencesDialog)
@@ -106,6 +111,7 @@ protected:
    afx_msg void OnToolWindowCheckbox();
    afx_msg void OnAlwaysOnTopCheckbox();
    afx_msg void OnChangeTransition();
+   afx_msg void OnEmulateCopyPasteCheckbox();
    afx_msg void OnOKButton();   
    //}}AFX_MSG
    DECLARE_MESSAGE_MAP()

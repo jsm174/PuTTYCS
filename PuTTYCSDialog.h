@@ -32,6 +32,9 @@
  *             Added command cistory clear button          
  *             Added AltGr support                  
  * 11/18/2005: Fixed AltGr support                   J. Millard
+ * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
+ *             Navigation through command history
+ *               moves cursor to end of command 
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -40,6 +43,8 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "CommandEdit.h"
 
 class CPuTTYCSDialog : public CDialog
 {
@@ -52,7 +57,8 @@ public:
 // Dialog Data
    //{{AFX_DATA(CPuTTYCSDialog)
    enum { IDD = IDD_PUTTYCS_DIALOG };
-   //}}AFX_DATA
+   CCommandEdit   m_cceCommandEdit;
+    //}}AFX_DATA
 
    // ClassWizard generated virtual function overrides
    //{{AFX_VIRTUAL(CPuTTYCSDialog)
@@ -109,6 +115,12 @@ protected:
    int m_iUnhideOnExit;
 
    /**
+    * Emulate Copy/Paste
+    */
+
+   int m_iEmulateCopyPaste;
+
+   /**
     * Send CR
     */
 
@@ -160,8 +172,8 @@ protected:
    afx_msg void OnSendButton();   
    afx_msg void OnClose();
    afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
-	afx_msg void OnCmdHistoryClearButton();
-	//}}AFX_MSG
+   afx_msg void OnCmdHistoryClearButton();
+   //}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 
 private:

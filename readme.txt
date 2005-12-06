@@ -1,19 +1,19 @@
-PuTTYCS - PuTTY Command Sender v1.1a
+PuTTYCS - PuTTY Command Sender v1.2
 (C) 2005 - Jason Millard - jsm174@gmail.com
-Release Date: 11/18/05
-
+Release Date: 12/06/05
 
 
 VERSION HISTORY
 ---------------
 
+12/06/05 - v1.2  - Added mouse Copy/Paste emulation
+                   Navigation through command history
+                   moves cursor to end of command 
 11/18/05 - v1.1a - Fixed AltGr support
 11/17/05 - v1.1  - Added UNICODE support
                    Added clear command history button
                    Added AltGr support
 11/07/05 - v1.0  - Initial release
-
-
 
 
 ABOUT
@@ -203,6 +203,11 @@ Preferences are loaded each time PuTTYCS is started.
   Unhide PuTTYs on exit
      Unhides any PuTTYs hidden using the Hide button.
      
+
+  Selection copies, right button pastes
+     Enable this to emulate PuTTY's selection to 
+     clipboard, and right mouse button paste feature.
+
 
   Save Password
      Saves the password used in the Send Password dialog.
