@@ -85,9 +85,9 @@ protected:
    afx_msg void OnMoveUpButton();
    afx_msg void OnMoveDownButton();
    afx_msg void OnOKButton();   
-   afx_msg void OnCancelButton();
    afx_msg void OnApplyButton();
-   //}}AFX_MSG
+	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
+	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 };
 

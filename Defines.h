@@ -33,6 +33,8 @@
  *             Added AltGr support
  * 11/18/2005: Fixed AltGr support                   J. Millard
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
+ * 12/15/2005: Added minimize to systray.            J. Millard
+ *             Added tab completion
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -42,12 +44,12 @@
 
 #define PUTTYCS_WINDOW_CLASS_PUTTY          _T( "PuTTY" )
 
-#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.2 - PuTTY Command Sender")
-#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.2")
+#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.3 - PuTTY Command Sender")
+#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.3")
 
-#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS 1.2")
+#define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS...")
 
-#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.2" )
+#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.3" )
 #define PUTTYCS_ABOUT_TEXT_LINE2            _T( "© 2005  Jason Millard. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD     _T( "Add Filter" )
@@ -82,6 +84,7 @@
 
 #define PUTTYCS_PREF_WINDOW_TOOL            _T( "toolWindow" )
 #define PUTTYCS_PREF_WINDOW_ALWAYS_ON_TOP   _T( "alwaysOnTop" )
+#define PUTTYCS_PREF_MINIMIZE_TO_SYSTRAY    _T( "minimizeToSysTray" )
 #define PUTTYCS_PREF_WINDOW_TRANSITION      _T( "transition" )
 
 #define PUTTYCS_PREF_AUTO_ARRANGE           _T( "autoArrange" )
@@ -93,6 +96,7 @@
 #define PUTTYCS_PREF_ARRANGE_ON_STARTUP     _T( "arrangeOnStartup" )
 #define PUTTYCS_PREF_UNHIDE_ON_EXIT         _T( "unhideOnExit" )
 
+#define PUTTYCS_PREF_TAB_COMPLETION         _T( "tabCompletion" )
 #define PUTTYCS_PREF_EMULATE_COPY_PASTE     _T( "emulateCopyPaste" )
 
 #define PUTTYCS_PREF_SEND_CR                _T( "sendCR" )
@@ -109,6 +113,7 @@
 #define PUTTYCS_SENDKEY_BUTTON_ENDTELNET    _T( "^]" )
 
 #define PUTTYCS_SENDKEY_BUTTON_ESCAPE       _T( "{ESC}" )
+#define PUTTYCS_SENDKEY_BUTTON_TAB          _T( "{TAB}" )
 #define PUTTYCS_SENDKEY_BUTTON_ENTER        _T( "^m" )
 
 #define PUTTYCS_SENDKEY_BUTTON_PLUS         _T( "{PLUS}" )

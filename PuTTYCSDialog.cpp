@@ -35,6 +35,8 @@
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
  *             Navigation through command history
  *             moves cursor to end of command 
+ * 12/15/2005: Added minimize to system tray         J. Millard
+ *             Added tab completion
  */
 
 #include "stdafx.h"
@@ -82,6 +84,12 @@ CPuTTYCSDialog::CPuTTYCSDialog(CWnd* pParent /*=NULL*/)
 
    m_pSymbolSmall->CreatePointFont(
       80, PUTTYCS_FONT_SYMBOL );
+
+   /**
+    * Taskbar Notification Icon
+    */
+
+   m_pTNI = NULL;
 }
 
 /**
@@ -91,6 +99,10 @@ CPuTTYCSDialog::CPuTTYCSDialog(CWnd* pParent /*=NULL*/)
 CPuTTYCSDialog::~CPuTTYCSDialog()
 {
    SavePreferences();
+
+   /**
+    * Fonts
+    */
 
    if ( m_pMarlettNormal )
    {
@@ -105,6 +117,18 @@ CPuTTYCSDialog::~CPuTTYCSDialog()
    if ( m_pSymbolSmall )
    {
       delete m_pSymbolSmall;
+   }
+
+   /**
+    * Taskbar Notification Icon
+    */
+
+   if ( m_pTNI )
+   {
+      Shell_NotifyIcon( NIM_DELETE, 
+         (NOTIFYICONDATA*) m_pTNI ); 
+
+      delete m_pTNI;
    }
 }
 
@@ -216,10 +240,14 @@ void CPuTTYCSDialog::LoadPreferences()
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_ALWAYS_ON_TOP, 1 );
 
+   m_iMinimizeToSysTray =
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_MINIMIZE_TO_SYSTRAY, 1 );
+
    m_iTransition =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_TRANSITION, 25 );
-
+  
    /**
     * Auto arrange 
     */
@@ -249,12 +277,17 @@ void CPuTTYCSDialog::LoadPreferences()
          PUTTYCS_APP_NAME, PUTTYCS_PREF_SEND_CR, 1 );
 
    /**
-    * Emulate Copy/Paste 
+    * Keyboard/Mouse 
     */
   
    m_iEmulateCopyPaste =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_EMULATE_COPY_PASTE, 1 );
+
+   m_iTabCompletion =
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_TAB_COMPLETION, 0 );
+
 }
 
 /**
@@ -335,6 +368,10 @@ void CPuTTYCSDialog::SavePreferences()
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
       PUTTYCS_PREF_WINDOW_ALWAYS_ON_TOP, m_iAlwaysOnTop );
 
+
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
+      PUTTYCS_PREF_MINIMIZE_TO_SYSTRAY, m_iMinimizeToSysTray );
+
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
       PUTTYCS_PREF_WINDOW_TRANSITION, m_iTransition );
 
@@ -362,11 +399,11 @@ void CPuTTYCSDialog::SavePreferences()
       PUTTYCS_PREF_SEND_CR, m_iSendCR );
 
    /**
-    * Emulate Copy/Paste 
+    * Keyboard/Mouse
     */
  
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
-      PUTTYCS_PREF_EMULATE_COPY_PASTE, m_iEmulateCopyPaste );  
+      PUTTYCS_PREF_TAB_COMPLETION, m_iTabCompletion );  
 }
 
 /**
@@ -408,34 +445,121 @@ BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
    ON_BN_CLICKED(IDC_PASSWORD_BUTTON, OnPasswordButton)
    ON_BN_CLICKED(IDC_PREFERENCES_BUTTON, OnPreferencesButton)
    ON_BN_CLICKED(IDC_SCRIPT_BUTTON, OnScriptButton)
-   ON_BN_CLICKED(IDC_SEND_BUTTON, OnSendButton)   
-   ON_WM_CLOSE()
+   ON_BN_CLICKED(IDC_SEND_BUTTON, OnSendButton)  
+   ON_MESSAGE(WM_TNI_MESSAGE, OnTrayNotify)
+   ON_COMMAND(IDMI_SYSTRAYOPEN_MENUITEM, OnOpenMenuItem)
+   ON_COMMAND(IDMI_SYSTRAYABOUT_MENUITEM, OnAboutButton)
+   ON_COMMAND(IDMI_SYSTRAYCASCADE_MENUITEM, OnCascadeButton)
+   ON_COMMAND(IDMI_SYSTRAYTILE_MENUITEM, OnTileButton)
+   ON_COMMAND(IDMI_SYSTRAYMINIMIZE_MENUITEM, OnMinimizeButton)
+   ON_COMMAND(IDMI_SYSTRAYHIDE_MENUITEM, OnHideButton)
+   ON_COMMAND(IDMI_SYSTRAYEXIT_MENUITEM, OnOK)   
    ON_WM_HELPINFO()
    //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////
-// CPuTTYCSDialog message handlers
+/**
+ * CPuTTYCSDialog::SetSysTrayTip()
+ */
+
+void CPuTTYCSDialog::SetSysTrayTip( CString csTip )
+{
+   DWORD dwMessage = NIM_MODIFY;
+
+   if ( !m_pTNI )
+   {
+      m_pTNI = new NOTIFYICONDATA;
+      
+      ZeroMemory(
+         m_pTNI, sizeof(NOTIFYICONDATA) );
+
+      m_pTNI->hWnd =
+         ((CWnd*) this)->GetSafeHwnd();
+      
+	  m_pTNI->cbSize = sizeof( NOTIFYICONDATA );
+      m_pTNI->uCallbackMessage = WM_TNI_MESSAGE;
+	  m_pTNI->uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
+      m_pTNI->hIcon	= m_hIcon;
+  	  m_pTNI->uTimeout = 1000;
+      m_pTNI->uID = 1;	
+
+      dwMessage = NIM_ADD;
+   }
+
+   _tcscpy( m_pTNI->szTip, csTip );  
+ 
+   Shell_NotifyIcon( dwMessage,
+      (NOTIFYICONDATA*) m_pTNI ); 
+}
 
 /**
- * PreTranslateMessage()
+ * CPuTTYCSDialog::PreTranslateMessage()
  */
 
 BOOL CPuTTYCSDialog::PreTranslateMessage(MSG* pMsg) 
 {
    if ( pMsg->message == WM_KEYDOWN )
    {
-      if ( pMsg->wParam==VK_ESCAPE )
+      if ( pMsg->wParam == VK_ESCAPE )
       {
          pMsg->wParam = NULL;
       } 
+      else if ( pMsg->wParam == VK_TAB )
+      {
+		 if ( m_iTabCompletion )
+		 {
+            UINT uiCtrlId = 
+               ((CWnd*) GetFocus())->GetDlgCtrlID();
+
+            if ( uiCtrlId == IDC_COMMAND_EDIT )
+			{           
+               CString csCommand = 
+                  m_cceCommandEdit.GetText();
+                        
+               sendCommand( csCommand, true );			   
+               pMsg->wParam = NULL;
+            }
+         }
+      }
    }
 
    return CDialog::PreTranslateMessage(pMsg);
 }
 
 /**
- * OnInitDialog()
+ * CPuTTYCSDialog::DestroyWindow()
+ */
+
+BOOL CPuTTYCSDialog::DestroyWindow() 
+{
+   m_bIsClosing = true;
+
+   if ( m_iUnhideOnExit )
+   {
+      m_obaWindows.RemoveAll();
+
+      ::EnumWindows( enumwindowsProc, (LPARAM) this );
+    
+      SortWindows();
+
+      for ( int loop = 0;
+         loop < m_obaWindows.GetSize(); loop++ )
+      {
+         CWnd* pWnd =
+            (CWnd*) m_obaWindows.GetAt( loop );
+             
+         if ( !pWnd->IsWindowVisible() )
+         { 
+            pWnd->ShowWindow( SW_SHOW );
+         }
+      }
+   }
+	
+	return CDialog::DestroyWindow();
+}
+
+/**
+ * CPuTTYCSDialog::OnInitDialog()
  */
 
 BOOL CPuTTYCSDialog::OnInitDialog()
@@ -519,7 +643,7 @@ BOOL CPuTTYCSDialog::OnInitDialog()
       SetCheck( m_iSendCR );
 
    /**
-    * System Menu
+    * Menus
     */
 
    CMenu* pMenu = GetSystemMenu( FALSE );
@@ -533,6 +657,8 @@ BOOL CPuTTYCSDialog::OnInitDialog()
       pMenu->AppendMenu( MF_STRING,
          IDM_ABOUT_PUTTYCS, PUTTYCS_WINDOW_TITLE_ABOUT );
    }
+
+   m_cmMenu.LoadMenu( IDM_SYSTRAY_MENU );
 
    /**
     * Dialog size
@@ -563,15 +689,26 @@ BOOL CPuTTYCSDialog::OnInitDialog()
 
 void CPuTTYCSDialog::OnSysCommand(UINT nID, LPARAM lParam)
 {
-   if ((nID & 0xFFF0) == IDM_ABOUT_PUTTYCS)
+   if ( (nID & 0xFFF0) == IDM_ABOUT_PUTTYCS )
    {
-      CAboutDialog dialog;
-      dialog.DoModal();
+      OnAboutButton();
    }
+   else if ( (nID & 0xFFF0) == SC_MINIMIZE )
+   {
+      if ( m_iMinimizeToSysTray )
+      {
+         ShowWindow( SW_HIDE );  
+         SetSysTrayTip( PUTTYCS_WINDOW_TITLE_APP );
+      }
+      else
+      {
+         CDialog::OnSysCommand(nID, lParam);
+      }
+   }   
    else
    {
       CDialog::OnSysCommand(nID, lParam);
-   }   
+   }
 }
 
 /**
@@ -626,6 +763,16 @@ BOOL CPuTTYCSDialog::OnHelpInfo(HELPINFO* pHelpInfo)
                  SW_SHOWNORMAL );   
 
    return TRUE;
+}
+
+/**
+ * CPuTTYCSDialog::OnAboutButton()
+ */
+
+void CPuTTYCSDialog::OnAboutButton()
+{
+   CAboutDialog dialog;
+   dialog.DoModal();  
 }
 
 /**
@@ -701,35 +848,22 @@ void CPuTTYCSDialog::UpdateDialog()
 }
 
 /**
- * CPuTTYCSDialog::OnClose()
- */
+ * CPuTTYCSDialog::OnOpenMenuItem()
+ */ 
 
-void CPuTTYCSDialog::OnClose() 
-{
-   m_bIsClosing = true;
-
-   if ( m_iUnhideOnExit )
+void CPuTTYCSDialog::OnOpenMenuItem()
+{ 
+   if ( m_pTNI )
    {
-      m_obaWindows.RemoveAll();
+      Shell_NotifyIcon( NIM_DELETE, 
+         (NOTIFYICONDATA*) m_pTNI ); 
 
-      ::EnumWindows( enumwindowsProc, (LPARAM) this );
-    
-      SortWindows();
+      delete m_pTNI;
 
-      for ( int loop = 0;
-         loop < m_obaWindows.GetSize(); loop++ )
-      {
-         CWnd* pWnd =
-            (CWnd*) m_obaWindows.GetAt( loop );
-             
-         if ( !pWnd->IsWindowVisible() )
-         { 
-            pWnd->ShowWindow( SW_SHOW );
-         }
-      }
+      m_pTNI = NULL;
    }
 
-   CDialog::OnClose();
+   ShowWindow( SW_SHOW );
 }
 
 /**
@@ -752,7 +886,7 @@ void CPuTTYCSDialog::OnSelChangeFiltersCombobox()
 
          OnMinimizeButton();
   
-         ::Sleep(250);
+         ::Sleep( 250 );
 
          m_iFilter = iFilter;
       }
@@ -771,7 +905,7 @@ void CPuTTYCSDialog::OnSelChangeFiltersCombobox()
 }
 
 /**
- * OnCascadeButton
+ * CPuTTYCSDialog::OnCascadeButton
  */ 
 
 void CPuTTYCSDialog::OnCascadeButton() 
@@ -1195,7 +1329,7 @@ void CPuTTYCSDialog::OnPasswordButton()
       m_csPassword = pDialog->getPassword();
 
       sendBuffer( 
-         CBase64::decode(m_csPassword), true );
+         CBase64::decode(m_csPassword), true, false );
 
       SavePreferences();
    }
@@ -1248,11 +1382,17 @@ void CPuTTYCSDialog::OnPreferencesButton()
       setAlwaysOnTop( m_iAlwaysOnTop );
 
    pDialog->
+      setMinimizeToSysTray( m_iMinimizeToSysTray );
+
+   pDialog->
       setTransition( m_iTransition );
 
    /**
-    * Emulate Copy/Paste
+    * Keyboard/Mouse
     */
+
+   pDialog->
+	   setTabCompletion( m_iTabCompletion );
 
    pDialog->
       setEmulateCopyPaste( m_iEmulateCopyPaste );
@@ -1296,25 +1436,31 @@ void CPuTTYCSDialog::OnPreferencesButton()
       m_iAlwaysOnTop =
          pDialog->getAlwaysOnTop();
 
+      m_iMinimizeToSysTray =
+         pDialog->getMinimizeToSysTray();      
+
       m_iTransition =
          pDialog->getTransition();
 
       /**
-       * Emulate Copy/Paste
+       * Keyboard/Mouse
        */
+
+	  m_iTabCompletion =
+		 pDialog->getTabCompletion();
 
       m_iEmulateCopyPaste =
          pDialog->getEmulateCopyPaste();
       
       m_cceCommandEdit.SetEmulateCopyPaste( m_iEmulateCopyPaste );
-
+      
       /**
        * Window refresh
        */
-
+      
       if ( (iToolWindow != m_iToolWindow) ||
            (iAlwaysOnTop != m_iAlwaysOnTop) )
-      {
+      {                  
          ShowWindow(SW_HIDE);
 
          UpdateDialog();     
@@ -1407,14 +1553,61 @@ void CPuTTYCSDialog::OnScriptButton()
 
 void CPuTTYCSDialog::OnSendButton() 
 {
+   CString csCommand;
+   GetDlgItemText(IDC_COMMAND_EDIT, csCommand);
+
+   sendCommand( csCommand, false );
+}
+
+/**
+ * CPuTTYCSDialog::OnTrayNotify()
+ */
+
+void CPuTTYCSDialog::OnTrayNotify( WPARAM wParam, LPARAM lParam ) 
+{ 
+   UINT uID = (UINT) wParam;
+   UINT uMsg = (UINT) lParam;
+ 	
+   switch ( uMsg ) 
+	{ 
+	   case WM_LBUTTONDBLCLK:     
+
+         OnOpenMenuItem();
+
+		   break;
+	
+	   case WM_RBUTTONDOWN:      
+	   case WM_CONTEXTMENU:
+
+         CPoint pt;	
+    	   GetCursorPos(&pt);     
+
+         m_cmMenu.GetSubMenu(0)->
+            SetDefaultItem( IDMI_SYSTRAYOPEN_MENUITEM, FALSE );	
+
+         m_cmMenu.GetSubMenu(0)->
+            TrackPopupMenu( TPM_BOTTOMALIGN |
+                            TPM_LEFTBUTTON |
+                            TPM_RIGHTBUTTON,
+                            pt.x, pt.y, this );
+
+	  	   break;
+   } 
+
+   return; 
+} 
+
+/**
+ * CPuTTYCSDialog::sendCommand( )
+ */
+
+void CPuTTYCSDialog::sendCommand( CString csCommand, bool bTab ) 
+{
    if ( m_csaCmdHistory.GetSize() == 
       PUTTYCS_PREF_CMDHISTORY_MAX_SIZE )
    {
      m_csaCmdHistory.RemoveAt( 0 ) ;
    }
-
-   CString csCommand;
-   GetDlgItemText(IDC_COMMAND_EDIT, csCommand);
 
    CString csTempCommand = csCommand;
    csTempCommand.TrimLeft();
@@ -1429,7 +1622,7 @@ void CPuTTYCSDialog::OnSendButton()
 
    m_cceCommandEdit.SetText( PUTTYCS_EMPTY_STRING );
 
-   sendBuffer( csCommand, true );
+   sendBuffer( csCommand, bTab, true );
 
    RefreshDialog();  
 }
@@ -1438,12 +1631,12 @@ void CPuTTYCSDialog::OnSendButton()
  * CPuTTYCSDialog::sendBuffer()
  */
 
-void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool parse )
+void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool bTab, bool bParse )
 {
    CString csOutput =
       PUTTYCS_SENDKEY_DELAY_0;
 
-   if ( !parse )
+   if ( !bParse )
    {
       csOutput += csBuffer;
    }
@@ -1461,56 +1654,56 @@ void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool parse )
     
       for ( int loop = 0; loop < csBuffer.GetLength(); loop++ )
       {
-         TCHAR ch = csBuffer.GetAt(loop);
+         TCHAR chChar = csBuffer.GetAt(loop);
 
-         if ( ch == PUTTYCS_SENDKEY_CHAR_PLUS )
+         if ( chChar == PUTTYCS_SENDKEY_CHAR_PLUS )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_PLUS;
          }
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_AT )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_AT )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_AT;
          } 
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_CARET )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_CARET )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_CARET;
          }
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_TILDE )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_TILDE )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_TILDE;
          }
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_LEFTBRACE )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_LEFTBRACE )
          { 
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_LEFTBRACE;
          }
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_RIGHTBRACE )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_RIGHTBRACE )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_RIGHTBRACE;
          }
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_LEFTPAREN )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_LEFTPAREN )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_LEFTPAREN;
          }
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_RIGHTPAREN )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_RIGHTPAREN )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_RIGHTPAREN;
          }
-         else if ( ch == PUTTYCS_SENDKEY_CHAR_PERCENT )
+         else if ( chChar == PUTTYCS_SENDKEY_CHAR_PERCENT )
          {
             csOutput +=
                PUTTYCS_SENDKEY_BUTTON_PERCENT;
          }
          else 
          {
-            csOutput += ch;
+            csOutput += chChar;
          }
       }
 
@@ -1520,7 +1713,12 @@ void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool parse )
             PUTTYCS_SENDKEY_BUTTON_CAPSLOCK;
       }
 
-      if ( m_iSendCR )
+      if ( bTab )
+      {
+         csOutput +=
+            PUTTYCS_SENDKEY_BUTTON_TAB;
+      }
+      else if ( m_iSendCR )
       {
          csOutput +=
             PUTTYCS_SENDKEY_BUTTON_ENTER;    
@@ -1743,5 +1941,3 @@ int CPuTTYCSDialog::Compare( const void *pWndS1, const void *pWndS2 )
     
    return ( csS1 < csS2 );
 }
-
-

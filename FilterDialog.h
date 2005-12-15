@@ -73,7 +73,8 @@ protected:
    virtual BOOL OnInitDialog();
    afx_msg void OnChangeFilterName();
    afx_msg void OnChangeFilterList();   
-   //}}AFX_MSG
+	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
+	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 
    CString m_csFilterName;

@@ -34,7 +34,9 @@
  * 11/18/2005: Fixed AltGr support                   J. Millard
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
  *             Navigation through command history
- *               moves cursor to end of command 
+ *             moves cursor to end of command 
+ * 12/15/2005: Added minimize to system tray         J. Millard
+ *             Added tab completion
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -45,6 +47,8 @@
 #endif // _MSC_VER > 1000
 
 #include "CommandEdit.h"
+
+#define WM_TNI_MESSAGE (WM_USER + 1)
 
 class CPuTTYCSDialog : public CDialog
 {
@@ -62,11 +66,12 @@ public:
 
    // ClassWizard generated virtual function overrides
    //{{AFX_VIRTUAL(CPuTTYCSDialog)
-   public:
+	public:
    virtual BOOL PreTranslateMessage(MSG* pMsg);
-   protected:
+	virtual BOOL DestroyWindow();
+	protected:
    virtual void DoDataExchange(CDataExchange* pDX);   // DDX/DDV support
-   //}}AFX_VIRTUAL
+	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -90,7 +95,7 @@ protected:
    CStringArray m_csaCmdHistory;
    int m_iCmdHistory;
 
-    /**
+   /**
     * Password
     */
    
@@ -103,6 +108,7 @@ protected:
 
    int m_iToolWindow;
    int m_iAlwaysOnTop;
+   int m_iMinimizeToSysTray;
    int m_iTransition;
 
    /**
@@ -113,11 +119,12 @@ protected:
    int m_iAutoMinimize;
    int m_iArrangeOnStartup;   
    int m_iUnhideOnExit;
-
+  
    /**
-    * Emulate Copy/Paste
+    * Keyboard/Mouse
     */
 
+   int m_iTabCompletion;
    int m_iEmulateCopyPaste;
 
    /**
@@ -133,8 +140,9 @@ protected:
    CFont* m_pMarlettNormal;
    CFont* m_pMarlettSmall;
    CFont* m_pSymbolSmall;
- 
-   void sendBuffer(CString csBuffer, bool parse = false);
+    
+   void sendCommand( CString csCommand, bool bTab );
+   void sendBuffer( CString csBuffer, bool bParse = false, bool bTab = false );
 
    void LoadPreferences();
    void SavePreferences();
@@ -148,6 +156,7 @@ protected:
    afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
    afx_msg void OnPaint();
    afx_msg HCURSOR OnQueryDragIcon();
+   afx_msg void OnAboutButton();
    afx_msg void OnSelChangeFiltersCombobox();   
    afx_msg void OnCascadeButton();      
    afx_msg void OnTileButton();
@@ -169,10 +178,11 @@ protected:
    afx_msg void OnPasswordButton();
    afx_msg void OnPreferencesButton();      
    afx_msg void OnScriptButton();   
-   afx_msg void OnSendButton();   
-   afx_msg void OnClose();
+   afx_msg void OnSendButton();      
+   afx_msg void OnTrayNotify(WPARAM wParam, LPARAM lParam);
    afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
    afx_msg void OnCmdHistoryClearButton();
+   afx_msg void OnOpenMenuItem();  
    //}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 
@@ -180,6 +190,11 @@ private:
 
    CSendKeys m_skSendKeys;
    CObArray  m_obaWindows;
+
+   CMenu m_cmMenu;
+
+   NOTIFYICONDATA* m_pTNI;
+   void SetSysTrayTip( CString csTip = PUTTYCS_EMPTY_STRING );
 
    static BOOL CALLBACK enumwindowsProc(HWND hwnd, LPARAM lParam); 
    static int wildcmp(const TCHAR* wild, const TCHAR* string);

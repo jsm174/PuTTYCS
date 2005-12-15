@@ -32,6 +32,8 @@
  *             Added AltGr support 
  * 11/18/2005: Fixed AltGr support                   J. Millard
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
+ * 12/15/2005: Added minimize to system tray         J. Millard
+ *             Added tab completion
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -74,8 +76,14 @@ public:
    int getAlwaysOnTop();
    void setAlwaysOnTop( int iAlwaysOnTop );   
    
+   int getMinimizeToSysTray();
+   void setMinimizeToSysTray( int iMinimizeToSysTray );   
+
    int getTransition();
    void setTransition( int iTransition );
+
+   int getTabCompletion();
+   void setTabCompletion( int iTabCompletion );
 
    int getEmulateCopyPaste();
    void setEmulateCopyPaste( int iEmulateCopyPaste );
@@ -97,8 +105,10 @@ protected:
    int m_iUnhideOnExit;      
    int m_iToolWindow;   
    int m_iAlwaysOnTop;
+   int m_iMinimizeToSysTray;
    int m_iTransition; 
    int m_iEmulateCopyPaste;
+   int m_iTabCompletion;
       
    // Generated message map functions
    //{{AFX_MSG(CPreferencesDialog)
@@ -113,7 +123,10 @@ protected:
    afx_msg void OnChangeTransition();
    afx_msg void OnEmulateCopyPasteCheckbox();
    afx_msg void OnOKButton();   
-   //}}AFX_MSG
+	afx_msg void OnMinimizeToSysTrayCheckbox();
+	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
+	afx_msg void OnTabCompletionCheckbox();
+	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 
    void UpdateDialog();

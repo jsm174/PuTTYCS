@@ -28,6 +28,7 @@
  * REVISION HISTORY:
  *
  * 12/06/2005: Initial version                       J. Millard
+ * 12/15/2005: Added GetText() method                J. Millard
  */
 
 #include "stdafx.h"
@@ -63,6 +64,18 @@ BEGIN_MESSAGE_MAP(CCommandEdit, CEdit)
    ON_WM_RBUTTONUP()
    //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+/**
+ * CCommandEdit::GetText()
+ */ 
+
+CString CCommandEdit::GetText()
+{
+   CString csText;
+   GetWindowText(csText);
+
+   return csText;
+}
 
 /**
  * CCommandEdit::SetText()
@@ -103,8 +116,7 @@ void CCommandEdit::OnLButtonUp(UINT nFlags, CPoint point)
       {                  
          if ( OpenClipboard() ) 
          {      
-            CString csText;
-            GetWindowText(csText);      
+            CString csText = GetText(); 
        
             CString csCommand = 
                csText.Mid( iStart, (iEnd - iStart) );

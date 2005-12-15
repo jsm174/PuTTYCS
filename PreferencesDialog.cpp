@@ -30,6 +30,9 @@
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
+ * 12/15/2005: Added minimize to system tray         J. Millard
+ *             Updated Help/F1 to go visit website   
+ *             Added tab completion
  */
 
 #include "stdafx.h"
@@ -70,17 +73,20 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    //{{AFX_MSG_MAP(CPreferencesDialog)
    ON_BN_CLICKED(IDC_SAVEPASSWORD_CHECKBOX, OnSavePasswordCheckbox)
    ON_BN_CLICKED(IDC_AUTOARRANGE_OFF_RADIO, OnAutoArrangeRadio)
-   ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
-   ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
    ON_BN_CLICKED(IDC_AUTOMINIMIZE_CHECKBOX, OnAutoMinimizeCheckbox)
    ON_BN_CLICKED(IDC_ARRANGEONSTARTUP_CHECKBOX, OnArrangeOnStartupCheckbox)
    ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)   
    ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheckbox)
    ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)
-   ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
    ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)   
+   ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
-   //}}AFX_MSG_MAP
+   ON_BN_CLICKED(IDC_MINIMIZETOSYSTRAY_CHECKBOX, OnMinimizeToSysTrayCheckbox)
+   ON_WM_HELPINFO()
+   ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
+   ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
+   ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /** 
@@ -210,6 +216,24 @@ void CPreferencesDialog::setAlwaysOnTop( int iAlwaysOnTop )
 }
 
 /**
+ * CPreferencesDialog::getMinimizeToSysTray()
+ */
+
+int CPreferencesDialog::getMinimizeToSysTray()
+{
+   return m_iMinimizeToSysTray;
+}
+
+/**
+ * CPreferencesDialog::setMinimizeToSysTray()
+ */
+
+void CPreferencesDialog::setMinimizeToSysTray( int iMinimizeToSysTray )
+{
+   m_iMinimizeToSysTray = iMinimizeToSysTray;
+}
+
+/**
  * CPreferencesDialog::getTransition()
  */
 
@@ -228,6 +252,24 @@ void CPreferencesDialog::setTransition( int iTransition )
 }
 
 /**
+ * CPreferencesDialog::getTabCompletion()
+ */
+
+int CPreferencesDialog::getTabCompletion()
+{
+   return m_iTabCompletion;
+}
+
+/**
+ * CPreferencesDialog::setTabCompletion()
+ */
+
+void CPreferencesDialog::setTabCompletion( int iTabCompletion )
+{
+   m_iTabCompletion = iTabCompletion;
+}
+
+/**
  * CPreferencesDialog::getEmulateCopyPaste()
  */
 
@@ -243,6 +285,22 @@ int CPreferencesDialog::getEmulateCopyPaste()
 void CPreferencesDialog::setEmulateCopyPaste( int iEmulateCopyPaste )
 {
    m_iEmulateCopyPaste = iEmulateCopyPaste;
+}
+
+/**
+ * CPreferencesDialog::OnHelpInfo()
+ */
+
+BOOL CPreferencesDialog::OnHelpInfo(HELPINFO* pHelpInfo) 
+{
+   ShellExecute( NULL, 
+                 PUTTYCS_SHELL_EXECUTE_OPEN, 
+                 PUTTYCS_URL_HOMEPAGE, 
+                 NULL, 
+                 NULL, 
+                 SW_SHOWNORMAL );  
+
+	return TRUE;
 }
 
 /**
@@ -280,9 +338,15 @@ BOOL CPreferencesDialog::OnInitDialog()
    CheckDlgButton( IDC_ALWAYSONTOP_CHECKBOX, 
       m_iAlwaysOnTop );
 
+   CheckDlgButton( IDC_MINIMIZETOSYSTRAY_CHECKBOX, 
+      m_iMinimizeToSysTray );
+
    SetDlgItemInt( IDC_TRANSITION_EDIT, 
       m_iTransition );
 
+   CheckDlgButton( IDC_TABCOMPLETION_CHECKBOX, 
+      m_iTabCompletion );
+ 
    CheckDlgButton( IDC_EMULATECOPYPASTE_CHECKBOX, 
       m_iEmulateCopyPaste );
  
@@ -390,6 +454,16 @@ void CPreferencesDialog::OnAlwaysOnTopCheckbox()
       IsDlgButtonChecked( IDC_ALWAYSONTOP_CHECKBOX );   
 }
 
+/** 
+ * CPreferencesDialog::OnMinimizeToSysTrayCheckbox()
+ */
+
+void CPreferencesDialog::OnMinimizeToSysTrayCheckbox() 
+{
+   m_iMinimizeToSysTray =
+      IsDlgButtonChecked( IDC_MINIMIZETOSYSTRAY_CHECKBOX );	
+}
+
 /**
  * CPreferencesDialog::OnChangeTransition()
  */ 
@@ -402,6 +476,16 @@ void CPreferencesDialog::OnChangeTransition()
    UpdateDialog();
 }
 
+/** 
+ * CPreferencesDialog::OnTabCompletionCheckbox()
+ */
+
+void CPreferencesDialog::OnTabCompletionCheckbox() 
+{
+   m_iTabCompletion =
+      IsDlgButtonChecked( IDC_TABCOMPLETION_CHECKBOX );
+}
+
 /**
  * CPreferencesDialog::OnEmulateCopyPasteCheckbox()
  */ 
@@ -410,8 +494,6 @@ void CPreferencesDialog::OnEmulateCopyPasteCheckbox()
 {
    m_iEmulateCopyPaste =
       IsDlgButtonChecked( IDC_EMULATECOPYPASTE_CHECKBOX );   
-  
-   UpdateDialog();
 }
 
 /** 
@@ -422,3 +504,4 @@ void CPreferencesDialog::OnOKButton()
 {
    CDialog::OnOK();      
 }
+

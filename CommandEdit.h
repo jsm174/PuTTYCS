@@ -28,6 +28,7 @@
  * REVISION HISTORY:
  *
  * 12/06/2005: Initial version                       J. Millard
+ * 12/15/2005: Added GetText() method                J. Millard
  */
 
 #if !defined(AFX_COMMANDEDIT_H__309531A0_E385_4512_83CF_2A230314E589__INCLUDED_)
@@ -43,6 +44,7 @@ class CCommandEdit : public CEdit
 public:
    CCommandEdit();
 
+   CString GetText();
    void SetText( CString csText );
    void SetEmulateCopyPaste( int iEmulateCopyPaste );
 

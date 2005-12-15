@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 12/15/2005: Updated Help/F1 to go visit website   J. Millard
  */
 
 #include "stdafx.h"
@@ -68,19 +69,20 @@ void CFiltersDialog::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CFiltersDialog, CDialog)
    //{{AFX_MSG_MAP(CFiltersDialog)
-   ON_LBN_SELCHANGE(IDC_FILTERS_LISTBOX, RefreshDialog)
-   ON_LBN_DBLCLK(IDC_FILTERS_LISTBOX, OnEditButton)
    ON_BN_CLICKED(IDC_ADD_BUTTON, OnAddButton)
-   ON_BN_CLICKED(IDC_EDIT_BUTTON, OnEditButton)
+   ON_LBN_DBLCLK(IDC_FILTERS_LISTBOX, OnEditButton)
    ON_BN_CLICKED(IDC_COPY_BUTTON, OnCopyButton)
    ON_BN_CLICKED(IDC_REMOVE_BUTTON, OnRemoveButton)
    ON_BN_CLICKED(IDC_REMOVE_ALL_BUTTON, OnRemoveAllButton)
    ON_BN_CLICKED(IDC_MOVEUP_BUTTON, OnMoveUpButton)
    ON_BN_CLICKED(IDC_MOVEDOWN_BUTTON, OnMoveDownButton)
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
-   ON_BN_CLICKED(IDC_CANCEL_BUTTON, OnCancel)
    ON_BN_CLICKED(IDC_APPLY_BUTTON, OnApplyButton)         
-   //}}AFX_MSG_MAP
+   ON_LBN_SELCHANGE(IDC_FILTERS_LISTBOX, RefreshDialog)
+   ON_BN_CLICKED(IDC_EDIT_BUTTON, OnEditButton)
+   ON_BN_CLICKED(IDC_CANCEL_BUTTON, OnCancel)
+	ON_WM_HELPINFO()
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -114,6 +116,22 @@ int CFiltersDialog::getFilter()
 void CFiltersDialog::setFilter( int filter )
 {
    m_iFilter = filter;
+}
+
+/**
+ * CFiltersDialog::OnHelpInfo()
+ */
+
+BOOL CFiltersDialog::OnHelpInfo(HELPINFO* pHelpInfo) 
+{
+   ShellExecute( NULL, 
+                 PUTTYCS_SHELL_EXECUTE_OPEN, 
+                 PUTTYCS_URL_HOMEPAGE, 
+                 NULL, 
+                 NULL, 
+                 SW_SHOWNORMAL );  
+
+	return TRUE;
 }
 
 /**

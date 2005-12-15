@@ -10,6 +10,7 @@
 #define IDD_PASSWORD_DIALOG             113
 #define IDD_FILTERS_DIALOG              114
 #define IDD_FILTER_DIALOG               115
+#define IDM_SYSTRAY_MENU                139
 #define IDC_FILTERS_COMBOBOX            1001
 #define IDC_CASCADE_BUTTON              1002
 #define IDC_TILE_BUTTON                 1003
@@ -45,6 +46,8 @@
 #define IDC_TOOLWINDOW_CHECKBOX         1108
 #define IDC_TRANSITION_EDIT             1109
 #define IDC_EMULATECOPYPASTE_CHECKBOX   1110
+#define IDC_MINIMIZETOSYSTRAY_CHECKBOX  1111
+#define IDC_TABCOMPLETION_CHECKBOX      1112
 #define IDC_FILTERS_LISTBOX             1200
 #define IDC_ADD_BUTTON                  1201
 #define IDC_COPY_BUTTON                 1202
@@ -65,13 +68,20 @@
 #define IDC_VISITWEBSITE_BUTTON         1503
 #define IDC_ABOUT_TEXT_LINE3            1504
 #define IDC_COMMAND_RICHEDIT            1600
+#define IDMI_SYSTRAYOPEN_MENUITEM       32771
+#define IDMI_SYSTRAYCASCADE_MENUITEM    32772
+#define IDMI_SYSTRAYABOUT_MENUITEM      32773
+#define IDMI_SYSTRAYEXIT_MENUITEM       32774
+#define IDMI_SYSTRAYMINIMIZE_MENUITEM   32777
+#define IDMI_SYSTRAYHIDE_MENUITEM       32778
+#define IDMI_SYSTRAYTILE_MENUITEM       32779
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_COMMAND_VALUE         32780
 #define _APS_NEXT_CONTROL_VALUE         1601
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

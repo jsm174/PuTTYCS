@@ -65,7 +65,8 @@ protected:
    //{{AFX_MSG(CAboutDialog)
    virtual BOOL OnInitDialog();
    afx_msg void OnVisitWebSiteButton();
-   //}}AFX_MSG
+	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
+	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 };
 

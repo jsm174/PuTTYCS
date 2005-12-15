@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 12/15/2005: Updated Help/F1 to go visit website   J. Millard
  */
 
 #include "stdafx.h"
@@ -69,8 +70,20 @@ BEGIN_MESSAGE_MAP(CAboutDialog, CDialog)
    //{{AFX_MSG_MAP(CAboutDialog)
    ON_BN_CLICKED(IDC_VISITWEBSITE_BUTTON, OnVisitWebSiteButton)
    ON_BN_CLICKED(IDC_CLOSE_BUTTON, OnOK)   
-   //}}AFX_MSG_MAP
+	ON_WM_HELPINFO()
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+/**
+ * CAboutDialog::OnHelpInfo()
+ */
+
+BOOL CAboutDialog::OnHelpInfo(HELPINFO* pHelpInfo) 
+{
+   OnVisitWebSiteButton();
+   
+   return TRUE;	
+}
 
 /**
  * CAboutDialog::OnInitDialog()

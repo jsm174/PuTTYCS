@@ -1,11 +1,13 @@
-PuTTYCS - PuTTY Command Sender v1.2
+PuTTYCS - PuTTY Command Sender v1.3
 (C) 2005 - Jason Millard - jsm174@gmail.com
-Release Date: 12/06/05
+Release Date: 12/15/05
 
 
 VERSION HISTORY
 ---------------
 
+12/15/05 - v1.3  - Added minimize to system tray
+                   Added tab completion				   
 12/06/05 - v1.2  - Added mouse Copy/Paste emulation
                    Navigation through command history
                    moves cursor to end of command 
@@ -180,6 +182,9 @@ Preferences are loaded each time PuTTYCS is started.
 
   Always on top:
      Display the PuTTYCS on top of all other windows.
+
+  Minimize to system tray:
+     Minimizes PuTTYCS to the system tray.
   
   Transition:
      Sets the amount time (in milliseconds) to pause
@@ -203,6 +208,11 @@ Preferences are loaded each time PuTTYCS is started.
   Unhide PuTTYs on exit
      Unhides any PuTTYs hidden using the Hide button.
      
+
+  Enable Tab Completion
+     Pressing Tab in the command field, sends the command
+     including the Tab key. Useful for file completion in 
+     shells like tcsh.
 
   Selection copies, right button pastes
      Enable this to emulate PuTTY's selection to 
@@ -274,6 +284,12 @@ see that PuTTY windows does not re-arrange themselves
 properly. PuTTYCS gets around this by performing a variety
 of hide, move, resize, and show commands. However, at times
 PuTTYs may not arrange as expected. 
+
+To use Tab completion on several windows, press the Tab
+key and wait until all windows receive the command. Pressing
+the Tab key too early may send an additional Tab to one of
+filtered PuTTY windows.
+
 
 
 FUTURE

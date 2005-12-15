@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 12/15/2005: Updated Help/F1 to go visit website   J. Millard
  */
 
 #include "stdafx.h"
@@ -69,7 +70,8 @@ void CPasswordDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPasswordDialog, CDialog)
    //{{AFX_MSG_MAP(CPasswordDialog)
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
-   //}}AFX_MSG_MAP
+	ON_WM_HELPINFO()
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -88,6 +90,22 @@ void CPasswordDialog::setPassword( CString csPassword )
 CString CPasswordDialog::getPassword()
 {
    return m_csPassword;
+}
+
+/**
+ * CPasswordDialog::OnHelpInfo()
+ */
+
+BOOL CPasswordDialog::OnHelpInfo(HELPINFO* pHelpInfo) 
+{
+   ShellExecute( NULL, 
+                 PUTTYCS_SHELL_EXECUTE_OPEN, 
+                 PUTTYCS_URL_HOMEPAGE, 
+                 NULL, 
+                 NULL, 
+                 SW_SHOWNORMAL );  
+
+	return TRUE;
 }
 
 /**

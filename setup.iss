@@ -28,14 +28,15 @@
 ; REVISION HISTORY:
 ;
 ; 12/06/2005: Initial version                       J. Millard
-; 
+; 12/15/2005: Updated for version 1.3               J. Millard
+;
 
 [Setup]
-AppName=PuTTYCS 1.2
-AppVerName=PuTTY Command Sender 1.2
-VersionInfoVersion=1.2.0.0
+AppName=PuTTYCS 1.3
+AppVerName=PuTTY Command Sender 1.3
+VersionInfoVersion=1.3.0.0
 VersionInfoCopyright=Copyright (C) 2005 Jason Millard
-VersionInfoDescription=PuTTYCS - PuTTY Command Sender 1.2
+VersionInfoDescription=PuTTYCS - PuTTY Command Sender 1.3
 AppPublisher=Jason Millard
 AppPublisherURL=http://www.millardsoftware.com/puttycs
 AppSupportURL=http://www.millardsoftware.com/puttycs
@@ -64,11 +65,11 @@ Source: "README.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\PuTTYCS 1.2"; Filename: "{app}\PuTTYCS.exe"
+Name: "{group}\PuTTYCS 1.3"; Filename: "{app}\PuTTYCS.exe"
 Name: "{group}\README.txt"; Filename: "{app}\README.txt"
-Name: "{userdesktop}\PuTTYCS 1.2"; Filename: "{app}\PuTTYCS.exe"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\PuTTYCS 1.2"; Filename: "{app}\PuTTYCS.exe"; Tasks: quicklaunchicon
+Name: "{userdesktop}\PuTTYCS 1.3"; Filename: "{app}\PuTTYCS.exe"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\PuTTYCS 1.3"; Filename: "{app}\PuTTYCS.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\README.txt"; Description: "{cm:ViewREADME}"; Flags: postinstall shellexec skipifsilent
-Filename: "{app}\PuTTYCS.exe"; Description: "{cm:LaunchProgram,PuTTY Command Sender 1.2}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\PuTTYCS.exe"; Description: "{cm:LaunchProgram,PuTTY Command Sender 1.3}"; Flags: nowait postinstall skipifsilent

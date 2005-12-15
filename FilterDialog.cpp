@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 12/15/2005: Updated Help/F1 to go visit website   J. Millard
  */
 
 #include "stdafx.h"
@@ -70,8 +71,25 @@ BEGIN_MESSAGE_MAP(CFilterDialog, CDialog)
    ON_EN_CHANGE(IDC_FILTERNAME_EDIT, OnChangeFilterName)
    ON_EN_CHANGE(IDC_FILTERLIST_EDIT, OnChangeFilterList)
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOK)
-   //}}AFX_MSG_MAP
+	ON_WM_HELPINFO()
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+/**
+ * CFiltersDialog::OnHelpInfo()
+ */
+
+BOOL CFilterDialog::OnHelpInfo(HELPINFO* pHelpInfo) 
+{
+   ShellExecute( NULL, 
+                 PUTTYCS_SHELL_EXECUTE_OPEN, 
+                 PUTTYCS_URL_HOMEPAGE, 
+                 NULL, 
+                 NULL, 
+                 SW_SHOWNORMAL );  
+
+	return TRUE;
+}
 
 /**
  * CFilterDialog::OnInitDialog()
