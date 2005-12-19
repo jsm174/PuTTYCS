@@ -34,6 +34,7 @@
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
  * 12/15/2005: Added minimize to system tray         J. Millard
  *             Added tab completion
+ * 12/19/2005: Added window opacity                  J. Millard
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -79,6 +80,9 @@ public:
    int getMinimizeToSysTray();
    void setMinimizeToSysTray( int iMinimizeToSysTray );   
 
+   int getOpacity();
+   void setOpacity( int iOpacity );
+
    int getTransition();
    void setTransition( int iTransition );
 
@@ -106,6 +110,7 @@ protected:
    int m_iToolWindow;   
    int m_iAlwaysOnTop;
    int m_iMinimizeToSysTray;
+   int m_iOpacity;
    int m_iTransition; 
    int m_iEmulateCopyPaste;
    int m_iTabCompletion;
@@ -126,6 +131,7 @@ protected:
 	afx_msg void OnMinimizeToSysTrayCheckbox();
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	afx_msg void OnTabCompletionCheckbox();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 

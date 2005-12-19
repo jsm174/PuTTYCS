@@ -37,6 +37,7 @@
  *             moves cursor to end of command 
  * 12/15/2005: Added minimize to system tray         J. Millard
  *             Added tab completion
+ * 12/19/2005: Added window opacity                  J. Millard
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -71,6 +72,7 @@ public:
 	virtual BOOL DestroyWindow();
 	protected:
    virtual void DoDataExchange(CDataExchange* pDX);   // DDX/DDV support
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -109,6 +111,7 @@ protected:
    int m_iToolWindow;
    int m_iAlwaysOnTop;
    int m_iMinimizeToSysTray;
+   int m_iOpacity;
    int m_iTransition;
 
    /**

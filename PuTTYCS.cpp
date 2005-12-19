@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 12/19/2005: Added window opacity                  J. Millard
  */
 
 #include "stdafx.h"
@@ -40,6 +41,8 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+lpfn CPuTTYCSApp::g_pSetLayeredWindowAttributes = NULL;
 
 BEGIN_MESSAGE_MAP(CPuTTYCSApp, CWinApp)
    //{{AFX_MSG_MAP(CPuTTYCSApp)
@@ -69,12 +72,23 @@ CPuTTYCSApp theApp;
 BOOL CPuTTYCSApp::InitInstance()
 {
    /**
+    * VC++ 6.0 layered windows support 
+    */
+
+   HMODULE hUser32 =
+      GetModuleHandle( _T("USER32.DLL") );
+
+   g_pSetLayeredWindowAttributes = 
+      (lpfn) GetProcAddress(hUser32, "SetLayeredWindowAttributes");
+ 
+   /**
     * Search for existing application 
     * (tool window style first, then app window style)
     */
 
    CWnd* pAppWnd =
       CWnd::FindWindow( NULL, PUTTYCS_WINDOW_TITLE_TOOL );
+
 
    if ( !pAppWnd )
    {

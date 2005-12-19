@@ -68,6 +68,9 @@
 #define IDC_VISITWEBSITE_BUTTON         1503
 #define IDC_ABOUT_TEXT_LINE3            1504
 #define IDC_COMMAND_RICHEDIT            1600
+#define IDC_OPACITY_SLIDER              1601
+#define IDC_OPACITY2_STATIC             1602
+#define IDC_OPACITY1_STATIC             1603
 #define IDMI_SYSTRAYOPEN_MENUITEM       32771
 #define IDMI_SYSTRAYCASCADE_MENUITEM    32772
 #define IDMI_SYSTRAYABOUT_MENUITEM      32773
@@ -82,7 +85,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32780
-#define _APS_NEXT_CONTROL_VALUE         1601
+#define _APS_NEXT_CONTROL_VALUE         1604
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

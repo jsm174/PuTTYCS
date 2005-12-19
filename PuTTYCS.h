@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 12/19/2005: Added window opacity                  J. Millard
  */
 
 #if !defined(AFX_PuTTYCS_H__0CA01026_D42B_4CD9_AD0C_DE18E2410D45__INCLUDED_)
@@ -44,10 +45,27 @@
 
 #include "resource.h"      // main symbols
 
+/**
+ * VC++ 6.0 layered windows support 
+ */
+
+typedef BOOL (WINAPI *lpfn) (HWND hWnd, COLORREF cr, BYTE bAlpha, DWORD dwFlags);
+
+#define WS_EX_LAYERED 0x00080000 
+
+#define LWA_COLORKEY 1 
+#define LWA_ALPHA    2 
+
+/**
+ * CPuTTYCSApp
+ */
+
 class CPuTTYCSApp : public CWinApp
 {
 public:
    CPuTTYCSApp();
+
+   static lpfn g_pSetLayeredWindowAttributes;
 
 // Overrides
    // ClassWizard generated virtual function overrides

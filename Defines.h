@@ -33,8 +33,9 @@
  *             Added AltGr support
  * 11/18/2005: Fixed AltGr support                   J. Millard
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
- * 12/15/2005: Added minimize to systray.            J. Millard
- *             Added tab completion
+ * 12/15/2005: Added minimize to systray             J. Millard
+ *             Added tab completion 
+ * 12/19/2005: Added window opacity                  J. Millard            
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -44,12 +45,12 @@
 
 #define PUTTYCS_WINDOW_CLASS_PUTTY          _T( "PuTTY" )
 
-#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.3 - PuTTY Command Sender")
-#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.3")
+#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.4 - PuTTY Command Sender")
+#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.4")
 
 #define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS...")
 
-#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.3" )
+#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.4" )
 #define PUTTYCS_ABOUT_TEXT_LINE2            _T( "© 2005  Jason Millard. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD     _T( "Add Filter" )
@@ -86,6 +87,7 @@
 #define PUTTYCS_PREF_WINDOW_ALWAYS_ON_TOP   _T( "alwaysOnTop" )
 #define PUTTYCS_PREF_MINIMIZE_TO_SYSTRAY    _T( "minimizeToSysTray" )
 #define PUTTYCS_PREF_WINDOW_TRANSITION      _T( "transition" )
+#define PUTTYCS_PREF_WINDOW_OPACITY         _T( "windowOpacity" )
 
 #define PUTTYCS_PREF_AUTO_ARRANGE           _T( "autoArrange" )
 #define PUTTYCS_PREF_AUTO_ARRANGE_OFF       1
@@ -153,5 +155,9 @@
 
 #define PUTTYCS_CASCADE_DIMENSION_WIDTH     600
 #define PUTTYCS_CASCADE_DIMENSION_HEIGHT    400
+
+#define PUTTYCS_OPACITY_MIN                 50
+#define PUTTYCS_OPACITY_MAX                 255
+
 
 #endif // !defined(DEFINES_H__INCLUDED_)

@@ -33,6 +33,7 @@
  * 12/15/2005: Added minimize to system tray         J. Millard
  *             Updated Help/F1 to go visit website   
  *             Added tab completion
+ * 12/19/2005: Added window opacity                  J. Millard
  */
 
 #include "stdafx.h"
@@ -80,12 +81,13 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)
    ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)   
    ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
-   ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
    ON_BN_CLICKED(IDC_MINIMIZETOSYSTRAY_CHECKBOX, OnMinimizeToSysTrayCheckbox)
-   ON_WM_HELPINFO()
+   ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)
    ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
    ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
-   ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)
+	ON_WM_HSCROLL()
+   ON_WM_HELPINFO()
+   ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -252,6 +254,24 @@ void CPreferencesDialog::setTransition( int iTransition )
 }
 
 /**
+ * CPreferencesDialog::getOpacity()
+ */
+
+int CPreferencesDialog::getOpacity()
+{
+   return m_iOpacity;
+}
+
+/**
+ * CPreferencesDialog::setOpacity()
+ */
+
+void CPreferencesDialog::setOpacity( int iOpacity )
+{
+   m_iOpacity = iOpacity;
+}
+
+/**
  * CPreferencesDialog::getTabCompletion()
  */
 
@@ -344,6 +364,26 @@ BOOL CPreferencesDialog::OnInitDialog()
    SetDlgItemInt( IDC_TRANSITION_EDIT, 
       m_iTransition );
 
+   if ( CPuTTYCSApp::g_pSetLayeredWindowAttributes )
+   {
+      ((CSliderCtrl*)GetDlgItem(IDC_OPACITY_SLIDER))->
+         SetRange( PUTTYCS_OPACITY_MIN, PUTTYCS_OPACITY_MAX );
+
+      ((CSliderCtrl*)GetDlgItem(IDC_OPACITY_SLIDER))->
+         SetPos( m_iOpacity );
+   }
+   else
+   {
+      ((CStatic*)GetDlgItem(IDC_OPACITY1_STATIC))->
+         ShowWindow( SW_HIDE );
+      
+      ((CSliderCtrl*)GetDlgItem(IDC_OPACITY_SLIDER))->
+         ShowWindow( SW_HIDE );
+      
+      ((CStatic*)GetDlgItem(IDC_OPACITY2_STATIC))->
+         ShowWindow( SW_HIDE );
+   }
+
    CheckDlgButton( IDC_TABCOMPLETION_CHECKBOX, 
       m_iTabCompletion );
  
@@ -369,7 +409,35 @@ void CPreferencesDialog::UpdateDialog()
 
    ((CButton*) GetDlgItem(IDC_OK_BUTTON))->
       EnableWindow( (m_iTransition >= 1) && 
-                    (m_iTransition <= 1500) );
+                    (m_iTransition <= 1500) &&
+                    (m_iOpacity >= PUTTYCS_OPACITY_MIN) );
+   
+   float fPercent = 
+      ((float) (m_iOpacity - PUTTYCS_OPACITY_MIN) /
+       (float) ((PUTTYCS_OPACITY_MAX + 1) -
+                (PUTTYCS_OPACITY_MIN))) * 100.;
+
+   CString csOpacity;
+   csOpacity.Format( _T("%d%%"), ((int) fPercent) + 1 );
+      
+   SetDlgItemText( IDC_OPACITY2_STATIC, csOpacity );
+}
+
+/** 
+ * CPreferencesDialog::OnHScroll()
+ */
+
+void CPreferencesDialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+{    
+   if ( pScrollBar->GetDlgCtrlID() == IDC_OPACITY_SLIDER )
+   {
+      m_iOpacity = 
+         ((CSliderCtrl*) pScrollBar)->GetPos();
+   }
+
+   UpdateDialog();
+
+	CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
 }
 
 /**
@@ -504,4 +572,3 @@ void CPreferencesDialog::OnOKButton()
 {
    CDialog::OnOK();      
 }
-

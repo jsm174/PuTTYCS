@@ -37,6 +37,7 @@
  *             moves cursor to end of command 
  * 12/15/2005: Added minimize to system tray         J. Millard
  *             Added tab completion
+ * 12/19/2005: Added window opacity                  J. Millard
  */
 
 #include "stdafx.h"
@@ -248,6 +249,11 @@ void CPuTTYCSDialog::LoadPreferences()
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_TRANSITION, 25 );
   
+   m_iOpacity =
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_OPACITY, 
+         PUTTYCS_OPACITY_MAX );
+ 
    /**
     * Auto arrange 
     */
@@ -375,6 +381,9 @@ void CPuTTYCSDialog::SavePreferences()
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
       PUTTYCS_PREF_WINDOW_TRANSITION, m_iTransition );
 
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
+      PUTTYCS_PREF_WINDOW_OPACITY, m_iOpacity );
+
    /**
     * Auto arrange 
     */
@@ -476,11 +485,11 @@ void CPuTTYCSDialog::SetSysTrayTip( CString csTip )
       m_pTNI->hWnd =
          ((CWnd*) this)->GetSafeHwnd();
       
-	  m_pTNI->cbSize = sizeof( NOTIFYICONDATA );
+      m_pTNI->cbSize = sizeof( NOTIFYICONDATA );
       m_pTNI->uCallbackMessage = WM_TNI_MESSAGE;
-	  m_pTNI->uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
+	   m_pTNI->uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
       m_pTNI->hIcon	= m_hIcon;
-  	  m_pTNI->uTimeout = 1000;
+  	   m_pTNI->uTimeout = 1000;
       m_pTNI->uID = 1;	
 
       dwMessage = NIM_ADD;
@@ -806,11 +815,11 @@ void CPuTTYCSDialog::RefreshDialog()
 
 void CPuTTYCSDialog::UpdateDialog()
 {
-   CRect dialogRect;
-   GetWindowRect(&dialogRect);
-
    long windowStyle =
       GetWindowLong( m_hWnd, GWL_EXSTYLE );
+  
+   CRect dialogRect;
+   GetWindowRect(&dialogRect);
 
    if (m_iToolWindow)
    {       
@@ -832,6 +841,11 @@ void CPuTTYCSDialog::UpdateDialog()
       SetWindowText( PUTTYCS_WINDOW_TITLE_APP );     
    }
 
+   if ( CPuTTYCSApp::g_pSetLayeredWindowAttributes )
+   { 
+      windowStyle |= WS_EX_LAYERED;    
+   }
+
    SetWindowLong( m_hWnd, GWL_EXSTYLE, windowStyle );
       
    const CWnd* pLocation = &CWnd::wndNoTopMost;
@@ -839,6 +853,19 @@ void CPuTTYCSDialog::UpdateDialog()
    if ( m_iAlwaysOnTop )
    {
       pLocation = &CWnd::wndTopMost;
+   }
+
+   if ( CPuTTYCSApp::g_pSetLayeredWindowAttributes )
+   {
+      /**
+       * Added delay, because top most PuTTY
+       * window does not redraw correctly
+       */
+
+      ::Sleep( 20 );
+
+      CPuTTYCSApp::g_pSetLayeredWindowAttributes(
+         m_hWnd, 0, m_iOpacity, LWA_ALPHA );
    }
 
    SetWindowPos( pLocation, 0, 0,
@@ -1387,6 +1414,9 @@ void CPuTTYCSDialog::OnPreferencesButton()
    pDialog->
       setTransition( m_iTransition );
 
+   pDialog->
+      setOpacity(m_iOpacity );
+
    /**
     * Keyboard/Mouse
     */
@@ -1439,6 +1469,11 @@ void CPuTTYCSDialog::OnPreferencesButton()
       m_iMinimizeToSysTray =
          pDialog->getMinimizeToSysTray();      
 
+      int iOpacity = m_iOpacity;
+
+      m_iOpacity = 
+         pDialog->getOpacity();
+
       m_iTransition =
          pDialog->getTransition();
 
@@ -1446,8 +1481,8 @@ void CPuTTYCSDialog::OnPreferencesButton()
        * Keyboard/Mouse
        */
 
-	  m_iTabCompletion =
-		 pDialog->getTabCompletion();
+	   m_iTabCompletion =
+		   pDialog->getTabCompletion();
 
       m_iEmulateCopyPaste =
          pDialog->getEmulateCopyPaste();
@@ -1458,7 +1493,8 @@ void CPuTTYCSDialog::OnPreferencesButton()
        * Window refresh
        */
       
-      if ( (iToolWindow != m_iToolWindow) ||
+      if ( (iOpacity != m_iOpacity) ||
+           (iToolWindow != m_iToolWindow) ||
            (iAlwaysOnTop != m_iAlwaysOnTop) )
       {                  
          ShowWindow(SW_HIDE);
@@ -1940,4 +1976,12 @@ int CPuTTYCSDialog::Compare( const void *pWndS1, const void *pWndS2 )
    ((CWnd*) pWnd2)->GetWindowText( csS2 );
     
    return ( csS1 < csS2 );
+}
+
+BOOL CPuTTYCSDialog::PreCreateWindow(CREATESTRUCT& cs) 
+{
+   
+	// TODO: Add your specialized code here and/or call the base class
+	
+	return CDialog::PreCreateWindow(cs);
 }
