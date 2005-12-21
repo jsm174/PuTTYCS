@@ -35,7 +35,8 @@
  * 12/06/2005: Added mouse Copy/Paste emulation      J. Millard
  * 12/15/2005: Added minimize to systray             J. Millard
  *             Added tab completion 
- * 12/19/2005: Added window opacity                  J. Millard            
+ * 12/19/2005: Added window opacity                  J. Millard   
+ * 12/21/2005: Fixed password not sending CR         J. Millard
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -45,12 +46,12 @@
 
 #define PUTTYCS_WINDOW_CLASS_PUTTY          _T( "PuTTY" )
 
-#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.4 - PuTTY Command Sender")
-#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.4")
+#define PUTTYCS_WINDOW_TITLE_TOOL           _T( "PuTTYCS 1.4a - PuTTY Command Sender")
+#define PUTTYCS_WINDOW_TITLE_APP            _T( "PuTTYCS 1.4a")
 
 #define PUTTYCS_WINDOW_TITLE_ABOUT          _T( "About PuTTYCS...")
 
-#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.4" )
+#define PUTTYCS_ABOUT_TEXT_LINE1            _T( "PuTTY Command Sender 1.4a" )
 #define PUTTYCS_ABOUT_TEXT_LINE2            _T( "© 2005  Jason Millard. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD     _T( "Add Filter" )

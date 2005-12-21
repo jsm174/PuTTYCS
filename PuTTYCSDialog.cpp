@@ -38,6 +38,7 @@
  * 12/15/2005: Added minimize to system tray         J. Millard
  *             Added tab completion
  * 12/19/2005: Added window opacity                  J. Millard
+ * 12/21/2005: Fixed password not sending CR         J. Millard
  */
 
 #include "stdafx.h"
@@ -1356,7 +1357,7 @@ void CPuTTYCSDialog::OnPasswordButton()
       m_csPassword = pDialog->getPassword();
 
       sendBuffer( 
-         CBase64::decode(m_csPassword), true, false );
+         CBase64::decode(m_csPassword), false, true );
 
       SavePreferences();
    }

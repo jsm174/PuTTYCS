@@ -1,14 +1,15 @@
-PuTTYCS - PuTTY Command Sender v1.4
+PuTTYCS - PuTTY Command Sender v1.4a
 (C) 2005 - Jason Millard - jsm174@gmail.com
-Release Date: 12/19/05
+Release Date: 12/21/05
 
 
 VERSION HISTORY
 ---------------
 
+12/21/05 - v1.4a - Fixed password not sending CR
 12/19/05 - v1.4  - Added window opacity
 12/15/05 - v1.3  - Added minimize to system tray
-                   Added tab completion				   
+                   Added tab completion               
 12/06/05 - v1.2  - Added mouse Copy/Paste emulation
                    Navigation through command history
                    moves cursor to end of command 
@@ -196,8 +197,8 @@ Preferences are loaded each time PuTTYCS is started.
 
   Opacity:
      Use the slider to set the opacity for the PuTTYCS
-	 window. This maybe useful if PuTTYCS sometimes blocks
-	 your existing PuTTY windows.
+     window. This maybe useful if PuTTYCS sometimes blocks
+     your existing PuTTY windows.
 
   Auto Arrange (Off, Cascade, Tile) 
      When switching filters, automatically cascade or
