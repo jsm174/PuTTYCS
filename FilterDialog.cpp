@@ -1,7 +1,7 @@
 /**
  * FilterDialog.cpp - PuTTYCS Filter Dialog
  *
- * Copyright (c) 2005 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without

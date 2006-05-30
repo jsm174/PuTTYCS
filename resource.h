@@ -35,6 +35,8 @@
 #define IDC_SCRIPT_BUTTON               1022
 #define IDC_PREFERENCES_BUTTON          1023
 #define IDC_SEND_BUTTON                 1024
+#define IDC_BACKSPACE_BUTTON            1030
+#define IDC_DELETE_BUTTON               1035
 #define IDC_SAVEPASSWORD_CHECKBOX       1100
 #define IDC_AUTOARRANGE_OFF_RADIO       1101
 #define IDC_AUTOARRANGE_TILE_RADIO      1102
@@ -67,7 +69,6 @@
 #define IDC_ABOUT_TEXT_LINE2            1502
 #define IDC_VISITWEBSITE_BUTTON         1503
 #define IDC_ABOUT_TEXT_LINE3            1504
-#define IDC_COMMAND_RICHEDIT            1600
 #define IDC_OPACITY_SLIDER              1601
 #define IDC_OPACITY2_STATIC             1602
 #define IDC_OPACITY1_STATIC             1603
@@ -78,14 +79,15 @@
 #define IDMI_SYSTRAYMINIMIZE_MENUITEM   32777
 #define IDMI_SYSTRAYHIDE_MENUITEM       32778
 #define IDMI_SYSTRAYTILE_MENUITEM       32779
+#define IDMI_SYSTRAYPREFERENCES_MENUITEM 32780
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         32780
-#define _APS_NEXT_CONTROL_VALUE         1604
+#define _APS_NEXT_COMMAND_VALUE         32781
+#define _APS_NEXT_CONTROL_VALUE         1610
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

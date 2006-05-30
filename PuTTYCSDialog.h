@@ -1,7 +1,7 @@
 /**
  * PuTTYCSDialog.h - PuTTYCS Main Dialog header
  *
- * Copyright (c) 2005 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,10 @@
  * 12/15/2005: Added minimize to system tray         J. Millard
  *             Added tab completion
  * 12/19/2005: Added window opacity                  J. Millard
+ * 05/27/2006: Improved system tray logic            J. Millard
+ *             Added Windows XP style
+ *             Added close, backspace, and          
+ *             delete buttons
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -48,8 +52,6 @@
 #endif // _MSC_VER > 1000
 
 #include "CommandEdit.h"
-
-#define WM_TNI_MESSAGE (WM_USER + 1)
 
 class CPuTTYCSDialog : public CDialog
 {
@@ -72,7 +74,7 @@ public:
 	virtual BOOL DestroyWindow();
 	protected:
    virtual void DoDataExchange(CDataExchange* pDX);   // DDX/DDV support
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -102,6 +104,7 @@ protected:
     */
    
    int m_iSavePassword;
+  
    CString m_csPassword;
   
    /**
@@ -155,9 +158,11 @@ protected:
 
    // Generated message map functions
    //{{AFX_MSG(CPuTTYCSDialog)
+   afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
    virtual BOOL OnInitDialog();
    afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
    afx_msg void OnPaint();
+   afx_msg void OnMultipleInstance(WPARAM wParam, LPARAM lParam);
    afx_msg HCURSOR OnQueryDragIcon();
    afx_msg void OnAboutButton();
    afx_msg void OnSelChangeFiltersCombobox();   
@@ -186,7 +191,10 @@ protected:
    afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
    afx_msg void OnCmdHistoryClearButton();
    afx_msg void OnOpenMenuItem();  
-   //}}AFX_MSG
+	afx_msg void OnBackspaceButton();
+	afx_msg void OnDeleteButton();
+	afx_msg void OnCloseButton();
+	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 
 private:
@@ -194,7 +202,8 @@ private:
    CSendKeys m_skSendKeys;
    CObArray  m_obaWindows;
 
-   CMenu m_cmMenu;
+   UINT m_uiTaskbarMessage;
+   BOOL m_bDisablePopup;
 
    NOTIFYICONDATA* m_pTNI;
    void SetSysTrayTip( CString csTip = PUTTYCS_EMPTY_STRING );
@@ -204,6 +213,8 @@ private:
    
    void SortWindows();
    static int Compare(const void* pWndS1, const void* pWndS2);
+
+   CMenu* m_pMenu;            
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -1,11 +1,14 @@
-PuTTYCS - PuTTY Command Sender v1.4a
-(C) 2005 - Jason Millard - jsm174@gmail.com
-Release Date: 12/21/05
+PuTTYCS - PuTTY Command Sender v1.5
+(C) 2005, 2006 - Jason Millard - jsm174@gmail.com
+Release Date: 05/30/06
 
 
 VERSION HISTORY
----------------
-
+ 
+05/30/06 - v1.5  - Improved system tray logic
+                   Added Windows XP style
+                   Added close, backspace, and
+                   delete buttons                   
 12/21/05 - v1.4a - Fixed password not sending CR
 12/19/05 - v1.4  - Added window opacity
 12/15/05 - v1.3  - Added minimize to system tray
@@ -120,6 +123,8 @@ even hidden. Just click on the corresponding button.
 To unhide PuTTY windows, click either the Cascade, Tile,
 or Minimize buttons.
 
+To automatically PuTTY windows, close the Close button.
+
 
 COMMAND HISTORY
 ---------------
@@ -153,12 +158,12 @@ and quickly want to clear the screen, you may find
 this handy.
 
 
-CTRL-C, CTRL-], ESC, ENTER
---------------------------
+BKSP, DELETE, CTRL-C, CTRL-], ESC, ENTER
+----------------------------------------
 
 These buttons send the corresponding key press to PuTTY
-windows. If you use VI, or telnet inside of PuTTY,
-this may be useful. 
+windows. If you use VI, or telnet inside of PuTTY, this
+may be useful. 
 
 
 PASSWORD
@@ -186,7 +191,9 @@ Preferences are loaded each time PuTTYCS is started.
      Display the PuTTYCS on top of all other windows.
 
   Minimize to system tray:
-     Minimizes PuTTYCS to the system tray.
+     Minimizes PuTTYCS to the system tray. If this is
+     enabled, PuTTYCS can only be exited through the 
+     system tray popup menu.
   
   Transition:
      Sets the amount time (in milliseconds) to pause
@@ -229,10 +236,11 @@ Preferences are loaded each time PuTTYCS is started.
   Save Password
      Saves the password used in the Send Password dialog.
 
-     NOTE: Passwords are encoded in Base64, so they
-           are not secure.
+     NOTE: Passwords are encoded in Base64 and stored in
+           the PuTTYCS.ini file. This may present a 
+           potential security risk. [see CONFIG FILE 
+           section]
 
-  
 SCRIPT
 ------
 
@@ -287,10 +295,10 @@ to have".
 
 PuTTY has some different logic for resizing windows. For 
 example, on the Start bar, choose Tile or Cascade. You will 
-see that PuTTY windows does not re-arrange themselves 
-properly. PuTTYCS gets around this by performing a variety
-of hide, move, resize, and show commands. However, at times
-PuTTYs may not arrange as expected. 
+see that PuTTY windows do not re-arrange themselves properly. 
+PuTTYCS gets around this by performing a variety of hide,
+move, resize, and show commands. However, at times, PuTTYs
+may not arrange as expected. 
 
 To use Tab completion on several windows, press the Tab
 key and wait until all windows receive the command. Pressing
@@ -298,34 +306,50 @@ the Tab key too early may send an additional Tab to one of
 filtered PuTTY windows.
 
 
-
 FUTURE
 ------
 
-Currently I have no plans to update PuTTYCS. Of course, 
-if there are reported bugs, I will try to fix them. 
+When I first released PuTTYCS, I had no plans on releasing
+any major updates. However, from all the positive feedback
+I've received, I have been contemplating a version 2. 
 
-If enough interested is generated, I would consider another
-release. I would really like to remove the dependency on 
-SendKeys. Don't get me wrong, it's a slick piece of software.
-It's just not as bulletproof as I would like for an application 
-of this type.
+I would like to break the filters down into an Environment ->
+Tier -> Server setup. This way you could easily launch PuTTYs
+directly from PuTTYCS. 
+
+Also, I have figured out how to control PuTTY without using
+SendKeys. This makes for much more reliable communication. 
+However, if I removed SendKeys, the scripting ability would
+be removed. If you use scripting, please let me know!
+
+PuTTYCS needs a LOGO!! If you can draw and would be interested
+in designing a logo please contact me!!
 
 
 SOURCE CODE
 -----------
 
-Since PuTTY's source code is available, I'm making this
-source code available as well. I cleaned it up as best I could,
-but comments are sparse. It should compile under Visual C++ 6
-and above.
+Since PuTTY's source code is available, I'm making this source
+code available as well. I cleaned it up as best I could, but
+comments are sparse. It should compile under Visual C++ 6.
 
 
 I LIKE IT
 ---------
 
 If you like this application, drop me a line at jsm174@gmail.com.
-It's just cool to hear from people around the world!
+It's just cool to hear from people around the world! 
+
+
+I REALLY LIKE IT
+----------------
+
+If you really like this application, feel free to send a
+donation! I really would appreciate it! Plus I need some 
+motivation for version 2. :)
+
+Donations can be made through Paypal using the link on the
+homepage.
 
 
 CREDITS

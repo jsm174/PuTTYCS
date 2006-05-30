@@ -92,6 +92,7 @@ LINK32=link.exe
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "PuTTYCS___Win32_Debug_Unicode"
 # PROP Intermediate_Dir "PuTTYCS___Win32_Debug_Unicode"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D _WIN32_WINNT=0x401 /Yu"stdafx.h" /FD /GZ /c
 # ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "UNICODE" /D "_UNICODE" /D "MBCS" /D _WIN32_WINNT=0x401 /Yu"stdafx.h" /FD /GZ /c
@@ -266,6 +267,10 @@ SOURCE=.\SendKeys.cpp
 SOURCE=.\SendKeys.h
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\PuTTYCS.mft
+# End Source File
 # Begin Source File
 
 SOURCE=.\readme.txt

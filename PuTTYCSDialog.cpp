@@ -1,7 +1,7 @@
 /**
  * PuTTYCSDialog.cpp - PuTTYCS Main Dialog
  *
- * Copyright (c) 2005 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -39,6 +39,12 @@
  *             Added tab completion
  * 12/19/2005: Added window opacity                  J. Millard
  * 12/21/2005: Fixed password not sending CR         J. Millard
+ * 05/27/2006: Improved system tray logic            J. Millard
+ *             Added Windows XP style
+ *             Added close, backspace, and          
+ *             delete buttons
+ * 05/30/2006: Implemented MSDN KB135788 for         J. Millard
+ *             system tray context menu
  */
 
 #include "stdafx.h"
@@ -75,7 +81,7 @@ CPuTTYCSDialog::CPuTTYCSDialog(CWnd* pParent /*=NULL*/)
    m_pMarlettNormal = new CFont();
 
    m_pMarlettNormal->CreatePointFont( 
-      110, PUTTYCS_FONT_MARLETT );
+      100, PUTTYCS_FONT_MARLETT );
 
    m_pMarlettSmall = new CFont();
 
@@ -85,13 +91,25 @@ CPuTTYCSDialog::CPuTTYCSDialog(CWnd* pParent /*=NULL*/)
    m_pSymbolSmall = new CFont();
 
    m_pSymbolSmall->CreatePointFont(
-      80, PUTTYCS_FONT_SYMBOL );
+      70, PUTTYCS_FONT_SYMBOL );
 
    /**
     * Taskbar Notification Icon
     */
 
    m_pTNI = NULL;
+
+   m_uiTaskbarMessage = 0;
+
+   /**
+    * Context Menu
+    */
+
+   m_pMenu = new CMenu();
+
+   m_pMenu->LoadMenu( IDM_SYSTRAY_MENU );
+
+   m_bDisablePopup = FALSE;   
 }
 
 /**
@@ -131,6 +149,15 @@ CPuTTYCSDialog::~CPuTTYCSDialog()
          (NOTIFYICONDATA*) m_pTNI ); 
 
       delete m_pTNI;
+   }
+
+   /**
+    * Context Menu
+    */
+
+   if ( m_pMenu )
+   {
+      delete m_pMenu;
    }
 }
 
@@ -294,7 +321,6 @@ void CPuTTYCSDialog::LoadPreferences()
    m_iTabCompletion =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_TAB_COMPLETION, 0 );
-
 }
 
 /**
@@ -432,7 +458,9 @@ BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
    //{{AFX_MSG_MAP(CPuTTYCSDialog)
    ON_WM_SYSCOMMAND()
    ON_WM_PAINT()
-   ON_WM_QUERYDRAGICON()
+   ON_MESSAGE(WM_USER_MULTIPLE_INSTANCE, OnMultipleInstance)
+   ON_WM_QUERYDRAGICON()   
+   ON_COMMAND(IDMI_SYSTRAYABOUT_MENUITEM, OnAboutButton)   
    ON_CBN_SELCHANGE(IDC_FILTERS_COMBOBOX, OnSelChangeFiltersCombobox)
    ON_BN_CLICKED(IDC_CASCADE_BUTTON, OnCascadeButton)   
    ON_BN_CLICKED(IDC_TILE_BUTTON, OnTileButton)
@@ -442,7 +470,6 @@ BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
    ON_BN_CLICKED(IDC_SENDCR_PUSHBUTTON, OnSendCRPushButton)   
    ON_BN_CLICKED(IDC_CMDHISTORYUP_BUTTON, OnCmdHistoryUpButton)
    ON_BN_CLICKED(IDC_CMDHISTORYDOWN_BUTTON, OnCmdHistoryDownButton)
-   ON_BN_CLICKED(IDC_CMDHISTORYCLEAR_BUTTON, OnCmdHistoryClearButton)
    ON_BN_CLICKED(IDC_UP_BUTTON, OnUpButton)
    ON_BN_CLICKED(IDC_DOWN_BUTTON, OnDownButton)
    ON_BN_CLICKED(IDC_RIGHT_BUTTON, OnRightButton)   
@@ -456,16 +483,21 @@ BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
    ON_BN_CLICKED(IDC_PREFERENCES_BUTTON, OnPreferencesButton)
    ON_BN_CLICKED(IDC_SCRIPT_BUTTON, OnScriptButton)
    ON_BN_CLICKED(IDC_SEND_BUTTON, OnSendButton)  
-   ON_MESSAGE(WM_TNI_MESSAGE, OnTrayNotify)
+   ON_MESSAGE(WM_USER_TNI_MESSAGE, OnTrayNotify)      
+   ON_WM_HELPINFO()   	
+   ON_BN_CLICKED(IDC_CMDHISTORYCLEAR_BUTTON, OnCmdHistoryClearButton)
    ON_COMMAND(IDMI_SYSTRAYOPEN_MENUITEM, OnOpenMenuItem)
-   ON_COMMAND(IDMI_SYSTRAYABOUT_MENUITEM, OnAboutButton)
+   ON_BN_CLICKED(IDC_BACKSPACE_BUTTON, OnBackspaceButton)
+   ON_BN_CLICKED(IDC_DELETE_BUTTON, OnDeleteButton)   	         
+   ON_BN_CLICKED(IDC_CLOSE_BUTTON, OnCloseButton)
    ON_COMMAND(IDMI_SYSTRAYCASCADE_MENUITEM, OnCascadeButton)
    ON_COMMAND(IDMI_SYSTRAYTILE_MENUITEM, OnTileButton)
    ON_COMMAND(IDMI_SYSTRAYMINIMIZE_MENUITEM, OnMinimizeButton)
    ON_COMMAND(IDMI_SYSTRAYHIDE_MENUITEM, OnHideButton)
-   ON_COMMAND(IDMI_SYSTRAYEXIT_MENUITEM, OnOK)   
-   ON_WM_HELPINFO()
-   //}}AFX_MSG_MAP
+   ON_COMMAND(IDMI_SYSTRAYPREFERENCES_MENUITEM, OnPreferencesButton)   
+   ON_COMMAND(IDMI_SYSTRAYEXIT_MENUITEM, OnOK)   	
+	ON_WM_CREATE()
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -487,7 +519,7 @@ void CPuTTYCSDialog::SetSysTrayTip( CString csTip )
          ((CWnd*) this)->GetSafeHwnd();
       
       m_pTNI->cbSize = sizeof( NOTIFYICONDATA );
-      m_pTNI->uCallbackMessage = WM_TNI_MESSAGE;
+      m_pTNI->uCallbackMessage = WM_USER_TNI_MESSAGE;
 	   m_pTNI->uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
       m_pTNI->hIcon	= m_hIcon;
   	   m_pTNI->uTimeout = 1000;
@@ -500,6 +532,29 @@ void CPuTTYCSDialog::SetSysTrayTip( CString csTip )
  
    Shell_NotifyIcon( dwMessage,
       (NOTIFYICONDATA*) m_pTNI ); 
+}
+
+/**
+ * CPuTTYCSDialog::WindowProc()
+ */
+
+LRESULT CPuTTYCSDialog::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
+{
+   if ( message == m_uiTaskbarMessage )
+   {
+      if ( m_pTNI )
+      {
+         delete m_pTNI;
+         m_pTNI = NULL;
+      }
+
+      if ( m_iMinimizeToSysTray )
+      {
+         SetSysTrayTip( PUTTYCS_WINDOW_TITLE_APP );
+      }
+   }
+
+	return CDialog::WindowProc(message, wParam, lParam);	
 }
 
 /**
@@ -566,6 +621,21 @@ BOOL CPuTTYCSDialog::DestroyWindow()
    }
 	
 	return CDialog::DestroyWindow();
+}
+
+/**
+ * CPuTTYCSDialog::OnCreate()
+ */
+
+int CPuTTYCSDialog::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+{
+	if (CDialog::OnCreate(lpCreateStruct) == -1)
+		return -1;
+	
+   m_uiTaskbarMessage =
+      RegisterWindowMessage( PUTTYCS_MSG_TASKBAR_CREATED );
+	
+	return 0;
 }
 
 /**
@@ -653,7 +723,7 @@ BOOL CPuTTYCSDialog::OnInitDialog()
       SetCheck( m_iSendCR );
 
    /**
-    * Menus
+    * System Menu
     */
 
    CMenu* pMenu = GetSystemMenu( FALSE );
@@ -667,8 +737,6 @@ BOOL CPuTTYCSDialog::OnInitDialog()
       pMenu->AppendMenu( MF_STRING,
          IDM_ABOUT_PUTTYCS, PUTTYCS_WINDOW_TITLE_ABOUT );
    }
-
-   m_cmMenu.LoadMenu( IDM_SYSTRAY_MENU );
 
    /**
     * Dialog size
@@ -687,6 +755,19 @@ BOOL CPuTTYCSDialog::OnInitDialog()
    {
       OnSelChangeFiltersCombobox();
    }
+   
+   /**
+    * Minimize to SysTray
+    */
+
+   if ( m_iMinimizeToSysTray )
+   {
+      SetSysTrayTip( PUTTYCS_WINDOW_TITLE_APP );
+   }
+
+   /**
+    * Update dialog
+    */
 
    UpdateDialog();
 
@@ -699,26 +780,26 @@ BOOL CPuTTYCSDialog::OnInitDialog()
 
 void CPuTTYCSDialog::OnSysCommand(UINT nID, LPARAM lParam)
 {
-   if ( (nID & 0xFFF0) == IDM_ABOUT_PUTTYCS )
+   UINT nCmd = (nID & 0xFFF0);
+
+   if ( nCmd == IDM_ABOUT_PUTTYCS )
    {
       OnAboutButton();
    }
-   else if ( (nID & 0xFFF0) == SC_MINIMIZE )
+   else 
    {
-      if ( m_iMinimizeToSysTray )
+      if ( (m_iMinimizeToSysTray) &&
+           ((nCmd == SC_MINIMIZE)     
+         || (nCmd == SC_CLOSE)) )
       {
-         ShowWindow( SW_HIDE );  
+         ShowWindow( SW_HIDE );
          SetSysTrayTip( PUTTYCS_WINDOW_TITLE_APP );
       }
       else
       {
          CDialog::OnSysCommand(nID, lParam);
       }
-   }   
-   else
-   {
-      CDialog::OnSysCommand(nID, lParam);
-   }
+   } 
 }
 
 /**
@@ -776,13 +857,26 @@ BOOL CPuTTYCSDialog::OnHelpInfo(HELPINFO* pHelpInfo)
 }
 
 /**
+ * CPuTTYCSDialog::OnMultipleInstance()
+ */
+
+void CPuTTYCSDialog::OnMultipleInstance(WPARAM wParam, LPARAM lParam)
+{
+   OnOpenMenuItem();
+}
+
+/**
  * CPuTTYCSDialog::OnAboutButton()
  */
 
 void CPuTTYCSDialog::OnAboutButton()
 {
+   m_bDisablePopup = true;
+
    CAboutDialog dialog;
-   dialog.DoModal();  
+   dialog.DoModal();
+
+   m_bDisablePopup = false;   
 }
 
 /**
@@ -880,18 +974,16 @@ void CPuTTYCSDialog::UpdateDialog()
  */ 
 
 void CPuTTYCSDialog::OnOpenMenuItem()
-{ 
-   if ( m_pTNI )
-   {
-      Shell_NotifyIcon( NIM_DELETE, 
-         (NOTIFYICONDATA*) m_pTNI ); 
+{   
+   SendMessage(
+      WM_SYSCOMMAND, SC_HOTKEY, (LPARAM) m_hWnd );
 
-      delete m_pTNI;
-
-      m_pTNI = NULL;
-   }
+   SendMessage(
+      WM_SYSCOMMAND, SC_RESTORE, (LPARAM) m_hWnd );         
 
    ShowWindow( SW_SHOW );
+
+   SetForegroundWindow();
 }
 
 /**
@@ -1128,11 +1220,57 @@ void CPuTTYCSDialog::OnHideButton()
 }
 
 /**
+ * CPuTTYCSDialog::OnCloseButton()
+ */
+
+void CPuTTYCSDialog::OnCloseButton() 
+{
+   m_obaWindows.RemoveAll();
+
+   ::EnumWindows( enumwindowsProc, (LPARAM) this );
+    
+   SortWindows();
+
+   int iSize = m_obaWindows.GetSize();
+
+   if ( iSize > 0 )
+   {
+      if ( MessageBox(PUTTYCS_MESSAGEBOX_CLOSE, 
+                      PUTTYCS_APP_NAME, 
+                      MB_ICONEXCLAMATION | MB_YESNO) == IDYES )
+      {
+         for ( int loop = 0; loop < iSize; loop++ )
+         { 
+            CWnd* pWnd =
+               (CWnd*) m_obaWindows.GetAt( loop );
+
+            DWORD dwPid;
+            
+            GetWindowThreadProcessId( pWnd->m_hWnd, &dwPid);
+
+            if ( dwPid )
+            {
+               HANDLE hProcess =
+                  OpenProcess( PROCESS_ALL_ACCESS, FALSE, dwPid );
+
+               if ( hProcess )
+               {            
+                  ::TerminateProcess( hProcess, (DWORD) -1 );
+               }
+            }           
+         }
+      }
+   }
+}
+
+/**
  * CPuTTYCSDialog::OnFiltersButton()
  */
 
 void CPuTTYCSDialog::OnFiltersButton() 
 {
+   m_bDisablePopup = TRUE;
+
    CFiltersDialog* pDialog =
       new CFiltersDialog();
  
@@ -1163,6 +1301,8 @@ void CPuTTYCSDialog::OnFiltersButton()
    RefreshDialog();
 
    delete( pDialog );   
+
+   m_bDisablePopup = FALSE;
 }
 
 /**
@@ -1342,11 +1482,35 @@ void CPuTTYCSDialog::OnEnterButton()
 }
 
 /**
+ * CPuTTYCSDialog::OnBackspaceButton()
+ */
+
+void CPuTTYCSDialog::OnBackspaceButton() 
+{
+   sendBuffer( PUTTYCS_SENDKEY_BUTTON_BACKSPACE );   
+
+   RefreshDialog();  	
+}
+
+/**
+ * CPuTTYCSDialog::OnDeleteButton()
+ */
+
+void CPuTTYCSDialog::OnDeleteButton() 
+{
+   sendBuffer( PUTTYCS_SENDKEY_BUTTON_DELETE );   
+
+   RefreshDialog();  		
+}
+
+/**
  * CPuTTYCSDialog::OnPasswordButton()
  */
 
 void CPuTTYCSDialog::OnPasswordButton() 
 {
+   m_bDisablePopup = TRUE;
+
    CPasswordDialog* pDialog =
       new CPasswordDialog();
 
@@ -1365,6 +1529,8 @@ void CPuTTYCSDialog::OnPasswordButton()
    RefreshDialog();
 
    delete( pDialog );
+
+   m_bDisablePopup = FALSE;
 }
 
 /**
@@ -1373,6 +1539,8 @@ void CPuTTYCSDialog::OnPasswordButton()
 
 void CPuTTYCSDialog::OnPreferencesButton() 
 {
+   m_bDisablePopup = TRUE;
+
    CPreferencesDialog* pDialog =
       new CPreferencesDialog();
 
@@ -1427,7 +1595,7 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
    pDialog->
       setEmulateCopyPaste( m_iEmulateCopyPaste );
-
+ 
    if ( pDialog->DoModal() == IDOK )
    {  
       /**
@@ -1470,6 +1638,27 @@ void CPuTTYCSDialog::OnPreferencesButton()
       m_iMinimizeToSysTray =
          pDialog->getMinimizeToSysTray();      
 
+      if ( !m_iMinimizeToSysTray )
+      {
+         if ( m_pTNI )
+         {     
+            Shell_NotifyIcon( NIM_DELETE, 
+               (NOTIFYICONDATA*) m_pTNI ); 
+
+            delete m_pTNI;
+            m_pTNI = NULL;
+         }
+
+         if ( !IsWindowVisible() )
+         {
+            OnOpenMenuItem();
+         }
+      }
+      else
+      {
+         SetSysTrayTip( PUTTYCS_WINDOW_TITLE_APP );
+      }
+
       int iOpacity = m_iOpacity;
 
       m_iOpacity = 
@@ -1489,7 +1678,7 @@ void CPuTTYCSDialog::OnPreferencesButton()
          pDialog->getEmulateCopyPaste();
       
       m_cceCommandEdit.SetEmulateCopyPaste( m_iEmulateCopyPaste );
-      
+    
       /**
        * Window refresh
        */
@@ -1517,6 +1706,8 @@ void CPuTTYCSDialog::OnPreferencesButton()
    }
 
    delete( pDialog );   
+
+   m_bDisablePopup = FALSE;
 }
 
 /**
@@ -1525,6 +1716,8 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
 void CPuTTYCSDialog::OnScriptButton() 
 {   
+   m_bDisablePopup = TRUE;
+
    CFileDialog* pDialog = 
       new CFileDialog( true, 
                        NULL, 
@@ -1582,6 +1775,8 @@ void CPuTTYCSDialog::OnScriptButton()
    RefreshDialog(); 
 
    delete( pDialog );   
+
+   m_bDisablePopup = FALSE;
 }
 
 /**
@@ -1606,10 +1801,20 @@ void CPuTTYCSDialog::OnTrayNotify( WPARAM wParam, LPARAM lParam )
    UINT uMsg = (UINT) lParam;
  	
    switch ( uMsg ) 
-	{ 
+	{       
 	   case WM_LBUTTONDBLCLK:     
 
-         OnOpenMenuItem();
+         if ( !m_bDisablePopup )
+         {
+            if ( IsWindowVisible() )
+            {
+               ShowWindow( SW_HIDE );
+            }
+            else
+            {
+               OnOpenMenuItem();
+            }
+         }
 
 		   break;
 	
@@ -1618,15 +1823,38 @@ void CPuTTYCSDialog::OnTrayNotify( WPARAM wParam, LPARAM lParam )
 
          CPoint pt;	
     	   GetCursorPos(&pt);     
+       
+         CMenu* pPopup = m_pMenu->GetSubMenu(0);
 
-         m_cmMenu.GetSubMenu(0)->
+         pPopup->
             SetDefaultItem( IDMI_SYSTRAYOPEN_MENUITEM, FALSE );	
 
-         m_cmMenu.GetSubMenu(0)->
+         UINT uiEnable =
+            (m_bDisablePopup) ? MF_GRAYED : MF_ENABLED;
+
+         pPopup->EnableMenuItem( 
+            IDMI_SYSTRAYOPEN_MENUITEM, uiEnable );
+
+         pPopup->EnableMenuItem( 2, MF_BYPOSITION | uiEnable );               
+
+         pPopup->EnableMenuItem( 
+            IDMI_SYSTRAYPREFERENCES_MENUITEM, uiEnable );
+
+         pPopup->EnableMenuItem( 
+            IDMI_SYSTRAYABOUT_MENUITEM, uiEnable );
+
+         pPopup->EnableMenuItem( 
+            IDMI_SYSTRAYEXIT_MENUITEM, uiEnable );
+      
+         ::SetForegroundWindow( this->m_hWnd );
+
+         pPopup->
             TrackPopupMenu( TPM_BOTTOMALIGN |
                             TPM_LEFTBUTTON |
                             TPM_RIGHTBUTTON,
                             pt.x, pt.y, this );
+        
+         ::PostMessage( this->m_hWnd, WM_NULL, 0, 0 );
 
 	  	   break;
    } 
@@ -1977,12 +2205,4 @@ int CPuTTYCSDialog::Compare( const void *pWndS1, const void *pWndS2 )
    ((CWnd*) pWnd2)->GetWindowText( csS2 );
     
    return ( csS1 < csS2 );
-}
-
-BOOL CPuTTYCSDialog::PreCreateWindow(CREATESTRUCT& cs) 
-{
-   
-	// TODO: Add your specialized code here and/or call the base class
-	
-	return CDialog::PreCreateWindow(cs);
 }

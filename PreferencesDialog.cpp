@@ -1,7 +1,7 @@
 /**
  * PreferencesDialog.cpp - PuTTYCS Preferences Dialog
  *
- * Copyright (c) 2005 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -78,16 +78,16 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    ON_BN_CLICKED(IDC_ARRANGEONSTARTUP_CHECKBOX, OnArrangeOnStartupCheckbox)
    ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)   
    ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheckbox)
-   ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)
-   ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)   
+   ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)   
    ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
+   ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
    ON_BN_CLICKED(IDC_MINIMIZETOSYSTRAY_CHECKBOX, OnMinimizeToSysTrayCheckbox)
    ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)
    ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
    ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
-	ON_WM_HSCROLL()
-   ON_WM_HELPINFO()
-   ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
+   ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)      
+   ON_WM_HELPINFO()      
+	ON_WM_HSCROLL()   	
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -110,7 +110,7 @@ void CPreferencesDialog::setSavePassword( int iSavePassword )
 }
 
 /**
- * CPreferencesDialog::getAutoArrange)
+ * CPreferencesDialog::getAutoArrange()
  */
 
 int CPreferencesDialog::getAutoArrange()
@@ -334,7 +334,7 @@ BOOL CPreferencesDialog::OnInitDialog()
    CheckDlgButton( IDC_SAVEPASSWORD_CHECKBOX, 
       m_iSavePassword );
 
-    CheckDlgButton( IDC_AUTOARRANGE_OFF_RADIO,
+   CheckDlgButton( IDC_AUTOARRANGE_OFF_RADIO,
       (m_iAutoArrange == PUTTYCS_PREF_AUTO_ARRANGE_OFF) );
 
    CheckDlgButton( IDC_AUTOARRANGE_CASCADE_RADIO, 
@@ -389,7 +389,7 @@ BOOL CPreferencesDialog::OnInitDialog()
  
    CheckDlgButton( IDC_EMULATECOPYPASTE_CHECKBOX, 
       m_iEmulateCopyPaste );
- 
+
    UpdateDialog();
 
    return TRUE;  
@@ -447,7 +447,9 @@ void CPreferencesDialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollB
 void CPreferencesDialog::OnSavePasswordCheckbox() 
 {   
    m_iSavePassword =
-      IsDlgButtonChecked( IDC_SAVEPASSWORD_CHECKBOX );   
+      IsDlgButtonChecked( IDC_SAVEPASSWORD_CHECKBOX ); 
+   
+   UpdateDialog();
 }
 
 /**
@@ -489,7 +491,6 @@ void CPreferencesDialog::OnArrangeOnStartupCheckbox()
       ((CButton*) GetDlgItem(IDC_ARRANGEONSTARTUP_CHECKBOX))->GetCheck();   
 
    UpdateDialog();
-   
 }
 
 /**

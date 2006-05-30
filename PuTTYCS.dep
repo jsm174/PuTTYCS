@@ -1,0 +1,18 @@
+# Microsoft Developer Studio Generated Dependency File, included by PuTTYCS.mak
+
+.\PuTTYCS.rc : \
+	".\PuTTYCS.mft"\
+	".\res\PuTTYCS.ico"\
+	".\res\PuTTYCS.rc2"\
+	
+
+.\PuTTYCSDialog.cpp : \
+	".\AboutDialog.h"\
+	".\Base64.h"\
+	".\CommandEdit.h"\
+	".\FiltersDialog.h"\
+	".\PasswordDialog.h"\
+	".\PreferencesDialog.h"\
+	".\PuTTYCS.h"\
+	".\PuTTYCSDialog.h"\
+	

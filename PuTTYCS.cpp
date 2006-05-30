@@ -1,7 +1,7 @@
 /**
  * PuTTYCS.cpp - PuTTYCS Main Application
  *
- * Copyright (c) 2005 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,8 @@
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
  * 12/19/2005: Added window opacity                  J. Millard
+ * 05/27/2006: Added custom window class for         J. Millard
+ *             better multiple instance detection 
  */
 
 #include "stdafx.h"
@@ -71,6 +73,12 @@ CPuTTYCSApp theApp;
 
 BOOL CPuTTYCSApp::InitInstance()
 {
+#ifdef _AFXDLL
+	Enable3dControls();			// Call this when using MFC in a shared DLL
+#else
+	Enable3dControlsStatic();	// Call this when linking to MFC statically
+#endif
+
    /**
     * VC++ 6.0 layered windows support 
     */
@@ -80,32 +88,40 @@ BOOL CPuTTYCSApp::InitInstance()
 
    g_pSetLayeredWindowAttributes = 
       (lpfn) GetProcAddress(hUser32, "SetLayeredWindowAttributes");
- 
-   /**
-    * Search for existing application 
-    * (tool window style first, then app window style)
-    */
 
-   CWnd* pAppWnd =
-      CWnd::FindWindow( NULL, PUTTYCS_WINDOW_TITLE_TOOL );
+   WNDCLASS wndcls;
+   memset( &wndcls, 0, sizeof(WNDCLASS) );
+   wndcls.style = CS_DBLCLKS | CS_SAVEBITS;
+   wndcls.cbWndExtra = DLGWINDOWEXTRA;
+   wndcls.lpfnWndProc = ::DefDlgProc;
+   wndcls.hInstance = AfxGetInstanceHandle();      
+   wndcls.lpszClassName = PUTTYCS_WND_CLASS;
+   wndcls.hIcon = LoadIcon( IDR_MAINFRAME );
+   wndcls.hCursor = LoadCursor( IDC_ARROW );
+   wndcls.lpszMenuName = 0;     
 
+   if ( AfxRegisterClass(&wndcls) ) 
+   { 
+      /**
+       * Search for existing application 
+       */
 
-   if ( !pAppWnd )
-   {
-      pAppWnd =
-         CWnd::FindWindow( NULL, PUTTYCS_WINDOW_TITLE_APP );
-   }
+      CWnd* pAppWnd =
+         CWnd::FindWindow( PUTTYCS_WND_CLASS, NULL );
 
-   if ( pAppWnd )
-   {
-      pAppWnd->SetForegroundWindow();
-   }
-   else
-   {
-      CPuTTYCSDialog dialog;
-      m_pMainWnd = &dialog;
+      if ( pAppWnd )
+      {
+         pAppWnd->SendMessage( WM_USER_MULTIPLE_INSTANCE, 
+                               NULL, 
+                               NULL );
+      }
+      else
+      {
+         CPuTTYCSDialog dialog;
+         m_pMainWnd = &dialog;
 
-      dialog.DoModal();
+         dialog.DoModal();
+      }
    }
    
    return FALSE;

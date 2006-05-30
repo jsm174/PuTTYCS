@@ -1,7 +1,7 @@
 /**
  * PreferencesDialog.h - PuTTYCS Preferences Dialog header
  *
- * Copyright (c) 2005 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@ public:
 
    int getSavePassword();
    void setSavePassword( int iSavePassword );   
-   
+  
    int getAutoArrange();
    void setAutoArrange( int iAutoArrange );
    
@@ -114,7 +114,7 @@ protected:
    int m_iTransition; 
    int m_iEmulateCopyPaste;
    int m_iTabCompletion;
-      
+     
    // Generated message map functions
    //{{AFX_MSG(CPreferencesDialog)
    virtual BOOL OnInitDialog();
