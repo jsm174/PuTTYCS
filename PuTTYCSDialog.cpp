@@ -45,6 +45,11 @@
  *             delete buttons
  * 05/30/2006: Implemented MSDN KB135788 for         J. Millard
  *             system tray context menu
+ * 11/20/2006: Added support for PuTTYtel and        J. Millard
+ *             TuTTY. Added support for user 
+ *             defined cascade size. Changed 
+ *             scripting to send CR on last line
+ *             if CR button is on.
  */
 
 #include "stdafx.h"
@@ -281,7 +286,7 @@ void CPuTTYCSDialog::LoadPreferences()
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_OPACITY, 
          PUTTYCS_OPACITY_MAX );
- 
+   
    /**
     * Auto arrange 
     */
@@ -301,6 +306,14 @@ void CPuTTYCSDialog::LoadPreferences()
    m_iUnhideOnExit =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_UNHIDE_ON_EXIT, 1 );
+
+   m_iCascadeWidth = 
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_CASCADE_WIDTH, PUTTYCS_CASCADE_DEFAULT_WIDTH );
+
+   m_iCascadeHeight = 
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_CASCADE_HEIGHT, PUTTYCS_CASCADE_DEFAULT_HEIGHT );
 
    /**
     * Send CR 
@@ -426,6 +439,12 @@ void CPuTTYCSDialog::SavePreferences()
 
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
       PUTTYCS_PREF_UNHIDE_ON_EXIT, m_iUnhideOnExit );
+
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
+      PUTTYCS_PREF_CASCADE_WIDTH, m_iCascadeWidth );
+
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
+      PUTTYCS_PREF_CASCADE_HEIGHT, m_iCascadeHeight );
 
    /**
     * Send CR 
@@ -650,6 +669,7 @@ BOOL CPuTTYCSDialog::OnInitDialog()
    SetIcon(m_hIcon, FALSE);
     
    m_bIsClosing = false;
+   m_bFindAll = false;
 
    /**
     * Preferences
@@ -1025,6 +1045,25 @@ void CPuTTYCSDialog::OnSelChangeFiltersCombobox()
 }
 
 /**
+ * CPuTTYCSDialog::GetAllWindows()
+ */ 
+
+CObArray* CPuTTYCSDialog::GetAllWindows()
+{
+   m_obaWindows.RemoveAll();
+
+   m_bFindAll = true;
+
+   ::EnumWindows( enumwindowsProc, (LPARAM) this );
+    
+   SortWindows();
+
+   m_bFindAll = false;
+
+   return &m_obaWindows;
+}
+
+/**
  * CPuTTYCSDialog::OnCascadeButton
  */ 
 
@@ -1073,8 +1112,8 @@ void CPuTTYCSDialog::OnCascadeButton()
          SendMessage( WM_SIZE,
                       SIZE_RESTORED, 
                       MAKELPARAM( 
-                         PUTTYCS_CASCADE_DIMENSION_WIDTH,
-                         PUTTYCS_CASCADE_DIMENSION_HEIGHT) );
+                         m_iCascadeWidth,
+                         m_iCascadeHeight) );
 
       pWnd->SendMessage( WM_EXITSIZEMOVE, 0, 0 );      
 
@@ -1542,7 +1581,7 @@ void CPuTTYCSDialog::OnPreferencesButton()
    m_bDisablePopup = TRUE;
 
    CPreferencesDialog* pDialog =
-      new CPreferencesDialog();
+      new CPreferencesDialog( this );
 
    /**
     * Password 
@@ -1566,6 +1605,12 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
    pDialog->
       setUnhideOnExit( m_iUnhideOnExit );
+
+   pDialog->
+      setCascadeWidth( m_iCascadeWidth );
+
+   pDialog->
+      setCascadeHeight( m_iCascadeHeight );
 
    /**
     * Window
@@ -1620,6 +1665,12 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
       m_iUnhideOnExit =
          pDialog->getUnhideOnExit();
+
+      m_iCascadeWidth =
+         pDialog->getCascadeWidth();
+
+      m_iCascadeHeight =
+         pDialog->getCascadeHeight();
             
       /**
        * Window
@@ -1748,11 +1799,24 @@ void CPuTTYCSDialog::OnScriptButton()
                PUTTYCS_SENDKEY_BUTTON_CAPSLOCK;
          }
 
+         bool firstLine = true;
+
          TCHAR szLine[65536];
     
          while ( _fgetts(szLine, sizeof( szLine ), pFile) != NULL )       
          {
-            csBuffer += szLine;
+            if ( !firstLine ) 
+            {
+               csBuffer += PUTTYCS_SENDKEY_BUTTON_ENTER;
+            }
+         
+            csBuffer += szLine; 
+                           
+            firstLine = false;
+         }
+
+         if ( m_iSendCR )
+         {
             csBuffer += PUTTYCS_SENDKEY_BUTTON_ENTER;
          }
 
@@ -2044,13 +2108,17 @@ BOOL CALLBACK CPuTTYCSDialog::enumwindowsProc( HWND hwnd, LPARAM lParam )
 
    ::GetClassName( hwnd, szClass, sizeof(szClass) );
 
-   if ( !_tcscmp(szClass, PUTTYCS_WINDOW_CLASS_PUTTY) )
+   if ( (!_tcscmp(szClass, PUTTYCS_WINDOW_CLASS_PUTTY)) 
+     || (!_tcscmp(szClass, PUTTYCS_WINDOW_CLASS_PUTTYTEL)) 
+     || (!_tcscmp(szClass, PUTTYCS_WINDOW_CLASS_TUTTY)) 
+     || (!_tcscmp(szClass, PUTTYCS_WINDOW_CLASS_PIETTY)) )
+
    {      
       TCHAR szTitle[300];  
       ::GetWindowText(hwnd, szTitle, sizeof(szTitle));
 
       CString csEntry =
-         (pDialog->m_bIsClosing) ? PUTTYCS_FILTER_ALL :
+         ((pDialog->m_bIsClosing) || (pDialog->m_bFindAll)) ? PUTTYCS_FILTER_ALL :
          pDialog->m_csaFilters.GetAt(pDialog->m_iFilter);
      
       csEntry = csEntry.Mid(

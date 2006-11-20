@@ -42,6 +42,8 @@
  *             Added Windows XP style
  *             Added close, backspace, and          
  *             delete buttons
+ * 11/20/2006: Added support for user defined        J. Millard
+ *             cascade size.
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -61,6 +63,8 @@ public:
    CPuTTYCSDialog(CWnd* pParent = NULL);   // standard constructor
    ~CPuTTYCSDialog();
       
+   CObArray* GetAllWindows();
+   
 // Dialog Data
    //{{AFX_DATA(CPuTTYCSDialog)
    enum { IDD = IDD_PUTTYCS_DIALOG };
@@ -82,7 +86,9 @@ protected:
 
    HICON m_hIcon;
 
-   bool m_bIsClosing;   
+   bool m_bIsClosing;  
+   bool m_bFindAll; 
+
    int m_iDialogHeight;
 
    /**
@@ -125,6 +131,9 @@ protected:
    int m_iAutoMinimize;
    int m_iArrangeOnStartup;   
    int m_iUnhideOnExit;
+   
+   int m_iCascadeWidth;
+   int m_iCascadeHeight;
   
    /**
     * Keyboard/Mouse

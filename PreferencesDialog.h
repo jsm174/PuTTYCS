@@ -35,6 +35,8 @@
  * 12/15/2005: Added minimize to system tray         J. Millard
  *             Added tab completion
  * 12/19/2005: Added window opacity                  J. Millard
+ * 11/20/2006: Added support for user defined        J. Millard
+ *             cascade size.
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -67,6 +69,12 @@ public:
 
    int getArrangeOnStartup();
    void setArrangeOnStartup( int iArrangeOnStartup );
+
+   int getCascadeWidth(); 
+   void setCascadeWidth( int iCascadeWidth );
+
+   int getCascadeHeight(); 
+   void setCascadeHeight( int iCascadeHeight );
 
    int getUnhideOnExit();
    void setUnhideOnExit( int iUnhideOnExit);
@@ -106,6 +114,9 @@ protected:
    int m_iAutoArrange;
    int m_iAutoMinimize;
    int m_iArrangeOnStartup;
+   int m_iCascadeWidth;
+   int m_iCascadeHeight;
+   
    int m_iUnhideOnExit;      
    int m_iToolWindow;   
    int m_iAlwaysOnTop;
@@ -132,6 +143,9 @@ protected:
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	afx_msg void OnTabCompletionCheckbox();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnChangeCascadeHeightEdit();
+	afx_msg void OnChangeCascadeWidthEdit();
+	afx_msg void OnFindButton();
 	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 

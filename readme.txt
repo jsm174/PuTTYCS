@@ -1,10 +1,17 @@
-PuTTYCS - PuTTY Command Sender v1.5
+PuTTYCS - PuTTY Command Sender v1.6
 (C) 2005, 2006 - Jason Millard - jsm174@gmail.com
-Release Date: 05/30/06
+Release Date: 11/20/06
 
 
 VERSION HISTORY
  
+11/20/06 - v1.6  - Added support for PuTTYtel, TuTTY,
+                   and PieTTY
+                   Added support for user defined 
+                   cascade size
+                   Changed scripting to send CR on
+                   last line if Carriage Return is 
+                   enabled
 05/30/06 - v1.5  - Improved system tray logic
                    Added Windows XP style
                    Added close, backspace, and
@@ -27,10 +34,11 @@ ABOUT
 -----
 
 PuTTYCS is a small windows application that is intended
-to be used along with multiple instances of PuTTY. It's
-purpose is to send the same command to each PuTTY window.
-It is can be useful for copying files, starting and 
-stopping processes, and examine logs on multiple servers. 
+to be used along with multiple instances of PuTTY
+(including PuTTYtel, TuTTY, and PieTTY). It's purpose is
+to send the same command to each PuTTY window. It is can
+be useful for copying files, starting and stopping
+processes, and examining logs on multiple servers. 
 
 If you're not familiar with PuTTY, then this tool is
 probably not for you. If you want to find out more 
@@ -140,7 +148,8 @@ CARRIAGE RETURN
       
 The carriage return push button next to the command
 history arrow button determines if a carriage return 
-should be send when the Send button is pressed. This
+should be sent 1) when the Send button is pressed, and
+2) after the last line of a script [see SCRIPT]. This
 maybe useful if you want to send most of a command
 and than manually complete it.
 
@@ -207,7 +216,7 @@ Preferences are loaded each time PuTTYCS is started.
      window. This maybe useful if PuTTYCS sometimes blocks
      your existing PuTTY windows.
 
-  Auto Arrange (Off, Cascade, Tile) 
+  Auto arrange (Off, Cascade, Tile) 
      When switching filters, automatically cascade or
      tile PuTTY windows.
 
@@ -221,7 +230,20 @@ Preferences are loaded each time PuTTYCS is started.
   
   Unhide PuTTYs on exit
      Unhides any PuTTYs hidden using the Hide button.
-     
+
+  Cascade dimensions:
+     Sets the dimensions of filtered PuTTY windows when 
+     the Cascade button is pressed. Press the Find button
+     to determine the dimensions of the largest visible 
+     PuTTY window.
+
+     NOTE: PuTTYCS only supports cascading dimensions 
+           between 98x18 (12x1) and 1042x802 (130x50).
+           Default dimensions are 642x386 (80x24).
+
+           These dimensions are hardcoded and will not
+           change with system settings. 
+
 
   Enable Tab Completion
      Pressing Tab in the command field, sends the command
@@ -247,6 +269,11 @@ SCRIPT
 This button can be used to a load a PuTTYCS script. A
 script can be any text file and should end with a .pcs
 extension. 
+
+If you do not want to send a carriage return at the end
+of the script 1) make sure the last line of the script 
+is not blank, and 2) the Carriage Return button is not 
+enabled.
 
 Because the core of PuTTYCS is based on SendKeys in C++,
 the script should follow the syntax defined by SendKeys.
@@ -300,6 +327,10 @@ PuTTYCS gets around this by performing a variety of hide,
 move, resize, and show commands. However, at times, PuTTYs
 may not arrange as expected. 
 
+PuTTYCS officially supports PuTTY. I have support to find
+PuTTYtel, TuTTY, and PieTTY windows based upon user requests.
+I can't guarantee they will work as expected.
+
 To use Tab completion on several windows, press the Tab
 key and wait until all windows receive the command. Pressing
 the Tab key too early may send an additional Tab to one of
@@ -311,16 +342,13 @@ FUTURE
 
 When I first released PuTTYCS, I had no plans on releasing
 any major updates. However, from all the positive feedback
-I've received, I have been contemplating a version 2. 
+I've received, I have started coding version 2. It is a 
+complete rewrite. 
 
-I would like to break the filters down into an Environment ->
-Tier -> Server setup. This way you could easily launch PuTTYs
-directly from PuTTYCS. 
+The next version supports tabbing and launching PuTTYs.
 
-Also, I have figured out how to control PuTTY without using
-SendKeys. This makes for much more reliable communication. 
-However, if I removed SendKeys, the scripting ability would
-be removed. If you use scripting, please let me know!
+Unfortunately, I am seriously debating releasing version 2 as
+shareware. [see I LIKE IT]
 
 PuTTYCS needs a LOGO!! If you can draw and would be interested
 in designing a logo please contact me!!
@@ -340,16 +368,15 @@ I LIKE IT
 If you like this application, drop me a line at jsm174@gmail.com.
 It's just cool to hear from people around the world! 
 
+If you really like and use this application, please consider 
+donating. You can use the Paypal link found on the homepage.
 
-I REALLY LIKE IT
-----------------
+As of writing this, I've received a grand total of $1. It's 
+disappointing considering the amount of downloads and the effort 
+that went into making PuTTYCS.
 
-If you really like this application, feel free to send a
-donation! I really would appreciate it! Plus I need some 
-motivation for version 2. :)
-
-Donations can be made through Paypal using the link on the
-homepage.
+If this changes, I promise future version of PuTTYCS will remain 
+free.
 
 
 CREDITS

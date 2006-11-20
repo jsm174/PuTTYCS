@@ -38,6 +38,9 @@
  * 12/19/2005: Added window opacity                  J. Millard   
  * 12/21/2005: Fixed password not sending CR         J. Millard
  * 05/27/2006: Added custom window class             J. Millard
+ * 11/20/2006: Added support for PuTTYtel, TuTTY,    J. Millard
+ *             and PieTTY. Added support for user 
+ *             defined cascade size.
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -46,14 +49,18 @@
 #define PUTTYCS_APP_NAME                      _T( "PuTTYCS" )
 
 #define PUTTYCS_WINDOW_CLASS_PUTTY            _T( "PuTTY" )
+#define PUTTYCS_WINDOW_CLASS_PUTTYTEL         _T( "PuTTYtel" )
+#define PUTTYCS_WINDOW_CLASS_TUTTY            _T( "TuTTY" )
+#define PUTTYCS_WINDOW_CLASS_PIETTY           _T( "PieTTY" )
+
 #define PUTTYCS_MSG_TASKBAR_CREATED           _T( "TaskbarCreated" )
 
-#define PUTTYCS_WINDOW_TITLE_TOOL             _T( "PuTTYCS 1.5 - PuTTY Command Sender")
-#define PUTTYCS_WINDOW_TITLE_APP              _T( "PuTTYCS 1.5")
+#define PUTTYCS_WINDOW_TITLE_TOOL             _T( "PuTTYCS 1.6 - PuTTY Command Sender")
+#define PUTTYCS_WINDOW_TITLE_APP              _T( "PuTTYCS 1.6")
 
 #define PUTTYCS_WINDOW_TITLE_ABOUT            _T( "About PuTTYCS...")
 
-#define PUTTYCS_ABOUT_TEXT_LINE1              _T( "PuTTY Command Sender 1.5" )
+#define PUTTYCS_ABOUT_TEXT_LINE1              _T( "PuTTY Command Sender 1.6" )
 #define PUTTYCS_ABOUT_TEXT_LINE2              _T( "© 2005, 2006 Jason Millard. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD       _T( "Add Filter" )
@@ -63,9 +70,10 @@
 #define PUTTYCS_WINDOW_TITLE_LOCATE_PUTTY     _T( "Please locate PuTTY" )
   
 #define PUTTYCS_MESSAGEBOX_CMDHISTORY         _T( "Are you sure you want to\nclear the command history?" )
+#define PUTTYCS_MESSAGEBOX_CASCADE            _T( "Could not determine cascade dimensions.\n\nPlease verify that:\n\n1) At least one PuTTY window is open and visible.\n2) The PuTTY window is no smaller than %d x %d pixels.\n3) The PuTTY window is no larger than %d x %d pixels.\n\nCascade dimensions will be set to defaults." )
 #define PUTTYCS_MESSAGEBOX_CLOSE              _T( "Are you sure you want to\nclose filtered PuTTYs?" )
         
-#define PUTTYCS_URL_HOMEPAGE                  _T( "http://www.millardsoftware.com/puttycs/index.php?app=1&v=15" )
+#define PUTTYCS_URL_HOMEPAGE                  _T( "http://www.millardsoftware.com/puttycs/index.php?app=1&v=16" )
 
 #define PUTTYCS_FILTER_ALL                    _T( "All PuTTYs||+*")
 
@@ -98,6 +106,9 @@
 #define PUTTYCS_PREF_AUTO_ARRANGE_OFF         1
 #define PUTTYCS_PREF_AUTO_ARRANGE_CASCADE     2
 #define PUTTYCS_PREF_AUTO_ARRANGE_TILE        3
+
+#define PUTTYCS_PREF_CASCADE_WIDTH            _T( "cascadeWidth" )
+#define PUTTYCS_PREF_CASCADE_HEIGHT           _T( "cascadeHeight" )
 
 #define PUTTYCS_PREF_AUTO_MINIMIZE            _T( "autoMinimize" )
 #define PUTTYCS_PREF_ARRANGE_ON_STARTUP       _T( "arrangeOnStartup" )
@@ -160,8 +171,14 @@
 
 #define PUTTYCS_EMPTY_STRING                  _T( "" )
 
-#define PUTTYCS_CASCADE_DIMENSION_WIDTH       600
-#define PUTTYCS_CASCADE_DIMENSION_HEIGHT      400
+#define PUTTYCS_CASCADE_DEFAULT_WIDTH         642
+#define PUTTYCS_CASCADE_DEFAULT_HEIGHT        386
+
+#define PUTTYCS_CASCADE_MINIMUM_WIDTH         98   
+#define PUTTYCS_CASCADE_MINIMUM_HEIGHT        18
+
+#define PUTTYCS_CASCADE_MAXIMUM_WIDTH         1042
+#define PUTTYCS_CASCADE_MAXIMUM_HEIGHT        802
 
 #define PUTTYCS_OPACITY_MIN                   50
 #define PUTTYCS_OPACITY_MAX                   255

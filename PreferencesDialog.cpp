@@ -34,10 +34,13 @@
  *             Updated Help/F1 to go visit website   
  *             Added tab completion
  * 12/19/2005: Added window opacity                  J. Millard
+ * 11/20/2006: Added support for user defined        J. Millard
+ *             cascade size.
  */
 
 #include "stdafx.h"
 #include "PuTTYCS.h"
+#include "PuTTYCSDialog.h"
 #include "PreferencesDialog.h"
 
 #ifdef _DEBUG
@@ -79,15 +82,18 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)   
    ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheckbox)
    ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)   
+   ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)      
    ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
    ON_BN_CLICKED(IDC_MINIMIZETOSYSTRAY_CHECKBOX, OnMinimizeToSysTrayCheckbox)
+   ON_WM_HELPINFO()      
    ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)
+	ON_WM_HSCROLL()   	
+	ON_EN_CHANGE(IDC_CASCADE_HEIGHT_EDIT, OnChangeCascadeHeightEdit)
+	ON_EN_CHANGE(IDC_CASCADE_WIDTH_EDIT, OnChangeCascadeWidthEdit)
    ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
    ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
-   ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)      
-   ON_WM_HELPINFO()      
-	ON_WM_HSCROLL()   	
+	ON_BN_CLICKED(IDC_FIND_BUTTON, OnFindButton)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -161,6 +167,42 @@ int CPreferencesDialog::getArrangeOnStartup()
 void CPreferencesDialog::setArrangeOnStartup( int iArrangeOnStartup )
 {
    m_iArrangeOnStartup = iArrangeOnStartup;
+}
+
+/**
+ * CPreferencesDialog::getCascadeWidth()
+ */
+
+int CPreferencesDialog::getCascadeWidth()
+{
+   return m_iCascadeWidth;
+}
+
+/**
+ * CPreferencesDialog::setCascadeWidth()
+ */
+
+void CPreferencesDialog::setCascadeWidth( int iCascadeWidth )
+{
+   m_iCascadeWidth = iCascadeWidth;
+}
+
+/**
+ * CPreferencesDialog::getCascadeHeight()
+ */
+
+int CPreferencesDialog::getCascadeHeight()
+{
+   return m_iCascadeHeight;
+}
+
+/**
+ * CPreferencesDialog::setCascadeHeight()
+ */
+
+void CPreferencesDialog::setCascadeHeight( int iCascadeHeight )
+{
+   m_iCascadeHeight = iCascadeHeight;
 }
 
 /**
@@ -364,6 +406,12 @@ BOOL CPreferencesDialog::OnInitDialog()
    SetDlgItemInt( IDC_TRANSITION_EDIT, 
       m_iTransition );
 
+   SetDlgItemInt( IDC_CASCADE_WIDTH_EDIT, 
+      m_iCascadeWidth );
+
+   SetDlgItemInt( IDC_CASCADE_HEIGHT_EDIT, 
+      m_iCascadeHeight );
+
    if ( CPuTTYCSApp::g_pSetLayeredWindowAttributes )
    {
       ((CSliderCtrl*)GetDlgItem(IDC_OPACITY_SLIDER))->
@@ -410,7 +458,11 @@ void CPreferencesDialog::UpdateDialog()
    ((CButton*) GetDlgItem(IDC_OK_BUTTON))->
       EnableWindow( (m_iTransition >= 1) && 
                     (m_iTransition <= 1500) &&
-                    (m_iOpacity >= PUTTYCS_OPACITY_MIN) );
+                    (m_iOpacity >= PUTTYCS_OPACITY_MIN) &&
+                    (m_iCascadeWidth >= PUTTYCS_CASCADE_MINIMUM_WIDTH) &&
+                    (m_iCascadeWidth <= PUTTYCS_CASCADE_MAXIMUM_WIDTH) &&
+                    (m_iCascadeHeight >= PUTTYCS_CASCADE_MINIMUM_HEIGHT) &&
+                    (m_iCascadeHeight <= PUTTYCS_CASCADE_MAXIMUM_HEIGHT) );                    
    
    float fPercent = 
       ((float) (m_iOpacity - PUTTYCS_OPACITY_MIN) /
@@ -493,6 +545,88 @@ void CPreferencesDialog::OnArrangeOnStartupCheckbox()
    UpdateDialog();
 }
 
+/** 
+ * CPreferencesDialog::OnChangeCascadeWidthEdit()
+ */
+
+void CPreferencesDialog::OnChangeCascadeWidthEdit() 
+{
+   m_iCascadeWidth =
+      GetDlgItemInt( IDC_CASCADE_WIDTH_EDIT );
+
+   UpdateDialog();		
+}
+
+/** 
+ * CPreferencesDialog::OnChangeCascadeHeightEdit()
+ */
+
+void CPreferencesDialog::OnChangeCascadeHeightEdit() 
+{
+   m_iCascadeHeight =
+      GetDlgItemInt( IDC_CASCADE_HEIGHT_EDIT );
+
+   UpdateDialog();	
+}
+
+/** 
+ * CPreferencesDialog::OnFindButton()
+ */
+
+void CPreferencesDialog::OnFindButton() 
+{		
+   CPuTTYCSDialog* pDialog = (CPuTTYCSDialog*) GetParent();
+   CObArray* pWindows = pDialog->GetAllWindows();
+
+   int iWidth = 0;
+   int iHeight = 0;
+
+   for ( int loop = 0; loop < pWindows->GetSize(); loop++ )
+   {
+      CWnd* pWnd = (CWnd*) pWindows->GetAt(loop);
+
+      if (pWnd->IsWindowVisible())
+      {         
+         CRect rect;
+         pWnd->GetClientRect(rect);
+         
+         int iWndWidth = rect.Width();
+         int iWndHeight = rect.Height();
+
+         if ( (iWidth * iHeight) < (iWndWidth * iWndHeight) )
+         {
+            iWidth = iWndWidth;
+            iHeight = iWndHeight;
+         }
+      }
+   }
+
+   if ( ((iWidth >= PUTTYCS_CASCADE_MINIMUM_WIDTH) && (iWidth <= PUTTYCS_CASCADE_MAXIMUM_WIDTH)) && 
+        ((iHeight >= PUTTYCS_CASCADE_MINIMUM_HEIGHT) && (iHeight <= PUTTYCS_CASCADE_MAXIMUM_HEIGHT)) )
+   {
+      m_iCascadeWidth = iWidth;
+      m_iCascadeHeight = iHeight;
+   }
+   else
+   {
+      CString csMessage;
+
+      csMessage.Format( PUTTYCS_MESSAGEBOX_CASCADE, 
+         PUTTYCS_CASCADE_MINIMUM_WIDTH, PUTTYCS_CASCADE_MINIMUM_HEIGHT,
+         PUTTYCS_CASCADE_MAXIMUM_WIDTH, PUTTYCS_CASCADE_MAXIMUM_HEIGHT );
+
+      MessageBox( csMessage, PUTTYCS_APP_NAME, MB_ICONEXCLAMATION | MB_OK );
+
+      m_iCascadeWidth = PUTTYCS_CASCADE_DEFAULT_WIDTH;
+      m_iCascadeHeight = PUTTYCS_CASCADE_DEFAULT_HEIGHT;
+   }
+          
+   SetDlgItemInt( IDC_CASCADE_WIDTH_EDIT, m_iCascadeWidth );
+   SetDlgItemInt( IDC_CASCADE_HEIGHT_EDIT, m_iCascadeHeight );
+
+   UpdateDialog();                     
+}
+
 /**
  * CPreferencesDialog::OnUnhideOnExitCheckbox()
  */ 
@@ -573,3 +707,4 @@ void CPreferencesDialog::OnOKButton()
 {
    CDialog::OnOK();      
 }
+

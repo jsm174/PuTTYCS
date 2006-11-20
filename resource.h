@@ -50,6 +50,8 @@
 #define IDC_EMULATECOPYPASTE_CHECKBOX   1110
 #define IDC_MINIMIZETOSYSTRAY_CHECKBOX  1111
 #define IDC_TABCOMPLETION_CHECKBOX      1112
+#define IDC_CASCADE_WIDTH_EDIT          1113
+#define IDC_CASCADE_HEIGHT_EDIT         1114
 #define IDC_FILTERS_LISTBOX             1200
 #define IDC_ADD_BUTTON                  1201
 #define IDC_COPY_BUTTON                 1202
@@ -61,7 +63,8 @@
 #define IDC_CLOSE_BUTTON                1208
 #define IDC_OK_BUTTON                   1209
 #define IDC_CANCEL_BUTTON               1210
-#define IDC_APPLY_BUTTON                1211
+#define IDC_FIND_BUTTON                 1211
+#define IDC_APPLY_BUTTON                1212
 #define IDC_FILTERNAME_EDIT             1300
 #define IDC_FILTERLIST_EDIT             1301
 #define IDC_PASSWORD_CEDIT              1400
