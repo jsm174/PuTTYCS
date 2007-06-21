@@ -1,7 +1,7 @@
 /**
  * CommandEdit.cpp - Command CEdit Control
  *
- * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,9 @@
  *
  * 12/06/2005: Initial version                       J. Millard
  * 12/15/2005: Added GetText() method                J. Millard
+ * 06/21/2007: Added InsertText() method             J. Millard
+ *             Updated for command history scroll
+ *             through 
  */
 
 #include "stdafx.h"
@@ -48,6 +51,7 @@ static char THIS_FILE[] = __FILE__;
 CCommandEdit::CCommandEdit()
 {
    m_iEmulateCopyPaste = 0;
+   m_iCmdHistoryScrollThrough = 1;
 }
 
 /**
@@ -62,7 +66,8 @@ BEGIN_MESSAGE_MAP(CCommandEdit, CEdit)
    //{{AFX_MSG_MAP(CCommandEdit)
    ON_WM_LBUTTONUP()
    ON_WM_RBUTTONUP()
-   //}}AFX_MSG_MAP
+	ON_WM_KEYDOWN()
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /**
@@ -89,12 +94,30 @@ void CCommandEdit::SetText( CString csText )
 }
 
 /**
- * CCommandEdit::setEmulateCopyPaste()
+ * CCommandEdit::InsertText()
+ */ 
+
+void CCommandEdit::InsertText( CString csText )
+{
+   ReplaceSel( csText );
+}
+
+/**
+ * CCommandEdit::SetEmulateCopyPaste()
  */ 
 
 void CCommandEdit::SetEmulateCopyPaste( int iEmulateCopyPaste )
 {
    m_iEmulateCopyPaste = iEmulateCopyPaste;
+}
+
+/**
+ * CCommandEdit::SetCmdHistoryScrollThrough()
+ */ 
+
+void CCommandEdit::SetCmdHistoryScrollThrough( int iCmdHistoryScrollThrough )
+{
+   m_iCmdHistoryScrollThrough = iCmdHistoryScrollThrough;
 }
 
 /**
@@ -163,5 +186,22 @@ void CCommandEdit::OnRButtonUp(UINT nFlags, CPoint point)
    else
    {   
       CEdit::OnRButtonUp(nFlags, point);
+   }
+}
+
+/**
+ * CCommandEdit::OnKeyDown()
+ */ 
+
+void CCommandEdit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+{
+   if ( (m_iCmdHistoryScrollThrough) && ((nChar == VK_UP) || (nChar == VK_DOWN)) )
+   {	      
+      GetParent()->SendMessage( 
+         WM_KEYDOWN, (WPARAM) nChar, MAKELPARAM((nRepCnt), (nFlags)) );
+   }
+   else 
+   {
+      CEdit::OnKeyDown(nChar, nRepCnt, nFlags);
    }
 }

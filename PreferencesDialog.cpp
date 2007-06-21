@@ -1,7 +1,7 @@
 /**
  * PreferencesDialog.cpp - PuTTYCS Preferences Dialog
  *
- * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,11 @@
  *             Added tab completion
  * 12/19/2005: Added window opacity                  J. Millard
  * 11/20/2006: Added support for user defined        J. Millard
- *             cascade size.
+ *             cascade size
+ * 06/21/2007: Added scroll command history using    J. Millard
+ *             up/down arrow keys
+ *             Added check for PuTTYCS update
+ *             Added run on system startup   
  */
 
 #include "stdafx.h"
@@ -84,16 +88,19 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)   
    ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)      
    ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
-   ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
-   ON_BN_CLICKED(IDC_MINIMIZETOSYSTRAY_CHECKBOX, OnMinimizeToSysTrayCheckbox)
-   ON_WM_HELPINFO()      
-   ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)
-	ON_WM_HSCROLL()   	
+   ON_BN_CLICKED(IDC_CMDHISTORYSCROLLTHROUGH_CHECKBOX, OnCmdHistoryScrollThroughCheckbox)
+   ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)   
+   ON_BN_CLICKED(IDC_MINIMIZETOSYSTRAY_CHECKBOX, OnMinimizeToSysTrayCheckbox)    	
+   ON_BN_CLICKED(IDC_RUNONSYSTEMSTARTUP_CHECKBOX, OnRunOnSystemStartupCheckbox)
+   ON_BN_CLICKED(IDC_CHECKFORUPDATES_CHECKBOX, OnCheckForUpdatesCheckbox)
 	ON_EN_CHANGE(IDC_CASCADE_HEIGHT_EDIT, OnChangeCascadeHeightEdit)
 	ON_EN_CHANGE(IDC_CASCADE_WIDTH_EDIT, OnChangeCascadeWidthEdit)
    ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
    ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
 	ON_BN_CLICKED(IDC_FIND_BUTTON, OnFindButton)
+   ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
+   ON_WM_HSCROLL()  
+   ON_WM_HELPINFO()         
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -332,6 +339,24 @@ void CPreferencesDialog::setTabCompletion( int iTabCompletion )
 }
 
 /**
+ * CPreferencesDialog::getCmdHistoryScrollThrough()
+ */
+
+int CPreferencesDialog::getCmdHistoryScrollThrough()
+{
+   return m_iCmdHistoryScrollThrough;
+}
+
+/**
+ * CPreferencesDialog::setCmdHistoryScrollThrough()
+ */
+
+void CPreferencesDialog::setCmdHistoryScrollThrough( int iCmdHistoryScrollThrough )
+{
+   m_iCmdHistoryScrollThrough = iCmdHistoryScrollThrough;
+}
+
+/**
  * CPreferencesDialog::getEmulateCopyPaste()
  */
 
@@ -347,6 +372,42 @@ int CPreferencesDialog::getEmulateCopyPaste()
 void CPreferencesDialog::setEmulateCopyPaste( int iEmulateCopyPaste )
 {
    m_iEmulateCopyPaste = iEmulateCopyPaste;
+}
+
+/**
+ * CPreferencesDialog::getRunOnSystemStartup()
+ */
+
+int CPreferencesDialog::getRunOnSystemStartup()
+{
+   return m_iRunOnSystemStartup;
+}
+
+/**
+ * CPreferencesDialog::setRunOnSystemStartup()
+ */
+
+void CPreferencesDialog::setRunOnSystemStartup( int iRunOnSystemStartup )
+{
+   m_iRunOnSystemStartup = iRunOnSystemStartup;
+}
+
+/**
+ * CPreferencesDialog::getCheckForUpdates()
+ */
+
+int CPreferencesDialog::getCheckForUpdates()
+{
+   return m_iCheckForUpdates;
+}
+
+/**
+ * CPreferencesDialog::setCheckForUpdates()
+ */
+
+void CPreferencesDialog::setCheckForUpdates( int iCheckForUpdates )
+{
+   m_iCheckForUpdates = iCheckForUpdates;
 }
 
 /**
@@ -435,8 +496,17 @@ BOOL CPreferencesDialog::OnInitDialog()
    CheckDlgButton( IDC_TABCOMPLETION_CHECKBOX, 
       m_iTabCompletion );
  
+   CheckDlgButton( IDC_CMDHISTORYSCROLLTHROUGH_CHECKBOX, 
+      m_iCmdHistoryScrollThrough );
+
    CheckDlgButton( IDC_EMULATECOPYPASTE_CHECKBOX, 
       m_iEmulateCopyPaste );
+
+   CheckDlgButton( IDC_RUNONSYSTEMSTARTUP_CHECKBOX, 
+      m_iRunOnSystemStartup );
+
+   CheckDlgButton( IDC_CHECKFORUPDATES_CHECKBOX, 
+      m_iCheckForUpdates );
 
    UpdateDialog();
 
@@ -689,6 +759,16 @@ void CPreferencesDialog::OnTabCompletionCheckbox()
       IsDlgButtonChecked( IDC_TABCOMPLETION_CHECKBOX );
 }
 
+/** 
+ * CPreferencesDialog::OnCmdHistoryScrollThroughCheckbox()
+ */
+
+void CPreferencesDialog::OnCmdHistoryScrollThroughCheckbox() 
+{
+   m_iCmdHistoryScrollThrough =
+      IsDlgButtonChecked( IDC_CMDHISTORYSCROLLTHROUGH_CHECKBOX );
+}
+
 /**
  * CPreferencesDialog::OnEmulateCopyPasteCheckbox()
  */ 
@@ -697,6 +777,26 @@ void CPreferencesDialog::OnEmulateCopyPasteCheckbox()
 {
    m_iEmulateCopyPaste =
       IsDlgButtonChecked( IDC_EMULATECOPYPASTE_CHECKBOX );   
+}
+
+/**
+ * CPreferencesDialog::OnRunOnSystemStartupCheckbox()
+ */ 
+
+void CPreferencesDialog::OnRunOnSystemStartupCheckbox() 
+{
+   m_iRunOnSystemStartup =
+      IsDlgButtonChecked( IDC_RUNONSYSTEMSTARTUP_CHECKBOX );   
+}
+
+/**
+ * CPreferencesDialog::OnCheckForUpdatesCheckbox()
+ */ 
+
+void CPreferencesDialog::OnCheckForUpdatesCheckbox() 
+{
+   m_iCheckForUpdates =
+      IsDlgButtonChecked( IDC_CHECKFORUPDATES_CHECKBOX );   
 }
 
 /** 

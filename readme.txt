@@ -1,10 +1,25 @@
-PuTTYCS - PuTTY Command Sender v1.6
-(C) 2005, 2006 - Jason Millard - jsm174@gmail.com
-Release Date: 11/20/06
+PuTTYCS - PuTTY Command Sender v1.7
+(C) 2005 - 2007 - Millard Software - jsm174@gmail.com
+Release Date: 06/21/07
 
 
 VERSION HISTORY
- 
+
+06/21/07 - v1.7  - Added Ctrl-R and Ctrl-D buttons.
+                   Added support for any control
+                   sequence using {%CTRL%} token in 
+                   command input 
+                   Added support for an incremental 
+                   counter using {%INC%} token in
+                   command input
+                   Added scroll command history using 
+                   up/down arrow keys
+                   Changed command history right/left 
+                   buttons to up/down buttons
+                   Added support to check for PuTTYCS
+                   updates                    
+                   Added support for automatically
+                   running on system startup
 11/20/06 - v1.6  - Added support for PuTTYtel, TuTTY,
                    and PieTTY
                    Added support for user defined 
@@ -134,20 +149,65 @@ or Minimize buttons.
 To automatically PuTTY windows, close the Close button.
 
 
+CTRL
+----
+
+PuTTYCS supports sending control characters. To send a 
+control character, the {%CTRL%} token followed by the
+actual control character should be entered in the command
+input. For example, to send a control-J, the command input
+would be:
+
+   {%CTRL%}J
+
+The CTRL button will automatically add the {%CTRL%} token
+at the current position in the command input.
+
+
+INC
+---
+
+The {%INC%} token is used to send an incremental counter to
+each filtered PuTTY window. This may be useful, for example,
+if you want to copy files with the same name from several
+servers into one directory with one command (assume the one
+directory is shared across each server):
+
+   cp /opt/WebSphere/AppServer6/profiles/app/logs/SystemOut.log 
+   ~user/SystemOut{%INC%}.log
+
+If you have ten filtered PuTTY windows, after executing the 
+command, ~user will contain:
+
+   SystemOut1.log
+   SystemOut2.log
+   SystemOut3.log
+   .
+   .
+   .
+   SystemOut10.log
+
+The INC button will automatically add the {%INC%} token
+at the current position in the command input.
+
+
 COMMAND HISTORY
 ---------------
 
 PuTTYCS supports a command history up to 100 items.
-To scroll through the history, use the left and right
-arrows above the Command input field. The x button 
-will prompt you about clearing the command history.
+To scroll through the history, use the up and down
+arrows above the Command input field. Optionally, you can
+use the up and down arrow keys if "Scroll command history
+with up/down arrows keys" is checked in the preferences.
+The close (x) button will prompt you about clearing the
+command history. 
 
 
 CARRIAGE RETURN
 ---------------
       
-The carriage return push button next to the command
-history arrow button determines if a carriage return 
+The carriage return push button is to the right of the 
+command history buttons. When enabled, a carriage return 
 should be sent 1) when the Send button is pressed, and
 2) after the last line of a script [see SCRIPT]. This
 maybe useful if you want to send most of a command
@@ -167,8 +227,8 @@ and quickly want to clear the screen, you may find
 this handy.
 
 
-BKSP, DELETE, CTRL-C, CTRL-], ESC, ENTER
-----------------------------------------
+BKSP, DELETE, CTRL-C, CTRL-D, CTRL-R, CTRL-], ESC, ENTER
+--------------------------------------------------------
 
 These buttons send the corresponding key press to PuTTY
 windows. If you use VI, or telnet inside of PuTTY, this
@@ -245,10 +305,14 @@ Preferences are loaded each time PuTTYCS is started.
            change with system settings. 
 
 
-  Enable Tab Completion
+  Enable Tab ccmpletion
      Pressing Tab in the command field, sends the command
      including the Tab key. Useful for file completion in 
      shells like tcsh.
+ 
+  Scroll command history with up/down arrow keys
+     Enable this to allow the up and down arrow keys to
+    scroll through the command history. 
 
   Selection copies, right button pastes
      Enable this to emulate PuTTY's selection to 
@@ -263,6 +327,21 @@ Preferences are loaded each time PuTTYCS is started.
            potential security risk. [see CONFIG FILE 
            section]
 
+
+  Run on system startup
+     If enabled, adds a registry entry that automatically 
+     executes PuTTYCS when the system is started.
+    
+    NOTE: The registry entry is:
+
+          HKEY_CURRENT_USER\Software\
+            Microsoft\Windows\CurrentVersion\Run\PuTTYCS 
+
+  Check for updates on startup
+     If enable, PuTTYCS will check for software updates
+     when started.
+
+
 SCRIPT
 ------
 
@@ -274,6 +353,9 @@ If you do not want to send a carriage return at the end
 of the script 1) make sure the last line of the script 
 is not blank, and 2) the Carriage Return button is not 
 enabled.
+
+PuTTYCS scripts do not support the {%CTRL%} and {%INC%}
+tokens.
 
 Because the core of PuTTYCS is based on SendKeys in C++,
 the script should follow the syntax defined by SendKeys.
@@ -336,6 +418,12 @@ key and wait until all windows receive the command. Pressing
 the Tab key too early may send an additional Tab to one of
 filtered PuTTY windows.
 
+With v1.7+, the Check for Updates uses an API that internally
+uses Internet Explorer. Thus, if Internet Explorer can reach
+www.millardsoftware.com, PuTTYCS should be able to as well.
+However, if it can not, PuTTYCS may appear to freeze for a short
+time. For the next release, I will try to improve this code,
+
 
 FUTURE
 ------
@@ -343,15 +431,13 @@ FUTURE
 When I first released PuTTYCS, I had no plans on releasing
 any major updates. However, from all the positive feedback
 I've received, I have started coding version 2. It is a 
-complete rewrite. 
+complete rewrite. Unfortunately, progress is much slower than
+I would like.
 
-The next version supports tabbing and launching PuTTYs.
+The next major version supports tabbing and launching PuTTYs.
 
-Unfortunately, I am seriously debating releasing version 2 as
-shareware. [see I LIKE IT]
-
-PuTTYCS needs a LOGO!! If you can draw and would be interested
-in designing a logo please contact me!!
+PuTTYCS still needs a LOGO!! If you can draw and would be 
+interested in designing a logo please contact me!!
 
 
 SOURCE CODE
@@ -369,14 +455,8 @@ If you like this application, drop me a line at jsm174@gmail.com.
 It's just cool to hear from people around the world! 
 
 If you really like and use this application, please consider 
-donating. You can use the Paypal link found on the homepage.
-
-As of writing this, I've received a grand total of $1. It's 
-disappointing considering the amount of downloads and the effort 
-that went into making PuTTYCS.
-
-If this changes, I promise future version of PuTTYCS will remain 
-free.
+donating. You can use the Paypal link found on the homepage or 
+on the "About PuTTYCS..." dialog.
 
 
 CREDITS

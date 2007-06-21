@@ -253,6 +253,10 @@ SOURCE=.\res\PuTTYCS.ico
 
 SOURCE=.\res\PuTTYCS.rc2
 # End Source File
+# Begin Source File
+
+SOURCE=".\res\x-click-but04.bmp"
+# End Source File
 # End Group
 # Begin Group "lib"
 

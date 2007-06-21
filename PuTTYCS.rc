@@ -73,31 +73,33 @@ IDR_MAINFRAME           ICON    DISCARDABLE     "res\\PuTTYCS.ico"
 // Dialog
 //
 
-IDD_PUTTYCS_DIALOG DIALOGEX 0, 0, 229, 167
+IDD_PUTTYCS_DIALOG DIALOGEX 0, 0, 254, 166
 STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CLASS "PUTTYCS_WND_CLASS"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "PuTTY Filter:",IDC_STATIC,7,6,88,8
-    COMBOBOX        IDC_FILTERS_COMBOBOX,7,17,215,114,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_FILTERS_COMBOBOX,7,17,240,114,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "C&ascade",IDC_CASCADE_BUTTON,7,34,35,14
-    PUSHBUTTON      "&Tile",IDC_TILE_BUTTON,43,34,35,14
-    PUSHBUTTON      "Minimi&ze",IDC_MINIMIZE_BUTTON,79,34,35,14
-    PUSHBUTTON      "&Hide",IDC_HIDE_BUTTON,115,34,35,14
-    PUSHBUTTON      "&Close",IDC_CLOSE_BUTTON,151,34,35,14
-    PUSHBUTTON      "&Filters",IDC_FILTERS_BUTTON,187,34,35,14
+    PUSHBUTTON      "C&ascade",IDC_CASCADE_BUTTON,7,34,40,14
+    PUSHBUTTON      "&Tile",IDC_TILE_BUTTON,47,34,40,14
+    PUSHBUTTON      "Minimi&ze",IDC_MINIMIZE_BUTTON,87,34,40,14
+    PUSHBUTTON      "&Hide",IDC_HIDE_BUTTON,127,34,40,14
+    PUSHBUTTON      "&Close",IDC_CLOSE_BUTTON,167,34,40,14
+    PUSHBUTTON      "&Filters",IDC_FILTERS_BUTTON,207,34,40,14
     LTEXT           "Command:",IDC_STATIC,7,54,40,8
-    RADIOBUTTON     "¿",IDC_SENDCR_PUSHBUTTON,173,53,11,10,BS_PUSHLIKE | 
+    PUSHBUTTON      "Ctrl",IDC_CTRL_BUTTON,145,53,22,10
+    PUSHBUTTON      "Inc",IDC_INC_BUTTON,168,53,22,10
+    PUSHBUTTON      "5",IDC_CMDHISTORYUP_BUTTON,195,53,11,10,WS_DISABLED
+    PUSHBUTTON      "6",IDC_CMDHISTORYDOWN_BUTTON,207,53,11,10,BS_CENTER | 
+                    BS_VCENTER | WS_DISABLED
+    PUSHBUTTON      "r",IDC_CMDHISTORYCLEAR_BUTTON,219,53,11,10,BS_CENTER | 
+                    BS_VCENTER | WS_DISABLED
+    RADIOBUTTON     "¿",IDC_SENDCR_PUSHBUTTON,236,53,11,10,BS_PUSHLIKE | 
                     WS_TABSTOP
-    PUSHBUTTON      "3",IDC_CMDHISTORYUP_BUTTON,187,53,11,10,WS_DISABLED
-    PUSHBUTTON      "4",IDC_CMDHISTORYDOWN_BUTTON,199,53,11,10,BS_CENTER | 
-                    BS_VCENTER | WS_DISABLED
-    PUSHBUTTON      "r",IDC_CMDHISTORYCLEAR_BUTTON,211,53,11,10,BS_CENTER | 
-                    BS_VCENTER | WS_DISABLED
-    EDITTEXT        IDC_COMMAND_EDIT,7,64,215,61,ES_MULTILINE | 
+    EDITTEXT        IDC_COMMAND_EDIT,7,64,240,61,ES_MULTILINE | 
                     ES_AUTOVSCROLL
     PUSHBUTTON      "5",IDC_UP_BUTTON,20,130,11,10
     PUSHBUTTON      "3",IDC_LEFT_BUTTON,8,140,11,10
@@ -105,15 +107,17 @@ BEGIN
     PUSHBUTTON      "4",IDC_RIGHT_BUTTON,32,140,11,10,BS_CENTER | BS_VCENTER
     PUSHBUTTON      "6",IDC_DOWN_BUTTON,20,150,11,10
     PUSHBUTTON      "Bc&ksp",IDC_BACKSPACE_BUTTON,48,130,25,14
-    PUSHBUTTON      "D&elete",IDC_DELETE_BUTTON,48,146,25,14
+    PUSHBUTTON      "D&elete",IDC_DELETE_BUTTON,48,145,25,14
     PUSHBUTTON      "Ctr&l-C",IDC_BREAK_BUTTON,74,130,25,14
-    PUSHBUTTON      "Ctrl&-]",IDC_ENDTELNET_BUTTON,74,146,25,14
-    PUSHBUTTON      "E&nter",IDC_ENTER_BUTTON,100,130,25,14
-    PUSHBUTTON      "Es&c",IDC_ESCAPE_BUTTON,100,146,25,14
-    PUSHBUTTON      "Passwor&d",IDC_PASSWORD_BUTTON,126,130,47,14
-    PUSHBUTTON      "&Preferences",IDC_PREFERENCES_BUTTON,126,146,47,14
-    PUSHBUTTON      "Sc&ript",IDC_SCRIPT_BUTTON,174,130,48,14
-    DEFPUSHBUTTON   "&Send",IDC_SEND_BUTTON,174,146,48,14
+    PUSHBUTTON      "Ctrl-R",IDC_CTRLR_BUTTON,74,145,25,14
+    PUSHBUTTON      "Ctrl-D",IDC_CTRLD_BUTTON,100,130,25,14
+    PUSHBUTTON      "Ctrl&-]",IDC_ENDTELNET_BUTTON,100,145,25,14
+    PUSHBUTTON      "E&nter",IDC_ENTER_BUTTON,126,130,25,14
+    PUSHBUTTON      "Es&c",IDC_ESCAPE_BUTTON,126,145,25,14
+    PUSHBUTTON      "Passwor&d",IDC_PASSWORD_BUTTON,152,130,47,14
+    PUSHBUTTON      "&Preferences",IDC_PREFERENCES_BUTTON,152,145,47,14
+    PUSHBUTTON      "Sc&ript",IDC_SCRIPT_BUTTON,200,130,48,14
+    DEFPUSHBUTTON   "&Send",IDC_SEND_BUTTON,200,145,48,14
 END
 
 IDD_PASSWORD_DIALOG DIALOG DISCARDABLE  0, 0, 186, 59
@@ -128,28 +132,28 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,129,38,50,14
 END
 
-IDD_PREFERENCES_DIALOG DIALOGEX 0, 0, 211, 249
+IDD_PREFERENCES_DIALOG DIALOGEX 0, 0, 412, 174
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preferences"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Window:",IDC_STATIC,7,6,197,56
+    GROUPBOX        "Window:",IDC_STATIC,7,6,195,56
     CONTROL         "Tool window",IDC_TOOLWINDOW_CHECKBOX,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,13,20,72,10
     CONTROL         "Always on top",IDC_ALWAYSONTOP_CHECKBOX,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,13,33,72,10
     CONTROL         "Minimize to system tray",IDC_MINIMIZETOSYSTRAY_CHECKBOX,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,46,84,10
-    LTEXT           "Transition:",IDC_STATIC,112,21,34,10
-    EDITTEXT        IDC_TRANSITION_EDIT,149,18,22,12,ES_AUTOHSCROLL | 
+    LTEXT           "Transition:",IDC_STATIC,108,21,34,10
+    EDITTEXT        IDC_TRANSITION_EDIT,145,18,22,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    LTEXT           "ms",IDC_STATIC,175,21,10,10
-    LTEXT           "Opacity:",IDC_OPACITY1_STATIC,112,46,34,10,
+    LTEXT           "ms",IDC_STATIC,171,21,10,10
+    LTEXT           "Opacity:",IDC_OPACITY1_STATIC,108,46,34,10,
                     SS_CENTERIMAGE
     CONTROL         "Slider1",IDC_OPACITY_SLIDER,"msctls_trackbar32",
-                    WS_TABSTOP,145,45,35,11
-    LTEXT           "100%",IDC_OPACITY2_STATIC,181,46,18,10,SS_CENTERIMAGE
-    GROUPBOX        "Auto arrange:",IDC_STATIC,7,66,197,81
+                    WS_TABSTOP,141,45,35,11
+    LTEXT           "100%",IDC_OPACITY2_STATIC,177,46,18,10,SS_CENTERIMAGE
+    GROUPBOX        "Auto arrange:",IDC_STATIC,7,66,195,81
     CONTROL         "Off",IDC_AUTOARRANGE_OFF_RADIO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP,13,81,44,10
     CONTROL         "Cascade",IDC_AUTOARRANGE_CASCADE_RADIO,"Button",
@@ -157,30 +161,39 @@ BEGIN
     CONTROL         "Tile",IDC_AUTOARRANGE_TILE_RADIO,"Button",
                     BS_AUTORADIOBUTTON,13,105,44,10
     CONTROL         "Minimize other PuTTYs",IDC_AUTOMINIMIZE_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,112,81,89,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,108,81,89,10
     CONTROL         "Arrange on startup",IDC_ARRANGEONSTARTUP_CHECKBOX,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,112,93,74,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,108,93,74,10
     CONTROL         "Unhide PuTTYs on exit",IDC_UNHIDEONEXIT_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,112,105,89,10
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,12,121,190,1
-    LTEXT           "Cascade dimensions:",IDC_STATIC,21,130,68,8
-    EDITTEXT        IDC_CASCADE_WIDTH_EDIT,97,128,22,12,ES_AUTOHSCROLL | 
+                    BS_AUTOCHECKBOX | WS_TABSTOP,108,105,89,10
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,12,121,186,1
+    LTEXT           "Cascade dimensions:",IDC_STATIC,19,130,68,8
+    EDITTEXT        IDC_CASCADE_WIDTH_EDIT,95,128,22,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    LTEXT           "x",IDC_STATIC,123,130,8,8,0,WS_EX_TRANSPARENT
-    EDITTEXT        IDC_CASCADE_HEIGHT_EDIT,132,128,22,12,ES_AUTOHSCROLL | 
+    LTEXT           "x",IDC_STATIC,121,130,8,8,0,WS_EX_TRANSPARENT
+    EDITTEXT        IDC_CASCADE_HEIGHT_EDIT,130,128,22,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    PUSHBUTTON      "&Find",IDC_FIND_BUTTON,159,127,32,14
-    GROUPBOX        "Keyboard/Mouse:",IDC_STATIC,7,151,197,40
+    PUSHBUTTON      "&Find",IDC_FIND_BUTTON,157,127,32,14
+    GROUPBOX        "Keyboard/Mouse:",IDC_STATIC,210,6,195,56
     CONTROL         "Enable Tab completion",IDC_TABCOMPLETION_CHECKBOX,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,165,85,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,216,20,155,10
+    CONTROL         "Scroll command history with up/down arrows keys",
+                    IDC_CMDHISTORYSCROLLTHROUGH_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,216,33,183,10
     CONTROL         "Selection copies, right button pastes",
                     IDC_EMULATECOPYPASTE_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,13,177,155,10
+                    WS_TABSTOP,216,46,155,10
+    GROUPBOX        "Password:",IDC_STATIC,209,66,196,33
     CONTROL         "Save password",IDC_SAVEPASSWORD_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,13,207,63,10
-    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,103,227,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,154,227,50,14
-    GROUPBOX        "Password:",IDC_STATIC,7,195,197,28
+                    BS_AUTOCHECKBOX | WS_TABSTOP,215,81,63,10
+    GROUPBOX        "Miscellaneous:",IDC_STATIC,209,104,196,43
+    CONTROL         "Run on system startup",IDC_RUNONSYSTEMSTARTUP_CHECKBOX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,216,118,136,10
+    CONTROL         "Check for updates on startup",
+                    IDC_CHECKFORUPDATES_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,216,131,136,10
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,303,154,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,355,154,50,14
 END
 
 IDD_FILTERS_DIALOG DIALOG DISCARDABLE  0, 0, 200, 178
@@ -225,18 +238,21 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,126,121,50,14
 END
 
-IDD_ABOUT_DIALOG DIALOG DISCARDABLE  0, 0, 170, 81
+IDD_ABOUT_DIALOG DIALOG DISCARDABLE  0, 0, 192, 129
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About PuTTYCS"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CTEXT           "About Text Line 1",IDC_ABOUT_TEXT_LINE1,9,9,150,8
-    CTEXT           "About Text Line 2",IDC_ABOUT_TEXT_LINE2,9,19,150,8
-    PUSHBUTTON      "Visit Web Site",IDC_VISITWEBSITE_BUTTON,30,60,52,14
-    DEFPUSHBUTTON   "Close",IDC_CLOSE_BUTTON,87,60,52,14
+    CTEXT           "About Text Line 1",IDC_ABOUT_TEXT_LINE1,9,9,172,8
+    CTEXT           "About Text Line 2",IDC_ABOUT_TEXT_LINE2,9,19,172,8
+    PUSHBUTTON      "Visit Web Site",IDC_VISITWEBSITE_BUTTON,41,108,52,14
+    DEFPUSHBUTTON   "Close",IDC_CLOSE_BUTTON,98,108,52,14
     CTEXT           "Portions of code based on SendKeys in C++\n© 2004  lallousx86@yahoo.com.",
-                    IDC_ABOUT_TEXT_LINE3,7,36,156,16
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,7,7,156,24
+                    IDC_ABOUT_TEXT_LINE3,7,36,178,16
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,7,7,178,24
+    CTEXT           "Support PuTTYCS Development!",IDC_STATIC,7,63,178,8
+    CONTROL         134,IDC_DONATION_BUTTON,"Static",SS_BITMAP | SS_NOTIFY | 
+                    WS_TABSTOP,75,75,41,19
 END
 
 
@@ -247,8 +263,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,6,0,0
- PRODUCTVERSION 1,6,0,0
+ FILEVERSION 1,7,0,0
+ PRODUCTVERSION 1,7,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -263,17 +279,17 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Created by Jason Millard\0"
-            VALUE "CompanyName", "\0"
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "Millard Software\0"
             VALUE "FileDescription", "PuTTYCS\0"
-            VALUE "FileVersion", "1, 6, 0, 0\0"
+            VALUE "FileVersion", "1, 7, 0, 0\0"
             VALUE "InternalName", "PuTTYCS\0"
-            VALUE "LegalCopyright", "Copyright (C) 2005, 2006\0"
+            VALUE "LegalCopyright", "Copyright (C) 2005 - 2007\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "PuTTYCS.EXE\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.6\0"
-            VALUE "ProductVersion", "1, 6, 0, 0\0"
+            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.7\0"
+            VALUE "ProductVersion", "1, 7, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -297,9 +313,9 @@ BEGIN
     IDD_PUTTYCS_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 222
+        RIGHTMARGIN, 247
         TOPMARGIN, 6
-        BOTTOMMARGIN, 160
+        BOTTOMMARGIN, 159
     END
 
     IDD_PASSWORD_DIALOG, DIALOG
@@ -313,9 +329,9 @@ BEGIN
     IDD_PREFERENCES_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 204
+        RIGHTMARGIN, 405
         TOPMARGIN, 7
-        BOTTOMMARGIN, 242
+        BOTTOMMARGIN, 167
     END
 
     IDD_FILTERS_DIALOG, DIALOG
@@ -338,9 +354,9 @@ BEGIN
     IDD_ABOUT_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 163
+        RIGHTMARGIN, 185
         TOPMARGIN, 7
-        BOTTOMMARGIN, 74
+        BOTTOMMARGIN, 122
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -371,6 +387,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Preferences...",              IDMI_SYSTRAYPREFERENCES_MENUITEM
 
+        MENUITEM "Check for Updates...",        IDMI_SYSTRAYCHECKFORUPDATES_MENUITEM
+
         MENUITEM SEPARATOR
         MENUITEM "About PuTTYCS...",            IDMI_SYSTRAYABOUT_MENUITEM
         MENUITEM "Exit",                        IDMI_SYSTRAYEXIT_MENUITEM
@@ -384,6 +402,13 @@ END
 //
 
 1                       24      MOVEABLE PURE   "PuTTYCS.mft"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_DONATION_BITMAP     BITMAP  DISCARDABLE     "res\\x-click-but04.bmp"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 

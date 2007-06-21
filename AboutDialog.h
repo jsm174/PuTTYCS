@@ -1,7 +1,7 @@
 /**
  * AboutDialog.h - PuTTYCS About Dialog header
  *
- * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,7 @@
  *
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
+ * 06/21/2007: Added donation button                 J. Millard
  */
 
 #if !defined(AFX_ABOUTDIALOG_H__F0AE1C5B_A002_4323_855F_204A89B2CD5D__INCLUDED_)
@@ -65,6 +66,7 @@ protected:
    //{{AFX_MSG(CAboutDialog)
    virtual BOOL OnInitDialog();
    afx_msg void OnVisitWebSiteButton();
+   afx_msg void OnDonationButton();
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()

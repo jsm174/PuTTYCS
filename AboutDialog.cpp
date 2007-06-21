@@ -1,7 +1,7 @@
 /**
  * AboutDialog.cpp - PuTTYCS About Dialog
  *
- * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@
  * 11/07/2005: Initial version                       J. Millard
  * 11/17/2005: Added UNICODE support                 J. Millard
  * 12/15/2005: Updated Help/F1 to go visit website   J. Millard
+ * 06/21/2007: Added donation button                 J. Millard
  */
 
 #include "stdafx.h"
@@ -69,8 +70,9 @@ void CAboutDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDialog, CDialog)
    //{{AFX_MSG_MAP(CAboutDialog)
    ON_BN_CLICKED(IDC_VISITWEBSITE_BUTTON, OnVisitWebSiteButton)
-   ON_BN_CLICKED(IDC_CLOSE_BUTTON, OnOK)   
 	ON_WM_HELPINFO()
+   ON_BN_CLICKED(IDC_CLOSE_BUTTON, OnOK)   
+	ON_BN_CLICKED(IDC_DONATION_BUTTON, OnDonationButton)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -114,4 +116,18 @@ void CAboutDialog::OnVisitWebSiteButton()
                  NULL, 
                  NULL, 
                  SW_SHOWNORMAL );   
+}
+
+/**
+ * CAboutDialog::OnDonationButton()
+ */
+
+void CAboutDialog::OnDonationButton() 
+{
+   ShellExecute( NULL, 
+                 PUTTYCS_SHELL_EXECUTE_OPEN, 
+                 PUTTYCS_URL_DONATION, 
+                 NULL, 
+                 NULL, 
+                 SW_SHOWNORMAL );   	
 }

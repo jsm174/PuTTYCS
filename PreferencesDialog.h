@@ -1,7 +1,7 @@
 /**
  * PreferencesDialog.h - PuTTYCS Preferences Dialog header
  *
- * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,10 @@
  * 12/19/2005: Added window opacity                  J. Millard
  * 11/20/2006: Added support for user defined        J. Millard
  *             cascade size.
+ * 06/21/2007: Added scroll command history using    J. Millard
+ *             up/down arrow keys
+ *             Added check for PuTTYCS update
+ *             Added run on system startup   
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -97,8 +101,17 @@ public:
    int getTabCompletion();
    void setTabCompletion( int iTabCompletion );
 
+   int getCmdHistoryScrollThrough();
+   void setCmdHistoryScrollThrough( int iCmdHistoryScrollThrough );
+
    int getEmulateCopyPaste();
    void setEmulateCopyPaste( int iEmulateCopyPaste );
+
+   int getRunOnSystemStartup();
+   void setRunOnSystemStartup( int iRunOnSystemStartup );
+
+   int getCheckForUpdates();
+   void setCheckForUpdates( int iCheckForUpdates );
 
 // Overrides
    // ClassWizard generated virtual function overrides
@@ -124,7 +137,10 @@ protected:
    int m_iOpacity;
    int m_iTransition; 
    int m_iEmulateCopyPaste;
+   int m_iCmdHistoryScrollThrough;
    int m_iTabCompletion;
+   int m_iRunOnSystemStartup;
+   int m_iCheckForUpdates;
      
    // Generated message map functions
    //{{AFX_MSG(CPreferencesDialog)
@@ -138,14 +154,17 @@ protected:
    afx_msg void OnAlwaysOnTopCheckbox();
    afx_msg void OnChangeTransition();
    afx_msg void OnEmulateCopyPasteCheckbox();
+   afx_msg void OnCmdHistoryScrollThroughCheckbox();
+   afx_msg void OnTabCompletionCheckbox();
+   afx_msg void OnCheckForUpdatesCheckbox();
+	afx_msg void OnRunOnSystemStartupCheckbox();
    afx_msg void OnOKButton();   
 	afx_msg void OnMinimizeToSysTrayCheckbox();
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
-	afx_msg void OnTabCompletionCheckbox();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnChangeCascadeHeightEdit();
 	afx_msg void OnChangeCascadeWidthEdit();
-	afx_msg void OnFindButton();
+   afx_msg void OnFindButton();
 	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 

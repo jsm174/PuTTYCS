@@ -1,7 +1,7 @@
 /**
  * CommandEdit.h - Command CEdit Control header
  *
- * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,9 @@
  *
  * 12/06/2005: Initial version                       J. Millard
  * 12/15/2005: Added GetText() method                J. Millard
+ * 06/21/2007: Added InsertText() method             J. Millard
+ *             Updated for command history scroll
+ *             through 
  */
 
 #if !defined(AFX_COMMANDEDIT_H__309531A0_E385_4512_83CF_2A230314E589__INCLUDED_)
@@ -45,8 +48,11 @@ public:
    CCommandEdit();
 
    CString GetText();
+   void InsertText( CString csText);
+
    void SetText( CString csText );
    void SetEmulateCopyPaste( int iEmulateCopyPaste );
+   void SetCmdHistoryScrollThrough( int iCmdHistoryScrollThrough );
 
 // Attributes
 public:
@@ -68,9 +74,11 @@ protected:
    //{{AFX_MSG(CCommandEdit)
    afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
    afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
-   //}}AFX_MSG
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	//}}AFX_MSG
 
    int m_iEmulateCopyPaste;
+   int m_iCmdHistoryScrollThrough;
 
    DECLARE_MESSAGE_MAP()
 };

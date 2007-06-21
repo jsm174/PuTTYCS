@@ -1,7 +1,7 @@
 /**
  * PuTTYCSDialog.h - PuTTYCS Main Dialog header
  *
- * Copyright (c) 2005, 2006 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -44,6 +44,13 @@
  *             delete buttons
  * 11/20/2006: Added support for user defined        J. Millard
  *             cascade size.
+ * 06/21/2007: Added Ctrl-R and Ctrl-D buttons       J. Millard
+ *             Added {%CTRL%} command token 
+ *             Added {%INC%} command token 
+ *             Added scroll command history using 
+ *             up/down arrow keys
+ *             Added check for PuTTYCS update
+ *             Added run on system startup   
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -140,6 +147,7 @@ protected:
     */
 
    int m_iTabCompletion;
+   int m_iCmdHistoryScrollThrough;
    int m_iEmulateCopyPaste;
 
    /**
@@ -147,6 +155,13 @@ protected:
     */
 
    int m_iSendCR;
+
+   /** 
+    * Miscellaneous
+    */
+
+   int m_iRunOnSystemStartup;
+   int m_iCheckForUpdates;
 
    /**
     * Fonts
@@ -164,6 +179,9 @@ protected:
 
    void UpdateDialog();
    void RefreshDialog();
+
+   void SetRunOnSystemStartup( bool bEnable = true );
+   void CheckForUpdates(bool bInteractive = false);
 
    // Generated message map functions
    //{{AFX_MSG(CPuTTYCSDialog)
@@ -203,8 +221,13 @@ protected:
 	afx_msg void OnBackspaceButton();
 	afx_msg void OnDeleteButton();
 	afx_msg void OnCloseButton();
+	afx_msg void OnCtrlButton();
+   afx_msg void OnIncButton();
+   afx_msg void OnCheckForUpdates();
+	afx_msg void OnCtrlDButton();
+	afx_msg void OnCtrlRButton();
 	//}}AFX_MSG
-   DECLARE_MESSAGE_MAP()
+   DECLARE_MESSAGE_MAP()   
 
 private:
 
@@ -223,7 +246,10 @@ private:
    void SortWindows();
    static int Compare(const void* pWndS1, const void* pWndS2);
 
-   CMenu* m_pMenu;            
+   static CString GetAttributeValue(const CString, const CString);
+   CMenu* m_pMenu;    
+   
+  
 };
 
 //{{AFX_INSERT_LOCATION}}
