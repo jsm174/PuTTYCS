@@ -1,7 +1,7 @@
 /**
  * Defines.h - PuTTYCS Defines header
  *
- * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2008 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -48,6 +48,11 @@
  *             up/down arrow keys
  *             Added check for PuTTYCS update
  *             Added run on system startup   
+ * 02/29/2008: Added horizontal/vertical tiling      J. Millard
+ *             support. 
+ *             Updated cascade logic.
+ *             Added post send transition delay.
+ *             Added --script command line option.
  */
 
 #if !defined(DEFINES_H__INCLUDED_)
@@ -55,8 +60,8 @@
 
 #define PUTTYCS_APP_NAME                         _T( "PuTTYCS" )
 
-#define PUTTYCS_VERSION                          _T( "1.7" )
-#define PUTTYCS_VERSION_INT                      _T( "010700" )
+#define PUTTYCS_VERSION                          _T( "1.8.1" )
+#define PUTTYCS_VERSION_INT                      _T( "010801" )
 
 #define PUTTYCS_REGKEY_RUN                       _T( "Software\\Microsoft\\Windows\\CurrentVersion\\Run" )
 
@@ -73,7 +78,7 @@
 #define PUTTYCS_WINDOW_TITLE_ABOUT               _T( "About PuTTYCS...")
 
 #define PUTTYCS_ABOUT_TEXT_LINE1                 _T( "PuTTY Command Sender ") PUTTYCS_VERSION
-#define PUTTYCS_ABOUT_TEXT_LINE2                 _T( "© 2005 - 2007 Millard Software. All rights reserved." )
+#define PUTTYCS_ABOUT_TEXT_LINE2                 _T( "© 2005 - 2008 Millard Software. All rights reserved." )
 
 #define PUTTYCS_WINDOW_TITLE_FILTER_ADD          _T( "Add Filter" )
 #define PUTTYCS_WINDOW_TITLE_FILTER_EDIT         _T( "Edit Filter" )
@@ -84,6 +89,17 @@
 #define PUTTYCS_MESSAGEBOX_CMDHISTORY            _T( "Are you sure you want to\nclear the command history?" )
 #define PUTTYCS_MESSAGEBOX_CASCADE               _T( "Could not determine cascade dimensions.\n\nPlease verify that:\n\n1) At least one PuTTY window is open and visible.\n2) The PuTTY window is no smaller than %d x %d pixels.\n3) The PuTTY window is no larger than %d x %d pixels.\n\nCascade dimensions will be set to defaults." )
 #define PUTTYCS_MESSAGEBOX_CLOSE                 _T( "Are you sure you want to\nclose filtered PuTTYs?" )
+
+#define PUTTYCS_MESSAGEBOX_MISSING_ARGUMENT      _T( "Missing argument for %s or %s option" )
+#define PUTTYCS_MESSAGEBOX_UNKNOWN_OPTION        _T( "Unknown option: %s" )
+#define PUTTYCS_MESSAGEBOX_HELP                  _T( "Usage: puttycs [OPTION]...\n\n-s, --script <path>\n    Send a PuTTYCS script\n\n-h, --help\n    Display this help" )
+#define PUTTYCS_MESSAGEBOX_LOAD_SCRIPT_ERROR     _T( "Unable to load script.")
+
+#define PUTTYCS_CMD_SCRIPT                       _T( "-s" )
+#define PUTTYCS_CMD_SCRIPT_LONG                  _T( "--script" )
+
+#define PUTTYCS_CMD_HELP                         _T( "-h" )
+#define PUTTYCS_CMD_HELP_LONG                    _T( "--help" )
         
 #define PUTTYCS_MESSAGEBOX_UPDATE                _T( "A new version of PuTTYCS is available for download.\n\nCurrent version: %s\nLatest version: %s\n\nWould you like to go to the PuTTYCS homepage?" )
 #define PUTTYCS_MESSAGEBOX_NO_UPDATES            _T( "No updates found. PuTTYCS %s is the latest version." )
@@ -103,9 +119,6 @@
 #define PUTTYCS_FONT_MARLETT                     _T( "Marlett" )
 #define PUTTYCS_FONT_SYMBOL                      _T( "Symbol" )
 
-#define PUTTYCS_PREF_SAVE_PASSWORD               _T( "savePassword" )
-#define PUTTYCS_PREF_PASSWORD                    _T( "password" )
-
 #define PUTTYCS_PREF_CMDHISTORY_MAX_SIZE         100
 #define PUTTYCS_PREF_CMDHISTORY_ENTRY            _T( "cmdhistory%02d" )
 
@@ -116,13 +129,17 @@
 #define PUTTYCS_PREF_WINDOW_TOOL                 _T( "toolWindow" )
 #define PUTTYCS_PREF_WINDOW_ALWAYS_ON_TOP        _T( "alwaysOnTop" )
 #define PUTTYCS_PREF_MINIMIZE_TO_SYSTRAY         _T( "minimizeToSysTray" )
-#define PUTTYCS_PREF_WINDOW_TRANSITION           _T( "transition" )
 #define PUTTYCS_PREF_WINDOW_OPACITY              _T( "windowOpacity" )
 
 #define PUTTYCS_PREF_AUTO_ARRANGE                _T( "autoArrange" )
 #define PUTTYCS_PREF_AUTO_ARRANGE_OFF            1
 #define PUTTYCS_PREF_AUTO_ARRANGE_CASCADE        2
 #define PUTTYCS_PREF_AUTO_ARRANGE_TILE           3
+
+#define PUTTYCS_PREF_TILE_METHOD                 _T( "tileMethod" )
+#define PUTTYCS_PREF_TILE_METHOD_VERTICAL        1
+#define PUTTYCS_PREF_TILE_METHOD_HORIZONTAL      2
+#define PUTTYCS_PREF_TILE_METHOD_CLASSIC         3
 
 #define PUTTYCS_PREF_CASCADE_WIDTH               _T( "cascadeWidth" )
 #define PUTTYCS_PREF_CASCADE_HEIGHT              _T( "cascadeHeight" )
@@ -136,6 +153,12 @@
 #define PUTTYCS_PREF_EMULATE_COPY_PASTE          _T( "emulateCopyPaste" )
 
 #define PUTTYCS_PREF_SEND_CR                     _T( "sendCR" )
+
+#define PUTTYCS_PREF_WINDOW_TRANSITION           _T( "transition" )
+#define PUTTYCS_PREF_POST_SEND_DELAY             _T( "postSendDelay" )
+
+#define PUTTYCS_PREF_SAVE_PASSWORD               _T( "savePassword" )
+#define PUTTYCS_PREF_PASSWORD                    _T( "password" )
 
 #define PUTTYCS_PREF_RUN_ON_SYSTEM_STARTUP       _T( "runOnSystemStartup" )
 #define PUTTYCS_PREF_CHECK_FOR_UPDATES           _T( "checkForUpdates" )
@@ -217,12 +240,15 @@
 #define PUTTYCS_CASCADE_MAXIMUM_WIDTH            1042
 #define PUTTYCS_CASCADE_MAXIMUM_HEIGHT           802
 
+#define PUTTYCS_TILE_METHOD_DEFAULT              PUTTYCS_PREF_TILE_METHOD_CLASSIC
+
 #define PUTTYCS_OPACITY_MIN                      50
 #define PUTTYCS_OPACITY_MAX                      255
 
 #define PUTTYCS_WND_CLASS                        _T( "PUTTYCS_WND_CLASS" )
 
-#define WM_USER_MULTIPLE_INSTANCE                WM_USER + 1
-#define WM_USER_TNI_MESSAGE                      WM_USER + 2
+#define PUTTYCS_WM_COPYDATA_CMD_LINE             1
+
+#define WM_USER_TNI_MESSAGE                      WM_USER + 1
 
 #endif // !defined(DEFINES_H__INCLUDED_)

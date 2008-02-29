@@ -1,48 +1,58 @@
-PuTTYCS - PuTTY Command Sender v1.7
-(C) 2005 - 2007 - Millard Software - jsm174@gmail.com
-Release Date: 06/21/07
+PuTTYCS - PuTTY Command Sender v1.8.1
+(C) 2005 - 2008 - Millard Software - jsm174@gmail.com
+Release Date: 02/29/08
 
 
 VERSION HISTORY
 
-06/21/07 - v1.7  - Added Ctrl-R and Ctrl-D buttons.
-                   Added support for any control
-                   sequence using {%CTRL%} token in 
-                   command input 
-                   Added support for an incremental 
-                   counter using {%INC%} token in
-                   command input
-                   Added scroll command history using 
-                   up/down arrow keys
-                   Changed command history right/left 
-                   buttons to up/down buttons
-                   Added support to check for PuTTYCS
-                   updates                    
-                   Added support for automatically
-                   running on system startup
-11/20/06 - v1.6  - Added support for PuTTYtel, TuTTY,
-                   and PieTTY
-                   Added support for user defined 
-                   cascade size
-                   Changed scripting to send CR on
-                   last line if Carriage Return is 
-                   enabled
-05/30/06 - v1.5  - Improved system tray logic
-                   Added Windows XP style
-                   Added close, backspace, and
-                   delete buttons                   
-12/21/05 - v1.4a - Fixed password not sending CR
-12/19/05 - v1.4  - Added window opacity
-12/15/05 - v1.3  - Added minimize to system tray
-                   Added tab completion               
-12/06/05 - v1.2  - Added mouse Copy/Paste emulation
-                   Navigation through command history
-                   moves cursor to end of command 
-11/18/05 - v1.1a - Fixed AltGr support
-11/17/05 - v1.1  - Added UNICODE support
-                   Added clear command history button
-                   Added AltGr support
-11/07/05 - v1.0  - Initial release
+02/29/08 - v1.8.1 - Added horizontal and vertical
+                    tiling. 
+                    Updated tile and cascade to be
+                    aware of taskbar. Cascade now 
+                    uses entire desktop.               
+                    Added additional Post Send delay.
+                    [thanks sirandrew]
+                    Added --script command line 
+                    option.            
+                    Rearranged preferences dialog.   
+06/21/07 - v1.7   - Added Ctrl-R and Ctrl-D buttons.
+                    Added support for any control
+                    sequence using {%CTRL%} token in 
+                    command input 
+                    Added support for an incremental 
+                    counter using {%INC%} token in
+                    command input
+                    Added scroll command history using 
+                    up/down arrow keys
+                    Changed command history right/left 
+                    buttons to up/down buttons
+                    Added support to check for PuTTYCS
+                    updates                    
+                    Added support for automatically
+                    running on system startup
+11/20/06 - v1.6   - Added support for PuTTYtel, TuTTY,
+                    and PieTTY
+                    Added support for user defined 
+                    cascade size
+                    Changed scripting to send CR on
+                    last line if Carriage Return is 
+                    enabled
+05/30/06 - v1.5   - Improved system tray logic
+                    Added Windows XP style
+                    Added close, backspace, and
+                    delete buttons                   
+12/21/05 - v1.4a  - Fixed password not sending CR
+12/19/05 - v1.4   - Added window opacity
+12/15/05 - v1.3   - Added minimize to system tray
+                    Added tab completion               
+12/06/05 - v1.2   - Added mouse Copy/Paste emulation
+                    Navigation through command history
+                    moves cursor to end of command 
+11/18/05 - v1.1a  - Fixed AltGr support
+11/17/05 - v1.1   - Added UNICODE support
+                    Added clear command history button
+                    Added AltGr support
+11/07/05 - v1.0   - Initial release
 
 
 ABOUT
@@ -252,33 +262,31 @@ PREFERENCES
 This button will bring up the Preferences dialog. 
 Preferences are loaded each time PuTTYCS is started.
 
-  Tool Window:
-     Display PuTTYCS as a tool window with the thin
-     title bar.
-
-  Always on top:
-     Display the PuTTYCS on top of all other windows.
-
-  Minimize to system tray:
-     Minimizes PuTTYCS to the system tray. If this is
-     enabled, PuTTYCS can only be exited through the 
-     system tray popup menu.
+  Window:
   
-  Transition:
-     Sets the amount time (in milliseconds) to pause
-     before sending a command to next PuTTY window. 
+     Tool Window
+        Display PuTTYCS as a tool window with the thin
+        title bar.
 
-     NOTE: The slower the machine the higher this value
-           should be.
+     Always on top
+        Display the PuTTYCS on top of all other windows.
 
-  Opacity:
-     Use the slider to set the opacity for the PuTTYCS
-     window. This maybe useful if PuTTYCS sometimes blocks
-     your existing PuTTY windows.
+     Minimize to system tray
+        Minimizes PuTTYCS to the system tray. If this is
+        enabled, PuTTYCS can only be exited through the 
+        system tray popup menu.
+  
+     Opacity
+        Use the slider to set the opacity for the PuTTYCS
+        window. This maybe useful if PuTTYCS sometimes blocks
+        your existing PuTTY windows.
 
-  Auto arrange (Off, Cascade, Tile) 
-     When switching filters, automatically cascade or
-     tile PuTTY windows.
+
+  Auto arrange:
+  
+     Off, Cascade, Tile
+        When switching filters, automatically cascade or
+        tile PuTTY windows.
 
      Minimize other PuTTYs
         When auto arranging filtered PuTTY windows, 
@@ -288,14 +296,23 @@ Preferences are loaded each time PuTTYCS is started.
         When starting PuTTYCS, auto arranging filtered 
         PuTTY windows.
   
-  Unhide PuTTYs on exit
-     Unhides any PuTTYs hidden using the Hide button.
+     Unhide PuTTYs on exit
+        Unhides any PuTTYs hidden using the Hide button.
+
+  
+  Tile method:
+  
+       Vertical, Horizontal, Classic
+       When tiling PuTTY windows use this method. Use
+       Classic to tile like PuTTYCS v1.7 and lower.
+     
 
   Cascade dimensions:
-     Sets the dimensions of filtered PuTTY windows when 
-     the Cascade button is pressed. Press the Find button
-     to determine the dimensions of the largest visible 
-     PuTTY window.
+
+       Sets the dimensions of filtered PuTTY windows when 
+       the Cascade button is pressed. Press the Find button
+       to determine the dimensions of the largest visible 
+       PuTTY window.
 
      NOTE: PuTTYCS only supports cascading dimensions 
            between 98x18 (12x1) and 1042x802 (130x50).
@@ -305,41 +322,62 @@ Preferences are loaded each time PuTTYCS is started.
            change with system settings. 
 
 
-  Enable Tab ccmpletion
-     Pressing Tab in the command field, sends the command
-     including the Tab key. Useful for file completion in 
-     shells like tcsh.
+  Keyboard/Mouse:
+
+     Enable Tab ccmpletion
+        Pressing Tab in the command field, sends the command
+        including the Tab key. Useful for file completion in 
+        shells like tcsh.
  
-  Scroll command history with up/down arrow keys
-     Enable this to allow the up and down arrow keys to
-    scroll through the command history. 
+     Scroll command history with up/down arrow keys
+        Enable this to allow the up and down arrow keys to
+        scroll through the command history. 
 
-  Selection copies, right button pastes
-     Enable this to emulate PuTTY's selection to 
-     clipboard, and right mouse button paste feature.
-
-
-  Save Password
-     Saves the password used in the Send Password dialog.
-
-     NOTE: Passwords are encoded in Base64 and stored in
-           the PuTTYCS.ini file. This may present a 
-           potential security risk. [see CONFIG FILE 
-           section]
+     Selection copies, right button pastes
+        Enable this to emulate PuTTY's selection to 
+        clipboard, and right mouse button paste feature.
 
 
-  Run on system startup
-     If enabled, adds a registry entry that automatically 
-     executes PuTTYCS when the system is started.
+  Transition delays: (Advanced)
+
+     Window 
+        Sets the amount time (in milliseconds) to pause
+        after focusing a PuTTY window and before sending the
+        command.
+
+        NOTE: The slower the machine or remote connection,
+              the higher this value should be.
+
+     Post send
+        Sets the amount time (in milliseconds) to pause
+        after sending a command to a PuTTY window.
+
+        NOTE: The slower the machine or remote connection,
+              the higher this value should be.
+
+
+  Miscellaneous:
+
+     Save Password
+        Saves the password used in the Send Password dialog.
+
+        NOTE: Passwords are encoded in Base64 and stored in
+              the PuTTYCS.ini file. This may present a 
+              potential security risk. [see CONFIG FILE 
+              section]
+
+     Run on system startup
+        If enabled, adds a registry entry that automatically 
+        executes PuTTYCS when the system is started.
     
-    NOTE: The registry entry is:
+        NOTE: The registry entry is:
 
-          HKEY_CURRENT_USER\Software\
-            Microsoft\Windows\CurrentVersion\Run\PuTTYCS 
+           HKEY_CURRENT_USER\Software\
+              Microsoft\Windows\CurrentVersion\Run\PuTTYCS 
 
-  Check for updates on startup
-     If enable, PuTTYCS will check for software updates
-     when started.
+     Check for updates on startup
+        If enable, PuTTYCS will check for software updates
+        when started.
 
 
 SCRIPT
@@ -377,6 +415,19 @@ directory:
    C:\Windows\PuTTYCS.ini
 
 
+COMMAND LINE OPTIONS
+--------------------
+
+   -s, --script <path>
+      Send a PuTTYCS script. If PuTTYCS is already
+      running, the script will be sent to the current
+      filter, otherwise the script will be sent to the
+      last selected filter.
+     
+   -h, --help     
+      Displays the help dialog. 
+
+
 KNOWN ISSUES
 ------------
 
@@ -407,7 +458,8 @@ example, on the Start bar, choose Tile or Cascade. You will
 see that PuTTY windows do not re-arrange themselves properly. 
 PuTTYCS gets around this by performing a variety of hide,
 move, resize, and show commands. However, at times, PuTTYs
-may not arrange as expected. 
+may not arrange as expected. Also, because PuTTY snaps to the
+text size, Vertical and Horizontal tiling will contain gaps.
 
 PuTTYCS officially supports PuTTY. I have support to find
 PuTTYtel, TuTTY, and PieTTY windows based upon user requests.
@@ -423,6 +475,9 @@ uses Internet Explorer. Thus, if Internet Explorer can reach
 www.millardsoftware.com, PuTTYCS should be able to as well.
 However, if it can not, PuTTYCS may appear to freeze for a short
 time. For the next release, I will try to improve this code,
+
+PuTTYCS does not work well with multiple monitors. I have 
+looked into this and it would be extensive rewrite of the code.
 
 
 FUTURE
@@ -452,7 +507,7 @@ I LIKE IT
 ---------
 
 If you like this application, drop me a line at jsm174@gmail.com.
-It's just cool to hear from people around the world! 
+It is great to hear from people around the world! 
 
 If you really like and use this application, please consider 
 donating. You can use the Paypal link found on the homepage or 
@@ -471,6 +526,12 @@ http://www.adp-gmbh.ch/cpp/common/base64.html
 The wildcard compare was based on source code found at:
 http://www.codeproject.com/string/wildcmp.asp
 
+The ANSI version of CommandLineToArgv() can be found at:
+http://www.koders.com/c/fid63F8E1B505B46BF92349E967A24E3DD1D2BFF72D.aspx
+
+Horizontal and vertical tiling routines are based on source code 
+found at: http://source.winehq.org/source/dlls/user32/mdi.c
+ 
 
 DISCLAIMER
 ----------

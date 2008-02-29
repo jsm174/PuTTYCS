@@ -1,7 +1,7 @@
 /**
  * PreferencesDialog.cpp - PuTTYCS Preferences Dialog
  *
- * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2008 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,9 @@
  *             up/down arrow keys
  *             Added check for PuTTYCS update
  *             Added run on system startup   
+ * 02/29/2008: Added tiling methods                  J. Millard
+ *             Added post send transition delay     
+ *             Rearranged dialog
  */
 
 #include "stdafx.h"
@@ -79,14 +82,14 @@ void CPreferencesDialog::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    //{{AFX_MSG_MAP(CPreferencesDialog)
-   ON_BN_CLICKED(IDC_SAVEPASSWORD_CHECKBOX, OnSavePasswordCheckbox)
-   ON_BN_CLICKED(IDC_AUTOARRANGE_OFF_RADIO, OnAutoArrangeRadio)
+   ON_BN_CLICKED(IDC_SAVEPASSWORD_CHECKBOX, OnSavePasswordCheckbox)  
    ON_BN_CLICKED(IDC_AUTOMINIMIZE_CHECKBOX, OnAutoMinimizeCheckbox)
    ON_BN_CLICKED(IDC_ARRANGEONSTARTUP_CHECKBOX, OnArrangeOnStartupCheckbox)
    ON_BN_CLICKED(IDC_UNHIDEONEXIT_CHECKBOX, OnUnhideOnExitCheckbox)   
    ON_BN_CLICKED(IDC_TOOLWINDOW_CHECKBOX, OnToolWindowCheckbox)
    ON_BN_CLICKED(IDC_ALWAYSONTOP_CHECKBOX, OnAlwaysOnTopCheckbox)   
    ON_EN_CHANGE(IDC_TRANSITION_EDIT, OnChangeTransition)      
+   ON_EN_CHANGE(IDC_POST_SEND_DELAY_EDIT, OnChangePostSendDelay)      
    ON_BN_CLICKED(IDC_EMULATECOPYPASTE_CHECKBOX, OnEmulateCopyPasteCheckbox)
    ON_BN_CLICKED(IDC_CMDHISTORYSCROLLTHROUGH_CHECKBOX, OnCmdHistoryScrollThroughCheckbox)
    ON_BN_CLICKED(IDC_TABCOMPLETION_CHECKBOX, OnTabCompletionCheckbox)   
@@ -95,32 +98,18 @@ BEGIN_MESSAGE_MAP(CPreferencesDialog, CDialog)
    ON_BN_CLICKED(IDC_CHECKFORUPDATES_CHECKBOX, OnCheckForUpdatesCheckbox)
 	ON_EN_CHANGE(IDC_CASCADE_HEIGHT_EDIT, OnChangeCascadeHeightEdit)
 	ON_EN_CHANGE(IDC_CASCADE_WIDTH_EDIT, OnChangeCascadeWidthEdit)
+   ON_BN_CLICKED(IDC_AUTOARRANGE_OFF_RADIO, OnAutoArrangeRadio)
    ON_BN_CLICKED(IDC_AUTOARRANGE_CASCADE_RADIO, OnAutoArrangeRadio)   
    ON_BN_CLICKED(IDC_AUTOARRANGE_TILE_RADIO, OnAutoArrangeRadio)
+   ON_BN_CLICKED(IDC_TILEMETHOD_VERTICAL_RADIO, OnTileMethodRadio)
+   ON_BN_CLICKED(IDC_TILEMETHOD_HORIZONTAL_RADIO, OnTileMethodRadio)   
+   ON_BN_CLICKED(IDC_TILEMETHOD_CLASSIC_RADIO, OnTileMethodRadio)
 	ON_BN_CLICKED(IDC_FIND_BUTTON, OnFindButton)
    ON_BN_CLICKED(IDC_OK_BUTTON, OnOKButton)
    ON_WM_HSCROLL()  
    ON_WM_HELPINFO()         
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
-/** 
- * CPreferencesDialog::getSavePassword()
- */
-
-int CPreferencesDialog::getSavePassword()
-{
-   return m_iSavePassword;
-}
-
-/** 
- * CPreferencesDialog::setSavePassword()
- */
-
-void CPreferencesDialog::setSavePassword( int iSavePassword )
-{
-   m_iSavePassword = iSavePassword;
-}
 
 /**
  * CPreferencesDialog::getAutoArrange()
@@ -174,6 +163,24 @@ int CPreferencesDialog::getArrangeOnStartup()
 void CPreferencesDialog::setArrangeOnStartup( int iArrangeOnStartup )
 {
    m_iArrangeOnStartup = iArrangeOnStartup;
+}
+
+/**
+ * CPreferencesDialog::getTileMethod()
+ */
+
+int CPreferencesDialog::getTileMethod()
+{
+   return m_iTileMethod;
+}
+
+/**
+ * CPreferencesDialog::setTileMethod()
+ */
+
+void CPreferencesDialog::setTileMethod( int iTileMethod)
+{
+   m_iTileMethod = iTileMethod;
 }
 
 /**
@@ -285,24 +292,6 @@ void CPreferencesDialog::setMinimizeToSysTray( int iMinimizeToSysTray )
 }
 
 /**
- * CPreferencesDialog::getTransition()
- */
-
-int CPreferencesDialog::getTransition()
-{
-   return m_iTransition;
-}
-
-/**
- * CPreferencesDialog::setTransition()
- */
-
-void CPreferencesDialog::setTransition( int iTransition )
-{
-   m_iTransition = iTransition;
-}
-
-/**
  * CPreferencesDialog::getOpacity()
  */
 
@@ -372,6 +361,60 @@ int CPreferencesDialog::getEmulateCopyPaste()
 void CPreferencesDialog::setEmulateCopyPaste( int iEmulateCopyPaste )
 {
    m_iEmulateCopyPaste = iEmulateCopyPaste;
+}
+
+/**
+ * CPreferencesDialog::getTransition()
+ */
+
+int CPreferencesDialog::getTransition()
+{
+   return m_iTransition;
+}
+
+/**
+ * CPreferencesDialog::setTransition()
+ */
+
+void CPreferencesDialog::setTransition( int iTransition )
+{
+   m_iTransition = iTransition;
+}
+
+/**
+ * CPreferencesDialog::getPostSendDelay()
+ */
+
+int CPreferencesDialog::getPostSendDelay()
+{
+   return m_iPostSendDelay;
+}
+
+/**
+ * CPreferencesDialog::setPostSendDelay()
+ */
+
+void CPreferencesDialog::setPostSendDelay( int iPostSendDelay )
+{
+   m_iPostSendDelay = iPostSendDelay;
+}
+
+/** 
+ * CPreferencesDialog::getSavePassword()
+ */
+
+int CPreferencesDialog::getSavePassword()
+{
+   return m_iSavePassword;
+}
+
+/** 
+ * CPreferencesDialog::setSavePassword()
+ */
+
+void CPreferencesDialog::setSavePassword( int iSavePassword )
+{
+   m_iSavePassword = iSavePassword;
 }
 
 /**
@@ -464,8 +507,14 @@ BOOL CPreferencesDialog::OnInitDialog()
    CheckDlgButton( IDC_MINIMIZETOSYSTRAY_CHECKBOX, 
       m_iMinimizeToSysTray );
 
-   SetDlgItemInt( IDC_TRANSITION_EDIT, 
-      m_iTransition );
+   CheckDlgButton( IDC_TILEMETHOD_VERTICAL_RADIO, 
+      (m_iTileMethod == PUTTYCS_PREF_TILE_METHOD_VERTICAL) );
+
+   CheckDlgButton( IDC_TILEMETHOD_HORIZONTAL_RADIO, 
+      (m_iTileMethod == PUTTYCS_PREF_TILE_METHOD_HORIZONTAL) );
+
+   CheckDlgButton( IDC_TILEMETHOD_CLASSIC_RADIO, 
+      (m_iTileMethod == PUTTYCS_PREF_TILE_METHOD_CLASSIC) );
 
    SetDlgItemInt( IDC_CASCADE_WIDTH_EDIT, 
       m_iCascadeWidth );
@@ -502,6 +551,12 @@ BOOL CPreferencesDialog::OnInitDialog()
    CheckDlgButton( IDC_EMULATECOPYPASTE_CHECKBOX, 
       m_iEmulateCopyPaste );
 
+   SetDlgItemInt( IDC_TRANSITION_EDIT, 
+      m_iTransition );
+
+   SetDlgItemInt( IDC_POST_SEND_DELAY_EDIT, 
+      m_iPostSendDelay );
+
    CheckDlgButton( IDC_RUNONSYSTEMSTARTUP_CHECKBOX, 
       m_iRunOnSystemStartup );
 
@@ -528,12 +583,14 @@ void CPreferencesDialog::UpdateDialog()
    ((CButton*) GetDlgItem(IDC_OK_BUTTON))->
       EnableWindow( (m_iTransition >= 1) && 
                     (m_iTransition <= 1500) &&
+                    (m_iPostSendDelay >= 1) &&
+                    (m_iPostSendDelay <= 1500) &&
                     (m_iOpacity >= PUTTYCS_OPACITY_MIN) &&
                     (m_iCascadeWidth >= PUTTYCS_CASCADE_MINIMUM_WIDTH) &&
                     (m_iCascadeWidth <= PUTTYCS_CASCADE_MAXIMUM_WIDTH) &&
                     (m_iCascadeHeight >= PUTTYCS_CASCADE_MINIMUM_HEIGHT) &&
-                    (m_iCascadeHeight <= PUTTYCS_CASCADE_MAXIMUM_HEIGHT) );                    
-   
+                    (m_iCascadeHeight <= PUTTYCS_CASCADE_MAXIMUM_HEIGHT) ); 
+      
    float fPercent = 
       ((float) (m_iOpacity - PUTTYCS_OPACITY_MIN) /
        (float) ((PUTTYCS_OPACITY_MAX + 1) -
@@ -563,18 +620,6 @@ void CPreferencesDialog::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollB
 }
 
 /**
- * CPreferencesDialog::OnSavePasswordCheckbox()
- */ 
-
-void CPreferencesDialog::OnSavePasswordCheckbox() 
-{   
-   m_iSavePassword =
-      IsDlgButtonChecked( IDC_SAVEPASSWORD_CHECKBOX ); 
-   
-   UpdateDialog();
-}
-
-/**
  * CPreferencesDialog::OnAutoArrangeRadio()
  */ 
 
@@ -587,6 +632,23 @@ void CPreferencesDialog::OnAutoArrangeRadio()
           GetCheck() * PUTTYCS_PREF_AUTO_ARRANGE_CASCADE) +
         (((CButton*) GetDlgItem(IDC_AUTOARRANGE_TILE_RADIO))->
           GetCheck() * PUTTYCS_PREF_AUTO_ARRANGE_TILE) );
+   
+   UpdateDialog();
+}
+
+/**
+ * CPreferencesDialog::OnTileMethodRadio()
+ */ 
+
+void CPreferencesDialog::OnTileMethodRadio() 
+{
+   m_iTileMethod =
+      ( (((CButton*) GetDlgItem(IDC_TILEMETHOD_VERTICAL_RADIO))->
+          GetCheck() * PUTTYCS_PREF_TILE_METHOD_VERTICAL) +
+        (((CButton*) GetDlgItem(IDC_TILEMETHOD_HORIZONTAL_RADIO))->
+          GetCheck() * PUTTYCS_PREF_TILE_METHOD_HORIZONTAL) +
+        (((CButton*) GetDlgItem(IDC_TILEMETHOD_CLASSIC_RADIO))->
+          GetCheck() * PUTTYCS_PREF_TILE_METHOD_CLASSIC) );
    
    UpdateDialog();
 }
@@ -737,18 +799,6 @@ void CPreferencesDialog::OnMinimizeToSysTrayCheckbox()
       IsDlgButtonChecked( IDC_MINIMIZETOSYSTRAY_CHECKBOX );	
 }
 
-/**
- * CPreferencesDialog::OnChangeTransition()
- */ 
-
-void CPreferencesDialog::OnChangeTransition() 
-{
-   m_iTransition =
-      GetDlgItemInt( IDC_TRANSITION_EDIT );
-
-   UpdateDialog();
-}
-
 /** 
  * CPreferencesDialog::OnTabCompletionCheckbox()
  */
@@ -777,6 +827,42 @@ void CPreferencesDialog::OnEmulateCopyPasteCheckbox()
 {
    m_iEmulateCopyPaste =
       IsDlgButtonChecked( IDC_EMULATECOPYPASTE_CHECKBOX );   
+}
+
+/**
+ * CPreferencesDialog::OnChangeTransition()
+ */ 
+
+void CPreferencesDialog::OnChangeTransition() 
+{
+   m_iTransition =
+      GetDlgItemInt( IDC_TRANSITION_EDIT );
+
+   UpdateDialog();
+}
+
+/**
+ * CPreferencesDialog::OnChangePostSendDelay()
+ */ 
+
+void CPreferencesDialog::OnChangePostSendDelay() 
+{
+   m_iPostSendDelay =
+      GetDlgItemInt( IDC_POST_SEND_DELAY_EDIT );
+
+   UpdateDialog();
+}
+
+/**
+ * CPreferencesDialog::OnSavePasswordCheckbox()
+ */ 
+
+void CPreferencesDialog::OnSavePasswordCheckbox() 
+{   
+   m_iSavePassword =
+      IsDlgButtonChecked( IDC_SAVEPASSWORD_CHECKBOX ); 
+   
+   UpdateDialog();
 }
 
 /**

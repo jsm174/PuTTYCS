@@ -1,7 +1,7 @@
 /**
  * PuTTYCSDialog.cpp - PuTTYCS Main Dialog
  *
- * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2008 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,10 @@
  *             up/down arrow keys
  *             Added check for PuTTYCS update
  *             Added run on system startup   
+ * 02/29/2008: Added horizontal/vertical tiling      J. Millard
+ *             Updated cascade logic
+ *             Added post send transition delay
+ *             Added --script command line option
  */
 
 #include "stdafx.h"
@@ -185,11 +189,11 @@ void CPuTTYCSDialog::LoadPreferences()
 
    m_csaFilters.RemoveAll();
 
-   for ( int loop = 0;
-      loop < PUTTYCS_PREF_FILTER_MAX_SIZE; loop++ )
+   for ( int iLoop = 0;
+      iLoop < PUTTYCS_PREF_FILTER_MAX_SIZE; iLoop++ )
    {     
       CString csAttribute;
-      csAttribute.Format( PUTTYCS_PREF_FILTER_ENTRY, loop );
+      csAttribute.Format( PUTTYCS_PREF_FILTER_ENTRY, iLoop );
 
       CString csValue =
          AfxGetApp()->GetProfileString( 
@@ -228,11 +232,11 @@ void CPuTTYCSDialog::LoadPreferences()
 
    m_csaCmdHistory.RemoveAll();
 
-   for ( loop = 0;
-      loop < PUTTYCS_PREF_CMDHISTORY_MAX_SIZE; loop++ )
+   for ( iLoop = 0;
+      iLoop < PUTTYCS_PREF_CMDHISTORY_MAX_SIZE; iLoop++ )
    {  
       CString csAttribute;
-      csAttribute.Format( PUTTYCS_PREF_CMDHISTORY_ENTRY, loop );
+      csAttribute.Format( PUTTYCS_PREF_CMDHISTORY_ENTRY, iLoop );
 
       CString csValue =
         AfxGetApp()->GetProfileString( 
@@ -246,28 +250,7 @@ void CPuTTYCSDialog::LoadPreferences()
       }
    }
 
-   m_iCmdHistory = m_csaCmdHistory.GetSize();
-    
-   /**
-    * Password
-    */
-
-   m_iSavePassword = 
-      AfxGetApp()->GetProfileInt(
-         PUTTYCS_APP_NAME, PUTTYCS_PREF_SAVE_PASSWORD, 0 );
-
-   if ( m_iSavePassword )
-   {
-      m_csPassword =
-         AfxGetApp()->GetProfileString( 
-            PUTTYCS_APP_NAME,
-            PUTTYCS_PREF_PASSWORD, 
-            PUTTYCS_EMPTY_STRING );
-   }
-   else
-   {
-      m_csPassword = PUTTYCS_EMPTY_STRING;
-   }
+   m_iCmdHistory = m_csaCmdHistory.GetSize();    
 
    /**
     * Window settings
@@ -285,10 +268,6 @@ void CPuTTYCSDialog::LoadPreferences()
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_MINIMIZE_TO_SYSTRAY, 1 );
 
-   m_iTransition =
-      AfxGetApp()->GetProfileInt(
-         PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_TRANSITION, 25 );
-  
    m_iOpacity =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_OPACITY, 
@@ -313,6 +292,18 @@ void CPuTTYCSDialog::LoadPreferences()
    m_iUnhideOnExit =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_UNHIDE_ON_EXIT, 1 );
+
+   /**
+    * Tile method
+    */   
+
+   m_iTileMethod = 
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_TILE_METHOD, PUTTYCS_TILE_METHOD_DEFAULT );
+
+   /**
+    * Cascade dimensions
+    */   
 
    m_iCascadeWidth = 
       AfxGetApp()->GetProfileInt(
@@ -350,6 +341,23 @@ void CPuTTYCSDialog::LoadPreferences()
     * Miscellenous
     */
 
+   m_iSavePassword = 
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_SAVE_PASSWORD, 0 );
+
+   if ( m_iSavePassword )
+   {
+      m_csPassword =
+         AfxGetApp()->GetProfileString( 
+            PUTTYCS_APP_NAME,
+            PUTTYCS_PREF_PASSWORD, 
+            PUTTYCS_EMPTY_STRING );
+   }
+   else
+   {
+      m_csPassword = PUTTYCS_EMPTY_STRING;
+   }
+
    m_iRunOnSystemStartup =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_RUN_ON_SYSTEM_STARTUP, 0 );
@@ -359,6 +367,19 @@ void CPuTTYCSDialog::LoadPreferences()
    m_iCheckForUpdates =
       AfxGetApp()->GetProfileInt(
          PUTTYCS_APP_NAME, PUTTYCS_PREF_CHECK_FOR_UPDATES, 1 );
+
+   /**
+    * Transition Delays
+    */
+
+   m_iTransition =
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_WINDOW_TRANSITION, 25 );
+  
+   m_iPostSendDelay =
+      AfxGetApp()->GetProfileInt(
+         PUTTYCS_APP_NAME, PUTTYCS_PREF_POST_SEND_DELAY, 100 );
+ 
 }
 
 /**
@@ -371,16 +392,16 @@ void CPuTTYCSDialog::SavePreferences()
     * PuTTY filters
     */ 
 
-   for ( int loop = 0; loop < PUTTYCS_PREF_FILTER_MAX_SIZE; loop++ )
+   for ( int iLoop = 0; iLoop < PUTTYCS_PREF_FILTER_MAX_SIZE; iLoop++ )
    {     
       CString csAttribute;
-      csAttribute.Format( PUTTYCS_PREF_FILTER_ENTRY, loop );
+      csAttribute.Format( PUTTYCS_PREF_FILTER_ENTRY, iLoop );
 
       CString csValue = PUTTYCS_EMPTY_STRING;
 
-      if ( loop < m_csaFilters.GetSize() )
+      if ( iLoop < m_csaFilters.GetSize() )
       {
-         csValue = m_csaFilters.GetAt( loop );
+         csValue = m_csaFilters.GetAt( iLoop );
       }
 
       AfxGetApp()->WriteProfileString(
@@ -394,39 +415,21 @@ void CPuTTYCSDialog::SavePreferences()
     * Command history
     */ 
 
-   for ( loop = 0;
-      loop < PUTTYCS_PREF_CMDHISTORY_MAX_SIZE; loop++ )
+   for ( iLoop = 0;
+      iLoop < PUTTYCS_PREF_CMDHISTORY_MAX_SIZE; iLoop++ )
    {
       CString csAttribute;
-      csAttribute.Format( PUTTYCS_PREF_CMDHISTORY_ENTRY, loop );
+      csAttribute.Format( PUTTYCS_PREF_CMDHISTORY_ENTRY, iLoop );
 
       CString csValue = PUTTYCS_EMPTY_STRING;
 
-      if ( loop < m_csaCmdHistory.GetSize() )
+      if ( iLoop < m_csaCmdHistory.GetSize() )
       {
-         csValue = m_csaCmdHistory.GetAt(loop);
+         csValue = m_csaCmdHistory.GetAt(iLoop);
       }
 
       AfxGetApp()->WriteProfileString(
          PUTTYCS_APP_NAME, csAttribute, csValue );
-   }
-
-   /**
-    * Password
-    */
-
-   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
-      PUTTYCS_PREF_SAVE_PASSWORD, m_iSavePassword );
-
-   if ( m_iSavePassword )
-   {
-      AfxGetApp()->WriteProfileString( PUTTYCS_APP_NAME, 
-         PUTTYCS_PREF_PASSWORD, m_csPassword );
-   }
-   else
-   {
-      AfxGetApp()->WriteProfileString( PUTTYCS_APP_NAME, 
-         PUTTYCS_PREF_PASSWORD, PUTTYCS_EMPTY_STRING );
    }
 
    /**
@@ -442,9 +445,6 @@ void CPuTTYCSDialog::SavePreferences()
 
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
       PUTTYCS_PREF_MINIMIZE_TO_SYSTRAY, m_iMinimizeToSysTray );
-
-   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
-      PUTTYCS_PREF_WINDOW_TRANSITION, m_iTransition );
 
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
       PUTTYCS_PREF_WINDOW_OPACITY, m_iOpacity );
@@ -464,6 +464,17 @@ void CPuTTYCSDialog::SavePreferences()
 
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
       PUTTYCS_PREF_UNHIDE_ON_EXIT, m_iUnhideOnExit );
+
+   /**
+    * Tile method
+    */
+
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
+      PUTTYCS_PREF_TILE_METHOD, m_iTileMethod );
+
+   /**
+    * Cascade dimensions
+    */
 
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
       PUTTYCS_PREF_CASCADE_WIDTH, m_iCascadeWidth );
@@ -496,12 +507,36 @@ void CPuTTYCSDialog::SavePreferences()
     */
 
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
+      PUTTYCS_PREF_SAVE_PASSWORD, m_iSavePassword );
+
+   if ( m_iSavePassword )
+   {
+      AfxGetApp()->WriteProfileString( PUTTYCS_APP_NAME, 
+         PUTTYCS_PREF_PASSWORD, m_csPassword );
+   }
+   else
+   {
+      AfxGetApp()->WriteProfileString( PUTTYCS_APP_NAME, 
+         PUTTYCS_PREF_PASSWORD, PUTTYCS_EMPTY_STRING );
+   }
+
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
       PUTTYCS_PREF_RUN_ON_SYSTEM_STARTUP, m_iRunOnSystemStartup );   
 
    SetRunOnSystemStartup( m_iRunOnSystemStartup ? true : false);
 
    AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME,
       PUTTYCS_PREF_CHECK_FOR_UPDATES, m_iCheckForUpdates );   
+
+   /**
+    * Transition Delays
+    */
+
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
+      PUTTYCS_PREF_WINDOW_TRANSITION, m_iTransition );
+
+   AfxGetApp()->WriteProfileInt( PUTTYCS_APP_NAME, 
+      PUTTYCS_PREF_POST_SEND_DELAY, m_iPostSendDelay );
 }
 
 /**
@@ -521,7 +556,6 @@ BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
 	ON_WM_CREATE()
    ON_WM_SYSCOMMAND()
    ON_WM_PAINT()
-   ON_MESSAGE(WM_USER_MULTIPLE_INSTANCE, OnMultipleInstance)
    ON_WM_QUERYDRAGICON()   
    ON_COMMAND(IDMI_SYSTRAYABOUT_MENUITEM, OnAboutButton)   
    ON_CBN_SELCHANGE(IDC_FILTERS_COMBOBOX, OnSelChangeFiltersCombobox)
@@ -556,14 +590,15 @@ BEGIN_MESSAGE_MAP(CPuTTYCSDialog, CDialog)
 	ON_BN_CLICKED(IDC_CTRL_BUTTON, OnCtrlButton)
    ON_BN_CLICKED(IDC_INC_BUTTON, OnIncButton)
    ON_COMMAND(IDMI_SYSTRAYCHECKFORUPDATES_MENUITEM, OnCheckForUpdates)   
+	ON_BN_CLICKED(IDC_CTRLD_BUTTON, OnCtrlDButton)
+	ON_BN_CLICKED(IDC_CTRLR_BUTTON, OnCtrlRButton)
    ON_COMMAND(IDMI_SYSTRAYCASCADE_MENUITEM, OnCascadeButton)
    ON_COMMAND(IDMI_SYSTRAYTILE_MENUITEM, OnTileButton)
    ON_COMMAND(IDMI_SYSTRAYMINIMIZE_MENUITEM, OnMinimizeButton)
    ON_COMMAND(IDMI_SYSTRAYHIDE_MENUITEM, OnHideButton)
    ON_COMMAND(IDMI_SYSTRAYPREFERENCES_MENUITEM, OnPreferencesButton)   
    ON_COMMAND(IDMI_SYSTRAYEXIT_MENUITEM, OnOK)   	
-	ON_BN_CLICKED(IDC_CTRLD_BUTTON, OnCtrlDButton)
-	ON_BN_CLICKED(IDC_CTRLR_BUTTON, OnCtrlRButton)
+	ON_WM_COPYDATA()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -691,11 +726,11 @@ BOOL CPuTTYCSDialog::DestroyWindow()
     
       SortWindows();
 
-      for ( int loop = 0;
-         loop < m_obaWindows.GetSize(); loop++ )
+      for ( int iLoop = 0;
+         iLoop < m_obaWindows.GetSize(); iLoop++ )
       {
          CWnd* pWnd =
-            (CWnd*) m_obaWindows.GetAt( loop );
+            (CWnd*) m_obaWindows.GetAt( iLoop );
              
          if ( !pWnd->IsWindowVisible() )
          { 
@@ -755,9 +790,9 @@ BOOL CPuTTYCSDialog::OnInitDialog()
     * PuTTY filters
     */
 
-   for ( int loop = 0; loop < m_csaFilters.GetSize(); loop++ )
+   for ( int iLoop = 0; iLoop < m_csaFilters.GetSize(); iLoop++ )
    {
-      CString csFilter = m_csaFilters.GetAt(loop);
+      CString csFilter = m_csaFilters.GetAt(iLoop);
 
       ((CComboBox*) GetDlgItem(IDC_FILTERS_COMBOBOX))->
          AddString(csFilter.Mid(0, 
@@ -866,7 +901,13 @@ BOOL CPuTTYCSDialog::OnInitDialog()
 
    UpdateDialog();
 
-   return FALSE;
+   /**
+    * Parse command line options
+    */
+
+   ParseCmdLineOptions();
+
+   return TRUE;
 }
 
 /**
@@ -952,12 +993,52 @@ BOOL CPuTTYCSDialog::OnHelpInfo(HELPINFO* pHelpInfo)
 }
 
 /**
- * CPuTTYCSDialog::OnMultipleInstance()
+ * CPuTTYCSDialog::ParseCmdLineOptions()
  */
 
-void CPuTTYCSDialog::OnMultipleInstance(WPARAM wParam, LPARAM lParam)
+void CPuTTYCSDialog::ParseCmdLineOptions(LPTSTR pCmdLine)
 {
-   OnOpenMenuItem();
+   if (!m_bDisablePopup) 
+   {
+      m_bDisablePopup = true;
+
+      CString sMessage;
+
+      int iArgc;  
+      LPTSTR* pArgv = CommandLineToArgv(pCmdLine ? pCmdLine : GetCommandLine(), &iArgc);
+
+      for (int iArg = 1; iArg < iArgc; iArg++) 
+      {         
+         if (pArgv[iArg][0] == '-') 
+         {
+            if (_tcscmp(pArgv[iArg],PUTTYCS_CMD_SCRIPT)==0 || _tcscmp(pArgv[iArg],PUTTYCS_CMD_SCRIPT_LONG)==0) 
+            {
+               if (++iArg >= iArgc)
+               {
+                  sMessage.Format(PUTTYCS_MESSAGEBOX_MISSING_ARGUMENT, PUTTYCS_CMD_SCRIPT, PUTTYCS_CMD_SCRIPT_LONG);
+                  MessageBox(sMessage, PUTTYCS_WINDOW_TITLE_APP, MB_OK);
+			      }
+			      else 
+               {
+                  SendScript( pArgv[iArg] );				   
+               }
+			   }
+   		   else if (_tcscmp(pArgv[iArg],PUTTYCS_CMD_HELP)==0 || _tcscmp(pArgv[iArg],PUTTYCS_CMD_HELP_LONG)==0) 
+            {		         
+               MessageBox(PUTTYCS_MESSAGEBOX_HELP, PUTTYCS_WINDOW_TITLE_APP, MB_OK);
+            }
+			   else 
+            {
+               sMessage.Format( PUTTYCS_MESSAGEBOX_UNKNOWN_OPTION, pArgv[iArg]);          
+               MessageBox(sMessage, PUTTYCS_WINDOW_TITLE_APP, MB_OK);            
+            }
+         }
+      }
+
+      LocalFree(pArgv);
+
+      m_bDisablePopup = false;      
+   }
 }
 
 /**
@@ -1143,57 +1224,37 @@ CObArray* CPuTTYCSDialog::GetAllWindows()
  */ 
 
 void CPuTTYCSDialog::OnCascadeButton() 
-{
-   int x = 0;
-   int y = 0;
-   int size = GetSystemMetrics( SM_CYSIZE );
-
-   int offset = size;
-
+{      
    m_obaWindows.RemoveAll();
 
    ::EnumWindows( enumwindowsProc, (LPARAM) this );
     
    SortWindows();
 
-   for ( int loop = 0;
-      loop < m_obaWindows.GetSize(); loop++ )
-   {
-      CWnd* pWnd =
-         (CWnd*) m_obaWindows.GetAt(loop);
-          
-      if ( (loop % 10) == 0 )
-      {     
-         x = offset;
-         y = size;
+   int iTotal = m_obaWindows.GetSize();
 
-         offset += ( size * 8 );
-      }
-      else
-      {
-         x += size;
-         y += size;
-      }
+   if (iTotal > 0) 
+   {           
+       RECT rectWorkArea;
+      ::SystemParametersInfo(SPI_GETWORKAREA, NULL, &rectWorkArea, 0);
+ 
+      int iX = rectWorkArea.left;
+      int iY = rectWorkArea.top;
       
-      pWnd->SendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 );
+      for ( int iLoop = 0; iLoop < iTotal; iLoop++ )
+      {        
+         MovePuttyWnd((CWnd*) m_obaWindows.GetAt(iLoop), iX, iY, m_iCascadeWidth, m_iCascadeHeight);
 
-      pWnd->ShowWindow( SW_HIDE );
-      
-      pWnd->SetWindowPos( NULL, x, y, 0, 0, SWP_NOSIZE );
+         iX += GetSystemMetrics(SM_CYCAPTION) - GetSystemMetrics(SM_CYFRAME);
+         iY += GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFRAME) - 1;
 
-      pWnd->SendMessage( WM_ENTERSIZEMOVE, 0, 0 );
-
-      pWnd->
-         SendMessage( WM_SIZE,
-                      SIZE_RESTORED, 
-                      MAKELPARAM( 
-                         m_iCascadeWidth,
-                         m_iCascadeHeight) );
-
-      pWnd->SendMessage( WM_EXITSIZEMOVE, 0, 0 );      
-
-      pWnd->SendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 );      
-      pWnd->SendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 );
+         if ( ((iX + m_iCascadeWidth) >= rectWorkArea.right) ||
+              ((iY + m_iCascadeHeight + GetSystemMetrics(SM_CYCAPTION)) >= rectWorkArea.bottom) ) 
+         {
+            iX = rectWorkArea.left;
+            iY = rectWorkArea.top;            
+         }               
+      }
    }
 
    RefreshDialog();      
@@ -1205,72 +1266,93 @@ void CPuTTYCSDialog::OnCascadeButton()
 
 void CPuTTYCSDialog::OnTileButton() 
 {
-   int x = 0;
-   int y = 0;
-
    m_obaWindows.RemoveAll();
 
    ::EnumWindows( enumwindowsProc, (LPARAM) this );
     
    SortWindows();
 
-   int size =
-      m_obaWindows.GetSize();
+   int iTotal = m_obaWindows.GetSize();
 
-   if ( size > 0 )
-   {     
-      int maxCols =
-         (size / 4) + ((size % 4) > 0);
-      
-      int maxScreenX = GetSystemMetrics(SM_CXFULLSCREEN);
-      int maxScreenY = GetSystemMetrics(SM_CYFULLSCREEN);
+   if ( iTotal > 0 )
+   {        
+      int iLoop;
 
-      int tileHeight = 
-         (maxScreenY / ((size / maxCols) + ((size % maxCols) > 0)));
+      int iSizeX = 0;
+      int iSizeY = 0;
 
-      int tileWidth = (maxScreenX / maxCols);
+      int iX = 0;
+      int iY = 0;
 
-      for ( int loop = 0;
-         loop < m_obaWindows.GetSize(); loop++ )
-      {   
-         CWnd* pWnd =
-           (CWnd*) m_obaWindows.GetAt(loop);
-          
-         int offset = GetSystemMetrics( SM_CYSIZE );
+      int iColumns;
 
-         pWnd->
-            SendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 );
-       
-         pWnd->ShowWindow( SW_HIDE );
+      RECT rectWorkArea;
+      ::SystemParametersInfo(SPI_GETWORKAREA, NULL, &rectWorkArea, 0);
+ 
+      if (m_iTileMethod == PUTTYCS_PREF_TILE_METHOD_CLASSIC) 
+      {
+         iColumns = (iTotal / 4) + ((iTotal % 4) > 0);
             
-         pWnd->SetWindowPos( NULL, x, y, 0, 0, SWP_NOSIZE );
+         iSizeY = ((rectWorkArea.bottom - rectWorkArea.top) / ((iTotal / iColumns) + ((iTotal % iColumns) > 0)));
+         iSizeX = ((rectWorkArea.right - rectWorkArea.left) / iColumns);      
 
-         x += (tileWidth);
+         for ( iLoop = 0; iLoop < iTotal; iLoop++ )
+         {   
+            MovePuttyWnd((CWnd*) m_obaWindows.GetAt(iLoop), (iX + rectWorkArea.left), (iY + rectWorkArea.top), iSizeX, iSizeY - 20);
+
+            iX += (iSizeX);
          
-         if ( x > (tileWidth * (maxCols - 1)) )
+            if ( iX > (iSizeX * (iColumns - 1)) )
+            {
+               iX = 0;
+               iY += iSizeY;
+            }            
+         }        
+      }
+      else 
+      {
+         int iRow;
+         int iRows = (int) sqrt((double) iTotal);
+         
+         int iColumn;
+         iColumns = iTotal / iRows;
+         
+         int iWndIndex = 0;                 
+         
+         if (m_iTileMethod == PUTTYCS_PREF_TILE_METHOD_HORIZONTAL) 
          {
-            x = 0;
-            y += tileHeight;
+            int iTemp = iRows;
+            iRows = iColumns;
+            iColumns = iTemp;
          }
-            
-         pWnd->
-            SendMessage( WM_ENTERSIZEMOVE, 0, 0 );
 
-         pWnd->
-            SendMessage( WM_SIZE, 
-                         SIZE_RESTORED,
-                         MAKELPARAM(tileWidth,
-                                    tileHeight - 20) );
+         iSizeY = (rectWorkArea.bottom - rectWorkArea.top) / iRows;
+         iSizeX = (rectWorkArea.right  - rectWorkArea.left) / iColumns;
+         
+         for (iX = rectWorkArea.left, iLoop = 0, iColumn = 1; iColumn <= iColumns && iWndIndex < iTotal; iColumn++)
+         {
+             if (iColumn == iColumns)
+             {
+                 iRows  = iTotal - iLoop;
+                 iSizeY = (rectWorkArea.bottom - rectWorkArea.top) / iRows;
+             }
+ 
+             iY = rectWorkArea.top;        
 
-         pWnd->
-            SendMessage( WM_EXITSIZEMOVE, 0, 0 );
+             for (iRow = 1; iRow <= iRows && iWndIndex < iTotal; iRow++, iLoop++)
+             {                     
+                MovePuttyWnd((CWnd*) m_obaWindows.GetAt(iWndIndex), iX, iY,
+                   (iSizeX - ((GetSystemMetrics(SM_CXSIZEFRAME) * 2) + GetSystemMetrics(SM_CXVSCROLL))),
+                   (iSizeY - (GetSystemMetrics(SM_CYSIZE) + (GetSystemMetrics(SM_CYSIZEFRAME) * 2))));
+              
+                iY += iSizeY;
 
-         pWnd->
-            SendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 );
+                iWndIndex++;
+             }
 
-         pWnd->
-            SendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 );            
-      }         
+             iX += iSizeX;
+         }
+      }
    }   
 
    RefreshDialog(); 
@@ -1288,11 +1370,11 @@ void CPuTTYCSDialog::OnMinimizeButton()
     
    SortWindows();
 
-   for ( int loop = 0;
-      loop < m_obaWindows.GetSize(); loop++ )
+   for ( int iLoop = 0;
+      iLoop < m_obaWindows.GetSize(); iLoop++ )
    {
       CWnd* pWnd =
-         (CWnd*) m_obaWindows.GetAt( loop );
+         (CWnd*) m_obaWindows.GetAt( iLoop );
              
       if ( !pWnd->IsWindowVisible() )
       {
@@ -1318,11 +1400,11 @@ void CPuTTYCSDialog::OnHideButton()
     
    SortWindows();
 
-   for ( int loop = 0;
-      loop < m_obaWindows.GetSize(); loop++ )
+   for ( int iLoop = 0;
+      iLoop < m_obaWindows.GetSize(); iLoop++ )
    {
       CWnd* pWnd =
-        (CWnd*) m_obaWindows.GetAt( loop );
+        (CWnd*) m_obaWindows.GetAt( iLoop );
              
      if ( pWnd->IsWindowVisible() )
      {
@@ -1353,10 +1435,10 @@ void CPuTTYCSDialog::OnCloseButton()
                       PUTTYCS_APP_NAME, 
                       MB_ICONEXCLAMATION | MB_YESNO) == IDYES )
       {
-         for ( int loop = 0; loop < iSize; loop++ )
+         for ( int iLoop = 0; iLoop < iSize; iLoop++ )
          { 
             CWnd* pWnd =
-               (CWnd*) m_obaWindows.GetAt( loop );
+               (CWnd*) m_obaWindows.GetAt( iLoop );
 
             DWORD dwPid;
             
@@ -1396,9 +1478,9 @@ void CPuTTYCSDialog::OnFiltersButton()
    ((CComboBox*) GetDlgItem(IDC_FILTERS_COMBOBOX))->
       ResetContent();
 
-   for ( int loop = 0; loop < m_csaFilters.GetSize(); loop++)
+   for ( int iLoop = 0; iLoop < m_csaFilters.GetSize(); iLoop++)
    {
-      CString csFilter = m_csaFilters.GetAt(loop);
+      CString csFilter = m_csaFilters.GetAt(iLoop);
 
       ((CComboBox*) GetDlgItem(IDC_FILTERS_COMBOBOX))->
          AddString( csFilter.Mid(0, 
@@ -1687,13 +1769,6 @@ void CPuTTYCSDialog::OnPreferencesButton()
       new CPreferencesDialog( this );
 
    /**
-    * Password 
-    */
-
-   pDialog->
-      setSavePassword( m_iSavePassword );
-
-   /**
     * Auto arrange
     */
 
@@ -1708,6 +1783,16 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
    pDialog->
       setUnhideOnExit( m_iUnhideOnExit );
+
+   /**
+    * Tile method
+    */
+
+   pDialog->setTileMethod( m_iTileMethod );
+
+   /**
+    * Cascade dimensions
+    */
 
    pDialog->
       setCascadeWidth( m_iCascadeWidth );
@@ -1729,9 +1814,6 @@ void CPuTTYCSDialog::OnPreferencesButton()
       setMinimizeToSysTray( m_iMinimizeToSysTray );
 
    pDialog->
-      setTransition( m_iTransition );
-
-   pDialog->
       setOpacity(m_iOpacity );
 
    /**
@@ -1748,9 +1830,23 @@ void CPuTTYCSDialog::OnPreferencesButton()
       setEmulateCopyPaste( m_iEmulateCopyPaste );
  
    /**
-    * Miscellaneous
+    * Transition delays
     */
 
+   pDialog->
+      setTransition( m_iTransition );
+
+   pDialog->
+      setPostSendDelay( m_iPostSendDelay );
+
+   /**
+    * Miscellaneous
+    */
+ 
+   pDialog->
+      setSavePassword( m_iSavePassword );
+
+ 
    pDialog->
 	   setRunOnSystemStartup( m_iRunOnSystemStartup );
 
@@ -1759,13 +1855,6 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
    if ( pDialog->DoModal() == IDOK )
    {  
-      /**
-       * Password
-       */
-
-      m_iSavePassword =
-         pDialog->getSavePassword();
-
       /**
        * Auto arrange
        */
@@ -1781,6 +1870,17 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
       m_iUnhideOnExit =
          pDialog->getUnhideOnExit();
+
+      /**
+       * Tile method
+       */
+
+      m_iTileMethod =
+         pDialog->getTileMethod();
+
+      /**
+       * Cascade dimensions
+       */
 
       m_iCascadeWidth =
          pDialog->getCascadeWidth();
@@ -1830,8 +1930,6 @@ void CPuTTYCSDialog::OnPreferencesButton()
 
       m_iOpacity = pDialog->getOpacity();
 
-      m_iTransition = pDialog->getTransition();
-
       /**
        * Keyboard/Mouse
        */
@@ -1848,15 +1946,24 @@ void CPuTTYCSDialog::OnPreferencesButton()
          pDialog->getEmulateCopyPaste();
       
       m_cceCommandEdit.SetEmulateCopyPaste( m_iEmulateCopyPaste );
-    
+
+      /**
+       * Transition Delays
+       */
+
+      m_iTransition = pDialog->getTransition();
+      m_iPostSendDelay = pDialog->getPostSendDelay();
+
       /**
        * Miscellaneous
        */
 
+      m_iSavePassword = pDialog->getSavePassword();
+
       m_iRunOnSystemStartup = pDialog->getRunOnSystemStartup();
 
       m_iCheckForUpdates = pDialog->getCheckForUpdates();
-
+  
       /**
        * Window refresh
        */
@@ -2035,13 +2142,28 @@ void CPuTTYCSDialog::OnScriptButton()
       PUTTYCS_WINDOW_TITLE_OPEN_SCRIPT;
    
    if ( pDialog->DoModal() == IDOK )
-   {     
-      FILE* pFile;
+   {
+      SendScript(pDialog->GetPathName());
+   }
+   
+   delete( pDialog );   
 
-      if ( (pFile =
-         _tfopen(pDialog->GetPathName(), PUTTYCS_FILE_MODE_READ)) )
-      {
-         CString csBuffer;
+   m_bDisablePopup = FALSE;
+
+   RefreshDialog();    
+}
+
+/**
+ * CPuTTYCSDialog::SendScript()
+ */
+
+void CPuTTYCSDialog::SendScript(CString sFilename) 
+{     
+   FILE* pFile;
+   
+   if ( (pFile = _tfopen(sFilename, PUTTYCS_FILE_MODE_READ)) )
+   {
+      CString csBuffer;
 
          bool capsLock = false;
 
@@ -2049,8 +2171,7 @@ void CPuTTYCSDialog::OnScriptButton()
          {
             capsLock = true;
 
-            csBuffer +=
-               PUTTYCS_SENDKEY_BUTTON_CAPSLOCK;
+            csBuffer += PUTTYCS_SENDKEY_BUTTON_CAPSLOCK;
          }
 
          bool firstLine = true;
@@ -2087,14 +2208,11 @@ void CPuTTYCSDialog::OnScriptButton()
          ShowWindow( SW_SHOW );
         
          fclose( pFile );
-      }          
-   }   
-
-   RefreshDialog(); 
-
-   delete( pDialog );   
-
-   m_bDisablePopup = FALSE;
+   }  
+   else
+   {      
+      MessageBox(PUTTYCS_MESSAGEBOX_LOAD_SCRIPT_ERROR, PUTTYCS_WINDOW_TITLE_APP, MB_ICONEXCLAMATION | MB_OK );
+   }
 }
 
 /**
@@ -2207,6 +2325,22 @@ void CPuTTYCSDialog::OnTrayNotify( WPARAM wParam, LPARAM lParam )
 } 
 
 /**
+ * CPuTTYCSDialog::OnCopyData()
+ */
+
+BOOL CPuTTYCSDialog::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct) 
+{	
+   if (pCopyDataStruct->dwData == PUTTYCS_WM_COPYDATA_CMD_LINE) 
+   {
+      ParseCmdLineOptions((LPTSTR) pCopyDataStruct->lpData);
+   }
+   
+   OnOpenMenuItem();
+
+	return CDialog::OnCopyData(pWnd, pCopyDataStruct);
+}
+
+/**
  * CPuTTYCSDialog::sendCommand( )
  */
 
@@ -2259,9 +2393,9 @@ void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool bTab, bool bParse )
       csBuffer.Replace( PUTTYCS_TOKEN_INC, csIncToken );
       csBuffer.Replace( PUTTYCS_TOKEN_CTRL, csCtrlToken );   
       
-      for ( int loop = 0; loop < csBuffer.GetLength(); loop++ )
+      for ( int iLoop = 0; iLoop < csBuffer.GetLength(); iLoop++ )
       {
-         TCHAR chChar = csBuffer.GetAt(loop);
+         TCHAR chChar = csBuffer.GetAt(iLoop);
 
          if ( chChar == PUTTYCS_SENDKEY_CHAR_PLUS )
          {
@@ -2315,10 +2449,10 @@ void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool bTab, bool bParse )
 
    if ( m_obaWindows.GetSize() > 0 )
    {      
-      for (int loop = 0; loop < m_obaWindows.GetSize(); loop++)
+      for (int iLoop = 0; iLoop < m_obaWindows.GetSize(); iLoop++)
       {
          CString csInc;
-         csInc.Format( PUTTYCS_TOKEN_INT_TO_STRING, (loop + 1) );
+         csInc.Format( PUTTYCS_TOKEN_INT_TO_STRING, (iLoop + 1) );
 
          CString csTemp;
          
@@ -2348,7 +2482,7 @@ void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool bTab, bool bParse )
          }
 
          CWnd* pWnd =
-            (CWnd*) m_obaWindows.GetAt(loop);
+            (CWnd*) m_obaWindows.GetAt(iLoop);
 
          pWnd->SendMessage(
             WM_SYSCOMMAND, SC_HOTKEY, (LPARAM) pWnd->m_hWnd );
@@ -2362,9 +2496,11 @@ void CPuTTYCSDialog::sendBuffer( CString csBuffer, bool bTab, bool bParse )
 
          pWnd->SetFocus();      
 
+         ::Sleep( m_iTransition ); 
+
          m_skSendKeys.SendKeys( (LPCTSTR) csTemp );
          
-         ::Sleep( m_iTransition );            
+         ::Sleep( m_iPostSendDelay );            
       }          
    }
 
@@ -2414,9 +2550,9 @@ BOOL CALLBACK CPuTTYCSDialog::enumwindowsProc( HWND hwnd, LPARAM lParam )
       CString csFilter =
          PUTTYCS_EMPTY_STRING;
 
-      for ( int loop = 0; loop < csEntry.GetLength(); loop++ )
+      for ( int iLoop = 0; iLoop < csEntry.GetLength(); iLoop++ )
       {
-         TCHAR ch = csEntry.GetAt(loop);
+         TCHAR ch = csEntry.GetAt(iLoop);
 
          if ( ch == PUTTYCS_FILTER_SEPARATOR )
          {
@@ -2472,9 +2608,32 @@ BOOL CALLBACK CPuTTYCSDialog::enumwindowsProc( HWND hwnd, LPARAM lParam )
 }
 
 /**
- * CPuTTYCSDialog::wildcmp()
+ * CPuTTYCSDialog::MovePuttyWnd(CWnd* pWnd)
  */
 
+void CPuTTYCSDialog::MovePuttyWnd(CWnd* pWnd, int iX, int iY, int iSizeX, int iSizeY) 
+{
+   if (pWnd)
+   {
+      HWND hWnd = pWnd->GetSafeHwnd();
+
+      if (hWnd)
+      {
+         ::SendMessage(hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+         ::ShowWindow(hWnd, SW_HIDE);
+         ::SetWindowPos(hWnd, NULL, iX, iY, 0, 0, SWP_NOSIZE);               
+         ::SendMessage(hWnd, WM_ENTERSIZEMOVE, 0, 0);
+         ::SendMessage(hWnd, WM_SIZE, SIZE_RESTORED, MAKELPARAM(iSizeX, iSizeY));
+         ::SendMessage(hWnd, WM_EXITSIZEMOVE, 0, 0);
+         ::SendMessage(hWnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
+         ::SendMessage(hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);       
+      }
+   }
+}
+
+/**
+ * CPuTTYCSDialog::wildcmp()
+ */
 
 int CPuTTYCSDialog::wildcmp( const TCHAR* s1, const TCHAR* wild )
 {  
@@ -2585,3 +2744,141 @@ CString CPuTTYCSDialog::GetAttributeValue( CString csLine, CString csAttribute )
 
    return csValue;
 }
+
+#ifndef UNICODE
+/**
+ * CommandLineToArgvT()
+ * http://www.koders.com/c/fid63F8E1B505B46BF92349E967A24E3DD1D2BFF72D.aspx
+ */
+
+LPTSTR *WINAPI CommandLineToArgvT(LPCTSTR lpCmdLine, int *lpArgc)
+{
+	HGLOBAL hargv;
+	LPTSTR *argv, lpSrc, lpDest, lpArg;
+	int argc, nBSlash;
+	BOOL bInQuotes;
+
+	// If null was passed in for lpCmdLine, there are no arguments
+	if (!lpCmdLine) {
+		if (lpArgc)
+			*lpArgc = 0;
+		return 0;
+	}
+
+	lpSrc = (LPTSTR)lpCmdLine;
+	// Skip spaces at beginning
+	while (*lpSrc == _T(' ') || *lpSrc == _T('\t'))
+		lpSrc++;
+
+	// If command-line starts with null, there are no arguments
+	if (*lpSrc == 0) {
+		if (lpArgc)
+			*lpArgc = 0;
+		return 0;
+	}
+
+	lpArg = lpSrc;
+	argc = 0;
+	nBSlash = 0;
+	bInQuotes = FALSE;
+
+	// Count the number of arguments
+	while (1) {
+		if (*lpSrc == 0 || ((*lpSrc == _T(' ') || *lpSrc == _T('\t')) && !bInQuotes)) {
+			// Whitespace not enclosed in quotes signals the start of another argument
+			argc++;
+
+			// Skip whitespace between arguments
+			while (*lpSrc == _T(' ') || *lpSrc == _T('\t'))
+				lpSrc++;
+			if (*lpSrc == 0)
+				break;
+			nBSlash = 0;
+			continue;
+		}
+		else if (*lpSrc == _T('\\')) {
+			// Count consecutive backslashes
+			nBSlash++;
+		}
+		else if (*lpSrc == _T('\"') && !(nBSlash & 1)) {
+			// Open or close quotes
+			bInQuotes = !bInQuotes;
+			nBSlash = 0;
+		}
+		else {
+			// Some other character
+			nBSlash = 0;
+		}
+		lpSrc++;
+	}
+
+	// Allocate space the same way as CommandLineToArgvW for compatibility
+	hargv = GlobalAlloc(0, argc * sizeof(LPTSTR) + (_tcslen(lpArg) + 1) * sizeof(TCHAR));
+	argv = (LPTSTR *)GlobalLock(hargv);
+
+	if (!argv) {
+		// Memory allocation failed
+		if (lpArgc)
+			*lpArgc = 0;
+		return 0;
+	}
+
+	lpSrc = lpArg;
+	lpDest = lpArg = (LPTSTR)(argv + argc);
+	argc = 0;
+	nBSlash = 0;
+	bInQuotes = FALSE;
+
+	// Fill the argument array
+	while (1) {
+		if (*lpSrc == 0 || ((*lpSrc == _T(' ') || *lpSrc == _T('\t')) && !bInQuotes)) {
+			// Whitespace not enclosed in quotes signals the start of another argument
+			// Null-terminate argument
+			*lpDest++ = 0;
+			argv[argc++] = lpArg;
+
+			// Skip whitespace between arguments
+			while (*lpSrc == _T(' ') || *lpSrc == _T('\t'))
+				lpSrc++;
+			if (*lpSrc == 0)
+				break;
+			lpArg = lpDest;
+			nBSlash = 0;
+			continue;
+		}
+		else if (*lpSrc == _T('\\')) {
+			*lpDest++ = _T('\\');
+			lpSrc++;
+
+			// Count consecutive backslashes
+			nBSlash++;
+		}
+		else if (*lpSrc == _T('\"')) {
+			if (!(nBSlash & 1)) {
+				// If an even number of backslashes are before the quotes,
+				// the quotes don't go in the output
+				lpDest -= nBSlash / 2;
+				bInQuotes = !bInQuotes;
+			}
+			else {
+				// If an odd number of backslashes are before the quotes,
+				// output a quote
+				lpDest -= (nBSlash + 1) / 2;
+				*lpDest++ = _T('\"');
+			}
+			lpSrc++;
+			nBSlash = 0;
+		}
+		else {
+			// Copy other characters
+			*lpDest++ = *lpSrc++;
+			nBSlash = 0;
+		}
+	}
+
+	if (lpArgc)
+		*lpArgc = argc;
+	return argv;
+}
+
+#endif

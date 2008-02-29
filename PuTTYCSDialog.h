@@ -1,7 +1,7 @@
 /**
  * PuTTYCSDialog.h - PuTTYCS Main Dialog header
  *
- * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2008 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,10 @@
  *             up/down arrow keys
  *             Added check for PuTTYCS update
  *             Added run on system startup   
+ * 02/29/2008: Added horizontal/vertical tiling      J. Millard
+ *             Updated cascade logic
+ *             Added post send transition delay
+ *             Added --script command line option
  */
 
 #if !defined(AFX_PuTTYCSDLG_H__7BCAE5A7_75C4_4831_82FD_5A13F846FE61__INCLUDED_)
@@ -59,6 +63,13 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#ifdef UNICODE
+#define CommandLineToArgv CommandLineToArgvW
+#else
+#define CommandLineToArgv CommandLineToArgvT
+LPTSTR *WINAPI CommandLineToArgvT(LPCTSTR lpCmdLine, int *lpArgc);
+#endif
 
 #include "CommandEdit.h"
 
@@ -113,14 +124,6 @@ protected:
    int m_iCmdHistory;
 
    /**
-    * Password
-    */
-   
-   int m_iSavePassword;
-  
-   CString m_csPassword;
-  
-   /**
     * Window
     */
 
@@ -128,7 +131,6 @@ protected:
    int m_iAlwaysOnTop;
    int m_iMinimizeToSysTray;
    int m_iOpacity;
-   int m_iTransition;
 
    /**
     * Auto arrange 
@@ -138,7 +140,17 @@ protected:
    int m_iAutoMinimize;
    int m_iArrangeOnStartup;   
    int m_iUnhideOnExit;
+
+   /**
+    * Tile method
+    */ 
    
+   int m_iTileMethod;
+
+   /**
+    * Cascade dimensions
+    */ 
+
    int m_iCascadeWidth;
    int m_iCascadeHeight;
   
@@ -159,9 +171,20 @@ protected:
    /** 
     * Miscellaneous
     */
-
+   
+   int m_iSavePassword;
+  
+   CString m_csPassword;  
+  
    int m_iRunOnSystemStartup;
    int m_iCheckForUpdates;
+
+   /** 
+    * Transition delays
+    */
+
+   int m_iTransition;
+   int m_iPostSendDelay;
 
    /**
     * Fonts
@@ -173,15 +196,21 @@ protected:
     
    void sendCommand( CString csCommand, bool bTab );
    void sendBuffer( CString csBuffer, bool bParse = false, bool bTab = false );
-
+   
    void LoadPreferences();
    void SavePreferences();
 
    void UpdateDialog();
    void RefreshDialog();
 
+   void SendScript( CString csFilename );
+
+   void MovePuttyWnd(CWnd* pWnd, int iX, int intY, int iSizeX, int iSizeY);
+
    void SetRunOnSystemStartup( bool bEnable = true );
    void CheckForUpdates(bool bInteractive = false);
+
+   void ParseCmdLineOptions(LPTSTR pCmdLine = NULL);
 
    // Generated message map functions
    //{{AFX_MSG(CPuTTYCSDialog)
@@ -189,7 +218,6 @@ protected:
    virtual BOOL OnInitDialog();
    afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
    afx_msg void OnPaint();
-   afx_msg void OnMultipleInstance(WPARAM wParam, LPARAM lParam);
    afx_msg HCURSOR OnQueryDragIcon();
    afx_msg void OnAboutButton();
    afx_msg void OnSelChangeFiltersCombobox();   
@@ -226,6 +254,7 @@ protected:
    afx_msg void OnCheckForUpdates();
 	afx_msg void OnCtrlDButton();
 	afx_msg void OnCtrlRButton();
+	afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
 	//}}AFX_MSG
    DECLARE_MESSAGE_MAP()   
 
@@ -247,9 +276,7 @@ private:
    static int Compare(const void* pWndS1, const void* pWndS2);
 
    static CString GetAttributeValue(const CString, const CString);
-   CMenu* m_pMenu;    
-   
-  
+   CMenu* m_pMenu;  
 };
 
 //{{AFX_INSERT_LOCATION}}

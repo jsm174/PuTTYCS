@@ -1,7 +1,7 @@
 ;
 ; setup.iss - PuTTYCS Inno Setup Script
 ;
-; Copyright (c) 2005 Jason Millard (jsm174@gmail.com)
+; Copyright (c) 2005 - 2008 Jason Millard (jsm174@gmail.com)
 ; All rights reserved.
 ; 
 ; Redistribution and use in source and binary forms, with or without
@@ -34,14 +34,15 @@
 ; 05/30/2006: Updated for version 1.5               J. Millard
 ; 11/20/2006: Updated for version 1.6               J. Millard
 ; 06/20/2007: Updated for version 1.7               J. Millard
+; 02/29/2008: Updated for version 1.8.1             J. Millard
 ;
 
 [Setup]
-AppName=PuTTYCS 1.7
-AppVerName=PuTTY Command Sender 1.7
-VersionInfoVersion=1.7.0.0
-VersionInfoCopyright=Copyright (C) 2005 - 2007 Millard Software
-VersionInfoDescription=PuTTYCS - PuTTY Command Sender 1.7
+AppName=PuTTYCS 1.8.1
+AppVerName=PuTTY Command Sender 1.8.1
+VersionInfoVersion=1.8.1.0
+VersionInfoCopyright=Copyright (C) 2005 - 2008 Millard Software
+VersionInfoDescription=PuTTYCS - PuTTY Command Sender 1.8.1
 AppPublisher=Millard Software
 AppPublisherURL=http://www.millardsoftware.com/puttycs
 AppSupportURL=http://www.millardsoftware.com/puttycs
@@ -70,11 +71,11 @@ Source: "README.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\PuTTYCS 1.7"; Filename: "{app}\PuTTYCS.exe"
+Name: "{group}\PuTTYCS 1.8.1"; Filename: "{app}\PuTTYCS.exe"
 Name: "{group}\README.txt"; Filename: "{app}\README.txt"
-Name: "{userdesktop}\PuTTYCS 1.7"; Filename: "{app}\PuTTYCS.exe"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\PuTTYCS 1.7"; Filename: "{app}\PuTTYCS.exe"; Tasks: quicklaunchicon
+Name: "{userdesktop}\PuTTYCS 1.8.1"; Filename: "{app}\PuTTYCS.exe"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\PuTTYCS 1.8.1"; Filename: "{app}\PuTTYCS.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\README.txt"; Description: "{cm:ViewREADME}"; Flags: postinstall shellexec skipifsilent
-Filename: "{app}\PuTTYCS.exe"; Description: "{cm:LaunchProgram,PuTTY Command Sender 1.7}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\PuTTYCS.exe"; Description: "{cm:LaunchProgram,PuTTY Command Sender 1.8.1}"; Flags: nowait postinstall skipifsilent

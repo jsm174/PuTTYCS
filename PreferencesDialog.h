@@ -1,7 +1,7 @@
 /**
  * PreferencesDialog.h - PuTTYCS Preferences Dialog header
  *
- * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2008 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -41,6 +41,9 @@
  *             up/down arrow keys
  *             Added check for PuTTYCS update
  *             Added run on system startup   
+ * 02/29/2008: Added tiling methods                  J. Millard
+ *             Added post send transition delay     
+ *             Rearranged dialog
  */
 
 #if !defined(AFX_PREFERENCESDLG_H__4CD996C9_091F_4F4D_BFE3_EDD9236AB74B__INCLUDED_)
@@ -61,10 +64,7 @@ public:
    enum { IDD = IDD_PREFERENCES_DIALOG };
       // NOTE: the ClassWizard will add data members here
    //}}AFX_DATA
-
-   int getSavePassword();
-   void setSavePassword( int iSavePassword );   
-  
+ 
    int getAutoArrange();
    void setAutoArrange( int iAutoArrange );
    
@@ -73,6 +73,9 @@ public:
 
    int getArrangeOnStartup();
    void setArrangeOnStartup( int iArrangeOnStartup );
+
+   int getTileMethod(); 
+   void setTileMethod( int iTileMethod );
 
    int getCascadeWidth(); 
    void setCascadeWidth( int iCascadeWidth );
@@ -95,9 +98,6 @@ public:
    int getOpacity();
    void setOpacity( int iOpacity );
 
-   int getTransition();
-   void setTransition( int iTransition );
-
    int getTabCompletion();
    void setTabCompletion( int iTabCompletion );
 
@@ -107,6 +107,15 @@ public:
    int getEmulateCopyPaste();
    void setEmulateCopyPaste( int iEmulateCopyPaste );
 
+   int getTransition();
+   void setTransition( int iTransition );
+
+   int getPostSendDelay();
+   void setPostSendDelay( int iPostSendDelay );
+
+   int getSavePassword();
+   void setSavePassword( int iSavePassword );   
+ 
    int getRunOnSystemStartup();
    void setRunOnSystemStartup( int iRunOnSystemStartup );
 
@@ -123,10 +132,12 @@ public:
 // Implementation
 protected:
 
-   int m_iSavePassword;
    int m_iAutoArrange;
    int m_iAutoMinimize;
    int m_iArrangeOnStartup;
+
+   int m_iTileMethod;
+
    int m_iCascadeWidth;
    int m_iCascadeHeight;
    
@@ -135,27 +146,34 @@ protected:
    int m_iAlwaysOnTop;
    int m_iMinimizeToSysTray;
    int m_iOpacity;
-   int m_iTransition; 
+
    int m_iEmulateCopyPaste;
    int m_iCmdHistoryScrollThrough;
    int m_iTabCompletion;
+
+   int m_iTransition; 
+   int m_iPostSendDelay; 
+   
+   int m_iSavePassword;   
    int m_iRunOnSystemStartup;
    int m_iCheckForUpdates;
      
    // Generated message map functions
    //{{AFX_MSG(CPreferencesDialog)
    virtual BOOL OnInitDialog();
-   afx_msg void OnSavePasswordCheckbox();   
    afx_msg void OnAutoArrangeRadio();
+   afx_msg void OnTileMethodRadio();
    afx_msg void OnAutoMinimizeCheckbox();
    afx_msg void OnArrangeOnStartupCheckbox();
    afx_msg void OnUnhideOnExitCheckbox();   
    afx_msg void OnToolWindowCheckbox();
    afx_msg void OnAlwaysOnTopCheckbox();
-   afx_msg void OnChangeTransition();
    afx_msg void OnEmulateCopyPasteCheckbox();
    afx_msg void OnCmdHistoryScrollThroughCheckbox();
    afx_msg void OnTabCompletionCheckbox();
+   afx_msg void OnChangeTransition();
+   afx_msg void OnChangePostSendDelay();
+   afx_msg void OnSavePasswordCheckbox();      
    afx_msg void OnCheckForUpdatesCheckbox();
 	afx_msg void OnRunOnSystemStartupCheckbox();
    afx_msg void OnOKButton();   

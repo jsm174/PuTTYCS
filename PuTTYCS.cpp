@@ -1,7 +1,7 @@
 /**
  * PuTTYCS.cpp - PuTTYCS Main Application
  *
- * Copyright (c) 2005 - 2007 Jason Millard (jsm174@gmail.com)
+ * Copyright (c) 2005 - 2008 Jason Millard (jsm174@gmail.com)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,8 @@
  * 12/19/2005: Added window opacity                  J. Millard
  * 05/27/2006: Added custom window class for         J. Millard
  *             better multiple instance detection 
+ * 02/29/2008: Added code to send command line to    J. Millard
+ *             running instance of PuTTYCS
  */
 
 #include "stdafx.h"
@@ -106,15 +108,17 @@ BOOL CPuTTYCSApp::InitInstance()
        * Search for existing application 
        */
 
-      CWnd* pAppWnd =
-         CWnd::FindWindow( PUTTYCS_WND_CLASS, NULL );
+      CWnd* pAppWnd = CWnd::FindWindow( PUTTYCS_WND_CLASS, NULL );
 
       if ( pAppWnd )
-      {
-         pAppWnd->SendMessage( WM_USER_MULTIPLE_INSTANCE, 
-                               NULL, 
-                               NULL );
-      }
+      {                  
+		   COPYDATASTRUCT cds;        
+         cds.dwData = PUTTYCS_WM_COPYDATA_CMD_LINE;
+         cds.cbData = (lstrlen(GetCommandLine()) + 1) * sizeof(TCHAR);
+         cds.lpData = (void*) GetCommandLine();
+
+         pAppWnd->SendMessage(WM_COPYDATA, NULL, (LPARAM) &cds);  
+		}
       else
       {
          CPuTTYCSDialog dialog;

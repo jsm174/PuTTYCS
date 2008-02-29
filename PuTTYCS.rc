@@ -74,8 +74,8 @@ IDR_MAINFRAME           ICON    DISCARDABLE     "res\\PuTTYCS.ico"
 //
 
 IDD_PUTTYCS_DIALOG DIALOGEX 0, 0, 254, 166
-STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
-    WS_SYSMENU
+STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CLASS "PUTTYCS_WND_CLASS"
 FONT 8, "MS Sans Serif"
@@ -130,70 +130,6 @@ BEGIN
                     ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,78,38,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,129,38,50,14
-END
-
-IDD_PREFERENCES_DIALOG DIALOGEX 0, 0, 412, 174
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Preferences"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
-BEGIN
-    GROUPBOX        "Window:",IDC_STATIC,7,6,195,56
-    CONTROL         "Tool window",IDC_TOOLWINDOW_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,13,20,72,10
-    CONTROL         "Always on top",IDC_ALWAYSONTOP_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,13,33,72,10
-    CONTROL         "Minimize to system tray",IDC_MINIMIZETOSYSTRAY_CHECKBOX,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,46,84,10
-    LTEXT           "Transition:",IDC_STATIC,108,21,34,10
-    EDITTEXT        IDC_TRANSITION_EDIT,145,18,22,12,ES_AUTOHSCROLL | 
-                    ES_NUMBER
-    LTEXT           "ms",IDC_STATIC,171,21,10,10
-    LTEXT           "Opacity:",IDC_OPACITY1_STATIC,108,46,34,10,
-                    SS_CENTERIMAGE
-    CONTROL         "Slider1",IDC_OPACITY_SLIDER,"msctls_trackbar32",
-                    WS_TABSTOP,141,45,35,11
-    LTEXT           "100%",IDC_OPACITY2_STATIC,177,46,18,10,SS_CENTERIMAGE
-    GROUPBOX        "Auto arrange:",IDC_STATIC,7,66,195,81
-    CONTROL         "Off",IDC_AUTOARRANGE_OFF_RADIO,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP,13,81,44,10
-    CONTROL         "Cascade",IDC_AUTOARRANGE_CASCADE_RADIO,"Button",
-                    BS_AUTORADIOBUTTON,13,93,44,10
-    CONTROL         "Tile",IDC_AUTOARRANGE_TILE_RADIO,"Button",
-                    BS_AUTORADIOBUTTON,13,105,44,10
-    CONTROL         "Minimize other PuTTYs",IDC_AUTOMINIMIZE_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,108,81,89,10
-    CONTROL         "Arrange on startup",IDC_ARRANGEONSTARTUP_CHECKBOX,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,108,93,74,10
-    CONTROL         "Unhide PuTTYs on exit",IDC_UNHIDEONEXIT_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,108,105,89,10
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,12,121,186,1
-    LTEXT           "Cascade dimensions:",IDC_STATIC,19,130,68,8
-    EDITTEXT        IDC_CASCADE_WIDTH_EDIT,95,128,22,12,ES_AUTOHSCROLL | 
-                    ES_NUMBER
-    LTEXT           "x",IDC_STATIC,121,130,8,8,0,WS_EX_TRANSPARENT
-    EDITTEXT        IDC_CASCADE_HEIGHT_EDIT,130,128,22,12,ES_AUTOHSCROLL | 
-                    ES_NUMBER
-    PUSHBUTTON      "&Find",IDC_FIND_BUTTON,157,127,32,14
-    GROUPBOX        "Keyboard/Mouse:",IDC_STATIC,210,6,195,56
-    CONTROL         "Enable Tab completion",IDC_TABCOMPLETION_CHECKBOX,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,216,20,155,10
-    CONTROL         "Scroll command history with up/down arrows keys",
-                    IDC_CMDHISTORYSCROLLTHROUGH_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,216,33,183,10
-    CONTROL         "Selection copies, right button pastes",
-                    IDC_EMULATECOPYPASTE_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,216,46,155,10
-    GROUPBOX        "Password:",IDC_STATIC,209,66,196,33
-    CONTROL         "Save password",IDC_SAVEPASSWORD_CHECKBOX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,215,81,63,10
-    GROUPBOX        "Miscellaneous:",IDC_STATIC,209,104,196,43
-    CONTROL         "Run on system startup",IDC_RUNONSYSTEMSTARTUP_CHECKBOX,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,216,118,136,10
-    CONTROL         "Check for updates on startup",
-                    IDC_CHECKFORUPDATES_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,216,131,136,10
-    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,303,154,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,355,154,50,14
 END
 
 IDD_FILTERS_DIALOG DIALOG DISCARDABLE  0, 0, 200, 178
@@ -255,6 +191,80 @@ BEGIN
                     WS_TABSTOP,75,75,41,19
 END
 
+IDD_PREFERENCES_DIALOG DIALOGEX 0, 0, 409, 207
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Window:",IDC_STATIC,7,6,195,58
+    CONTROL         "Tool window",IDC_TOOLWINDOW_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,20,72,10
+    CONTROL         "Always on top",IDC_ALWAYSONTOP_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,34,72,10
+    CONTROL         "Minimize to system tray",IDC_MINIMIZETOSYSTRAY_CHECKBOX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,47,84,10
+    LTEXT           "Opacity:",IDC_OPACITY1_STATIC,108,20,34,10,
+                    SS_CENTERIMAGE
+    CONTROL         "Slider1",IDC_OPACITY_SLIDER,"msctls_trackbar32",
+                    WS_TABSTOP,141,19,35,11
+    LTEXT           "100%",IDC_OPACITY2_STATIC,177,20,18,10,SS_CENTERIMAGE
+    GROUPBOX        "Auto arrange:",IDC_STATIC,7,67,195,58
+    CONTROL         "Off",IDC_AUTOARRANGE_OFF_RADIO,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,13,83,44,10
+    CONTROL         "Cascade",IDC_AUTOARRANGE_CASCADE_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,13,95,44,10
+    CONTROL         "Tile",IDC_AUTOARRANGE_TILE_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,13,107,44,10
+    CONTROL         "Minimize other PuTTYs",IDC_AUTOMINIMIZE_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,109,83,89,10
+    CONTROL         "Arrange on startup",IDC_ARRANGEONSTARTUP_CHECKBOX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,109,95,74,10
+    CONTROL         "Unhide PuTTYs on exit",IDC_UNHIDEONEXIT_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,109,107,89,10
+    GROUPBOX        "Tile method:",IDC_STATIC,7,129,95,54
+    CONTROL         "Vertical",IDC_TILEMETHOD_VERTICAL_RADIO,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,13,144,39,10
+    CONTROL         "Horizontal",IDC_TILEMETHOD_HORIZONTAL_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,13,155,47,10
+    CONTROL         "Classic",IDC_TILEMETHOD_CLASSIC_RADIO,"Button",
+                    BS_AUTORADIOBUTTON,13,166,38,10
+    GROUPBOX        "Cascade dimensions:",IDC_STATIC,107,129,95,54
+    EDITTEXT        IDC_CASCADE_WIDTH_EDIT,116,150,22,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "x",IDC_STATIC,142,152,8,8,0,WS_EX_TRANSPARENT
+    EDITTEXT        IDC_CASCADE_HEIGHT_EDIT,151,150,22,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "...",IDC_FIND_BUTTON,177,149,15,14
+    GROUPBOX        "Keyboard/Mouse:",IDC_STATIC,207,6,195,58
+    CONTROL         "Enable Tab completion",IDC_TABCOMPLETION_CHECKBOX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,214,20,155,10
+    CONTROL         "Scroll command history with up/down arrows keys",
+                    IDC_CMDHISTORYSCROLLTHROUGH_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,214,34,182,10
+    CONTROL         "Selection copies, right button pastes",
+                    IDC_EMULATECOPYPASTE_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,214,47,155,10
+    GROUPBOX        "Transition delays: (Advanced)",IDC_STATIC,207,67,195,58
+    LTEXT           "Window",IDC_STATIC,216,84,32,10
+    EDITTEXT        IDC_TRANSITION_EDIT,254,81,22,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "ms",IDC_STATIC,279,84,11,10
+    LTEXT           "Post send ",IDC_STATIC,216,98,33,10
+    EDITTEXT        IDC_POST_SEND_DELAY_EDIT,254,97,22,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "ms",IDC_STATIC,279,98,11,10
+    GROUPBOX        "Miscellaneous:",IDC_STATIC,207,129,195,54
+    CONTROL         "Save password",IDC_SAVEPASSWORD_CHECKBOX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,214,144,63,10
+    CONTROL         "Run on system startup",IDC_RUNONSYSTEMSTARTUP_CHECKBOX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,214,155,136,10
+    CONTROL         "Check for updates on startup",
+                    IDC_CHECKFORUPDATES_CHECKBOX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,214,166,136,10
+    DEFPUSHBUTTON   "OK",IDC_OK_BUTTON,300,187,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,352,187,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -263,8 +273,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,7,0,0
- PRODUCTVERSION 1,7,0,0
+ FILEVERSION 1,8,1,0
+ PRODUCTVERSION 1,8,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -282,14 +292,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Millard Software\0"
             VALUE "FileDescription", "PuTTYCS\0"
-            VALUE "FileVersion", "1, 7, 0, 0\0"
+            VALUE "FileVersion", "1, 8, 1, 0\0"
             VALUE "InternalName", "PuTTYCS\0"
-            VALUE "LegalCopyright", "Copyright (C) 2005 - 2007\0"
+            VALUE "LegalCopyright", "Copyright (C) 2005 - 2008\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "PuTTYCS.EXE\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.7\0"
-            VALUE "ProductVersion", "1, 7, 0, 0\0"
+            VALUE "ProductName", "PuTTYCS - PuTTY Command Sender 1.8.1\0"
+            VALUE "ProductVersion", "1, 8, 1, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -326,14 +336,6 @@ BEGIN
         BOTTOMMARGIN, 52
     END
 
-    IDD_PREFERENCES_DIALOG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 405
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 167
-    END
-
     IDD_FILTERS_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -357,6 +359,14 @@ BEGIN
         RIGHTMARGIN, 185
         TOPMARGIN, 7
         BOTTOMMARGIN, 122
+    END
+
+    IDD_PREFERENCES_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 402
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 200
     END
 END
 #endif    // APSTUDIO_INVOKED
